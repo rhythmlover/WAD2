@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block body %}
+<h1>Stock Price Chart</h1>
+
+<div>
+    <button id="snp500">S&P 500</button>
+    <button id="nasdaq100">Nasdaq 100</button>
+    <button id="dow30">Dow 30</button>
+</div>
+
+<div id="candlestick-chart">
+    {{ chart_html | safe }}
+</div>
+
+<div>
+    <button id="1y">1 year</button>
+    <button id="6m">6 months</button>
+    <button id="3m">3 months</button>
+    <button id="1wk">1 week</button>
+</div>
+
+<script>
+    // Initialize the chart with the default data
+    var chartDiv = document.getElementById('candlestick-chart');
+    
+    // Function to update the chart based on the selected period
+    function updateChart(period) {
+        var today = new Date();
+        var start_date;
+
+        if (period === '1y') {
+            // 1 year period
+            start_date = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+        } else if (period === '6m') {
+            // 6 months period
+            start_date = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+        } else if (period === '3m') {
+            // 3 months period
+            start_date = new Date(today.getFullYear(), today.getMonth() - 3, today.getDate());
+        } else if (period === '1wk') {
+            // 1 week period
+            start_date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        }
+
+        // Format start_date as 'YYYY-MM-DD' for the API request
+        var formatted_start_date = start_date.toISOString().split('T')[0];
+
+        // Fetch updated data with the selected period
+        $.ajax({
+            url: '/update_chart',
+            type: 'POST',
+            data: { start_date: formatted_start_date },
+            success: (data) => {
+                // Update the chart with the new data
+                var graph = JSON.parse(data);
+                Plotly.react(chartDiv, graph.data, graph.layout);
+            },
+        });
+    }
+
+    function updateIndices(ticker) {
+        // Fetch updated data with the selected index
+        $.ajax({
+            url: '/update_indices',
+            type: 'POST',
+            data: { ticker: ticker },
+            success: (data) => {
+                // Update the chart with the new data
+                var graph = JSON.parse(data);
+                Plotly.react(chartDiv, graph.data, graph.layout);
+            },
+        });
+    }
+
+    // Add click event listeners to the buttons
+    document.getElementById('snp500').addEventListener('click', function() {
+        updateIndices('^GSPC');
+    });
+
+    document.getElementById('nasdaq100').addEventListener('click', function() {
+        updateIndices('^NDX');
+    });
+
+    document.getElementById('dow30').addEventListener('click', function() {
+        updateIndices('^DJI');
+    });
+
+    document.getElementById('1y').addEventListener('click', function() {
+        updateChart('1y');
+    });
+
+    document.getElementById('6m').addEventListener('click', function() {
+        updateChart('6m');
+    });
+
+    document.getElementById('3m').addEventListener('click', function() {
+        updateChart('3m');
+    });
+
+    document.getElementById('1wk').addEventListener('click', function() {
+        updateChart('1wk');
+    });
+</script>
+{% endblock %}
