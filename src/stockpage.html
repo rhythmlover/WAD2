@@ -3,11 +3,9 @@
 <html lang="en">
 
 <head>
-    <!-- Include necessary scripts and styles here -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Page</title>
-    <!-- Include necessary libraries (e.g., Axios, ApexCharts) -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -72,18 +70,16 @@
             <!-- news section-->
         </div>
 
-        <div class="container" id="comments">
-            <!-- Comment section-->
+        <div class="container" id="comments-form">
+            <input type="text" id="name-box" placeholder="Enter name">
             <input type="text" id="comment-box" placeholder="Enter comment">
             <button id="post">Comment</button>
-            <ul id="commentsList">
-
-            </ul>
-
+            <div id="comments-section">
+                <!-- Comments section-->
+            </div>
         </div>
     </div>
     <script>
-
         // Initialize chart to null
         let chart = null;
 
@@ -152,7 +148,6 @@
             try {
                 const response = await axios.request(options);
                 const stockData = response.data;
-                console.log(response.data);
 
                 // Extract the data you need for the chart from stockData
                 let chartData = stockData.prices.map((price) => ({
@@ -198,6 +193,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
+    <script src="./bundle.js"></script>
 </body>
 
 </html>
