@@ -1,13 +1,10 @@
-<!-- stockpage.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!-- Include necessary scripts and styles here -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Page</title>
-    <!-- Include necessary libraries (e.g., Axios, ApexCharts) -->
+    <title>Dashboard</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -18,18 +15,12 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand">Portfolio Management</a>
-            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    <a class="nav-link active" href="dashboard.html">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="stockpage.html">Stocks</a>
+                    <a class="nav-link" href="stockpage.html">Stocks</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="">News</a>
@@ -46,49 +37,50 @@
         </div>
     </nav>
 
-    <div class="container-fluid justify-content-center">
-
-
+    <div class="container text-center">
         <div class="container">
             <!-- Display the selected stock symbol -->
             <h1 id="stockSymbol"></h1>
         </div>
 
-
-        <div class="container" id="intervalOptions">
-            <label>Select Interval:</label>
-            <!-- <button id="dailyButton">Daily</button> -->
-            <button id="weeklyButton">Weekly</button>
-            <button id="monthlyButton">Monthly</button>
-            <button id="allButton">All</button>
+        <div class="container" id="indices-buttons">
+            <div class="row justify-content-start">
+                <div class="col-3">
+                    <button id="snp500">S&P 500</button>
+                    <button id="nasdaq100">Nasdaq 100</button>
+                    <button id="dow30">Dow 30</button>
+                </div>
+            </div>
         </div>
 
-
-        <div class="container" id="chart">
+        <div class="container" id="candlestick-chart">
             <!-- The candlestick chart will be rendered here -->
         </div>
 
-        <div class="container" id="news">
-            <!-- news section-->
-        </div>
-
-        <div class="container" id="comments">
-            <!-- Comment section-->
-            <input type="text" id="comment-box" placeholder="Enter comment">
-            <button id="post">Comment</button>
-            <ul id="commentsList">
-
-            </ul>
-
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-3" id="interval-options">
+                    <button id="allButton">All time</button>
+                    <button id="1m">1 month</button>
+                    <button id="1wk">1 week</button>
+                </div>
+                <div class="col-3" id="chart-type">
+                    <button id="candlestick">Candlestick</button>
+                    <button id="area">Area</button>
+                </div>
+            </div>
         </div>
     </div>
-    <script>
 
+    <script>
         // Initialize chart to null
-        let chart = null;
+        var chart = null;
 
         // Get the selected stock symbol from the URL parameter
-        let selectedSymbol = 'TSLA';
+        var selectedSymbol = '';
+
+        // Default chart type is candlestick, user can switch between area and candlestick
+        var chartType = 'candlestick';
 
         // Display the selected symbol and default period on the page
         document.getElementById('stockSymbol').textContent = `Stock Symbol: ${selectedSymbol} (Daily)`;
@@ -101,7 +93,7 @@
 
             const chartOptions = {
                 chart: {
-                    type: 'candlestick',
+                    type: chartType,
                     height: 400,
                     width: 1200
                 },
@@ -117,21 +109,24 @@
                     tooltip: {
                         enabled: true
                     }
+                },
+                dataLabels: {
+                    enabled: false
                 }
             };
 
             // Render the chart
-            chart = new ApexCharts(document.querySelector('#chart'), chartOptions);
+            chart = new ApexCharts(document.querySelector('#candlestick-chart'), chartOptions);
             chart.render();
         }
 
         // Fetch data from yahoo finance using rapidapi
-        async function fetchData(interval) {
-            let options = {
+        async function fetchData(interval, symbol = selectedSymbol) {
+            let historical_data = {
                 method: 'GET',
                 url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data',
                 params: {
-                    symbol: selectedSymbol,
+                    symbol: symbol,
                     region: 'US'
                 },
                 headers: {
@@ -140,19 +135,35 @@
                 }
             };
 
+            let quotes = {
+                method: 'GET',
+                url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes',
+                params: {
+                    region: 'US',
+                    symbols: symbol,
+                },
+                headers: {
+                    'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+                    'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
+                }
+            };
+
             // Adjust the interval and period based on the button clicked
             if (interval === 'Weekly') {
-                options.params.period1 = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60); // 7 days ago
+                historical_data.params.period1 = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60); // 7 days ago
             } else if (interval === 'Monthly') {
-                options.params.period1 = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60); // 30 days ago
+                historical_data.params.period1 = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60); // 30 days ago
             } else {
-                options.params.period1 = '0';   //default at ALL
+                historical_data.params.period1 = '0';   //default at ALL
             }
 
             try {
-                const response = await axios.request(options);
+                const response = await axios.request(historical_data);
+                const response_quotes = await axios.request(quotes);
                 const stockData = response.data;
-                console.log(response.data);
+                const quotesData = response_quotes.data;
+                
+                tickerName = quotesData.quoteResponse.result[0].shortName;
 
                 // Extract the data you need for the chart from stockData
                 let chartData = stockData.prices.map((price) => ({
@@ -175,25 +186,50 @@
                 renderChart(chartData);
 
                 // Update the displayed interval
-                document.getElementById('stockSymbol').textContent = `Stock Symbol: ${selectedSymbol} (${interval})`;
+                document.getElementById('stockSymbol').textContent = `Stock Symbol: ${tickerName} (${interval})`;
             } catch (error) {
                 console.error(error);
             }
         }
 
+        document.getElementById('snp500').addEventListener('click', () => {
+            selectedSymbol = '^GSPC';
+            fetchData('All');
+        });
+        document.getElementById('nasdaq100').addEventListener('click', () => {
+            selectedSymbol = '^NDX';
+            fetchData('All');
+        });
+        document.getElementById('dow30').addEventListener('click', () => {
+            selectedSymbol = '^DJI';
+            fetchData('All');
+        });
 
-        document.getElementById('weeklyButton').addEventListener('click', () => {
+
+        document.getElementById('1wk').addEventListener('click', () => {
             fetchData('Weekly');
         });
-        document.getElementById('monthlyButton').addEventListener('click', () => {
+        document.getElementById('1m').addEventListener('click', () => {
             fetchData('Monthly');
         });
         document.getElementById('allButton').addEventListener('click', () => {
             fetchData('All');
         });
-        window.addEventListener("load", () => { fetchData('All'); }, false);
-    </script>
 
+        document.getElementById('candlestick').addEventListener('click', () => {
+            chartType = 'candlestick';
+            fetchData('All');
+        });
+        document.getElementById('area').addEventListener('click', () => {
+            chartType = 'area';
+            fetchData('All');
+        });
+
+        window.addEventListener("load", () => {
+            selectedSymbol = '^GSPC';
+            fetchData('All');
+        }, false);
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
