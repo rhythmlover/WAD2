@@ -1,0 +1,339 @@
+<!-- stockpage.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Page</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" type="text/css" href="main.css"> -->
+
+    <style>
+        #showmore {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand">Portfolio Management</a>
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="stockpage.html">Stocks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">News</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Portfolio</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input id="searchInput" class="form-control me-2" type="search" placeholder="Search"
+                    aria-label="Search">
+                <button id="search" class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container-fluid justify-content-center">
+
+
+        <div class="container">
+            <!-- Display the selected stock symbol -->
+            <h1 id="stockSymbol"></h1>
+        </div>
+
+
+        <div class="container" id="intervalOptions">
+            <label>Select Interval:</label>
+            <!-- <button id="dailyButton">Daily</button> -->
+            <button id="weeklyButton">Weekly</button>
+            <button id="monthlyButton">Monthly</button>
+            <button id="allButton">All</button>
+        </div>
+
+
+        <div class="container" id="chart">
+            <!-- The chart will be rendered here -->
+        </div>
+        
+        
+        <!-- news section-->
+        
+        <div class="container" id="news">
+            <!-- only first 2 will show -->
+        </div>
+
+        <div class="container hidden" id="showmore">
+
+        </div>
+
+        <div class="d-grid gap-2 col-2 mx-auto">
+            <button class="btn btn-primary" id="showButton" type="button">Show More</button>
+          </div>
+
+
+        <div class="container" id="comments-form">
+            <input type="text" id="name-box" placeholder="Enter name">
+            <input type="text" id="comment-box" placeholder="Enter comment">
+            <button id="post">Comment</button>
+            <div id="comments-section">
+                <!-- Comments section-->
+            </div>
+        </div>
+    </div>
+    <script>
+        // Initialize chart to null
+        let chart = null;
+
+        // Get the selected stock symbol from the URL parameter
+        let selectedSymbol = 'TSLA';
+
+        // Display the selected symbol and default period on the page
+        document.getElementById('stockSymbol').textContent = `Stock Symbol: ${selectedSymbol} (Daily)`;
+
+        // Clear existing charts and create a new one
+        async function renderChart(chartData) {
+            if (chart) {
+                chart.destroy(); // Clear current chart
+            }
+
+            const chartOptions = {
+                chart: {
+                    type: 'candlestick',
+                    height: 400,
+                    width: 1200
+                },
+                series: [
+                    {
+                        data: chartData,
+                    },
+                ],
+                xaxis: {
+                    type: 'datetime',
+                },
+                yaxis: {
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            };
+
+            // Render the chart
+            chart = new ApexCharts(document.querySelector('#chart'), chartOptions);
+            chart.render();
+        }
+
+        // Fetch data from yahoo finance using rapidapi
+        async function fetchData(interval) {
+            let options = {
+                method: 'GET',
+                url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data',
+                params: {
+                    symbol: selectedSymbol,
+                    region: 'US'
+                },
+                headers: {
+                    'X-RapidAPI-Key': '0f41b9c6a4mshb99c3841f59207ap13d9c1jsn36a3f1207f00',
+                    'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
+                }
+            };
+
+            // Adjust the interval and period based on the button clicked
+            if (interval === 'Weekly') {
+                options.params.period1 = Math.floor(Date.now() / 1000) - (7 * 24 * 60 * 60); // 7 days ago
+            } else if (interval === 'Monthly') {
+                options.params.period1 = Math.floor(Date.now() / 1000) - (30 * 24 * 60 * 60); // 30 days ago
+            } else {
+                options.params.period1 = '0';   //default at ALL
+            }
+
+            try {
+                const response = await axios.request(options);
+                const stockData = response.data;
+
+                // Extract the data you need for the chart from stockData
+                let chartData = stockData.prices.map((price) => ({
+                    x: new Date(price.date * 1000),  // Convert timestamp to Date
+                    y: [price.open.toFixed(2), price.high.toFixed(2), price.low.toFixed(2), price.close.toFixed(2)]
+                }));
+
+                // Filter chartData based on the selected interval
+                if (interval === 'Weekly') {
+                    // Filter to include only the last 7 data points for weekly
+                    chartData = chartData.slice(-7);
+                } else if (interval === 'Monthly') {
+                    // Filter to include only the last 30 data points for monthly
+                    chartData = chartData.slice(-30);
+                } else if (interval === 'All') {
+                    // No need to filter for "All"
+                }
+
+                // Render the chart
+                renderChart(chartData);
+
+                // Update the displayed interval
+                document.getElementById('stockSymbol').textContent = `Stock Symbol: ${selectedSymbol} (${interval})`;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+        document.getElementById('weeklyButton').addEventListener('click', () => {
+            fetchData('Weekly');
+        });
+        document.getElementById('monthlyButton').addEventListener('click', () => {
+            fetchData('Monthly');
+        });
+        document.getElementById('allButton').addEventListener('click', () => {
+            fetchData('All');
+        });
+        window.addEventListener("load", () => { fetchData('All'); }, false);
+
+    </script>
+
+
+    <script>
+
+        let currentQuery = "Tesla";
+        let currentPage = 1;
+
+        let fetchNews = async (page, q) => {
+
+            console.log(`Fetching News for ${q}, Page number ${page}...`);
+
+
+            var url = 'https://newsapi.org/v2/everything?' +
+                'language=en&' +
+                'q=' + q +
+                '&pageSize=20&' +
+                'page=' + page +
+                '&apiKey=8ed1d1256b4e4f41996101e7967ad3b5';
+
+            var req = new Request(url);
+
+            let a = await fetch(req)
+            let response = await a.json()
+            console.log(JSON.stringify(response));
+
+            console.log(response)
+            let str = "<div class='container-fluid justify-content-center'><div class='row'>";
+            let extraStr = "<div class='container-fluid justify-content-center'><div class='row'>";
+            let articlecount = 0
+            let loopcount = 0
+            
+
+                for (let item of response.articles) {
+                    if (articlecount < 2) {
+                        loopcount++
+                    if (item.urlToImage != null) {
+                        articlecount++
+                        str = str + `<div class="col-lg-6"><div class="card m-2" style="width:40rem">
+                        <img height=300 src="${item.urlToImage}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">${item.title}</h5>`
+                        if (item.description != null) {
+                            str += `<p class="card-text"> ${item.description.slice(0, 100)}...    </p >`
+                        }
+                        str += `<a href="${item.url}" target="_blank" class="btn btn-primary">Read Article</a>
+                </div></div></div>`}
+            }          
+            }
+            str += `</div></div>`; 
+            document.querySelector("#news").innerHTML = str
+
+            for (let item of response.articles.slice(loopcount)) {
+            
+                    if (item.urlToImage != null) {
+                        articlecount++
+                        extraStr = extraStr + `<div class="col-lg-6"><div class="card m-2" style="width:40rem">
+                        <img height=300 src="${item.urlToImage}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">${item.title}</h5>`
+                        if (item.description != null) {
+                            extraStr += `<p class="card-text"> ${item.description.slice(0, 100)}...    </p >`
+                        }
+                        extraStr += `<a href="${item.url}" target="_blank" class="btn btn-primary">Read Article</a>
+                </div></div></div>`}
+            }          
+            
+            extraStr += `</div></div>`; 
+            document.querySelector("#showmore").innerHTML = extraStr
+        }
+
+        fetchNews(1, currentQuery)
+        search.addEventListener("click", (e) => {
+            e.preventDefault()
+            let query = searchInput.value;
+            currentQuery = query
+
+            fetchNews(1, query)
+        })
+        prev.addEventListener("click", (e) => {
+            e.preventDefault()
+            if (currentPage > 1) {
+                currentPage = currentPage - 1;
+
+
+                fetchNews(currentPage, currentQuery)
+            }
+
+        })
+        next.addEventListener("click", (e) => {
+            e.preventDefault()
+            currentPage = currentPage + 1;
+
+
+            fetchNews(currentPage, currentQuery)
+        })
+    </script>
+
+    <script>
+        
+        showButtonValue = false;
+        let showButton = document.getElementById("showButton");
+        let hidden = document.getElementById("showmore");
+
+        showButton.addEventListener('click',()=>{
+            showButtonValue = !showButtonValue;
+            if(showButtonValue){
+                showButton.textContent = "Show Less";
+                hidden.style.display = 'block';
+            }
+            else{
+                showButton.textContent = "Show More"
+                hidden.style.display = 'none';
+
+            }
+        })
+
+        
+
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <script src="./bundle.js"></script>
+    <script src="./news.js"></script>
+</body>
+
+</html>
