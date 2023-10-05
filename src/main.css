@@ -18,3 +18,7 @@ button {
     margin-top: 10px;
     cursor: pointer;
 }
+
+.hidden{
+    display: none;
+}
