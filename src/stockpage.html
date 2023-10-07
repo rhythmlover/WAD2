@@ -103,7 +103,7 @@
         let chart = null;
 
         // Get the selected stock symbol from the URL parameter
-        let selectedSymbol = 'TSLA';
+        let selectedSymbol = new URLSearchParams(window.location.search).get('selectedSymbol');
 
         // Display the selected symbol and default period on the page
         document.getElementById('stockSymbol').textContent = `Stock Symbol: ${selectedSymbol} (Daily)`;
