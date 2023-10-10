@@ -17,7 +17,7 @@ async function getTrending() {
     const trending = result.finance.result[0].quotes;
 
     generateTable(name, trending);
-    console.log(result);
+    // console.log(result);
   } catch (error) {
     console.error(error);
   }
@@ -41,7 +41,7 @@ async function getActive() {
     const active = result.quotes;
 
     generateTable(name, active);
-    console.log(result);
+    // console.log(result);
   } catch (error) {
     console.error(error);
   }
@@ -65,7 +65,7 @@ async function getGainer() {
     const gainer = result.quotes;
 
     generateTable(name, gainer);
-    console.log(result);
+    // console.log(result);
   } catch (error) {
     console.error(error);
   }
