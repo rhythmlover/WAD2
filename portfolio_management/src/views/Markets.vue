@@ -21,7 +21,7 @@
     <div class="container-fluid">
       <div class="row justify-content-between">
         <div class="col-3" id="interval-options">
-          <button id="allButton" @click="fetchDataAndUpdateChart('All')">All time</button>
+          <button id="allButton">All time</button>
           <button id="1m" @click="fetchDataAndUpdateChart('Monthly')">1 Month</button>
           <button id="1wk" @click="fetchDataAndUpdateChart('Weekly')">1 Week</button>
         </div>
@@ -149,7 +149,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': '<!-- please enter your own key -->',
+      'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -162,7 +162,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': '<!-- please enter your own key -->',
+      'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
