@@ -26,6 +26,22 @@
   </nav>
   <RouterView />
 </template>
+``
+<style scoped>
+li {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+li a {
+  text-decoration: none;
+  color: black;
+}
+
+.router-link-active {
+  text-decoration: underline;
+}
+</style>
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'

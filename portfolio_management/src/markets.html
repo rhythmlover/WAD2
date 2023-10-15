@@ -211,6 +211,7 @@
 
         try {
           const response = await axios.request(historical_data)
+          console.log(response)
           const response_quotes = await axios.request(quotes)
           const stockData = response.data
           const quotesData = response_quotes.data
