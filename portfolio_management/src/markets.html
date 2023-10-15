@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markets</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand">Portfolio Management</a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+          <li class="nav-item">
+            <a class="nav-link" href="portfolio.html">Portfolio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="markets.html">Markets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="stockList.html">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="stockpage.html">Stock Page(TEMP)</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <button id="login-btn" class="btn btn-outline-success">Login</button>
+        </form>
+      </div>
+    </nav>
+
+    <div class="container text-center">
+      <div class="container">
+        <h1 id="stockSymbol"></h1>
+      </div>
+
+      <div class="container" id="indices-buttons">
+        <div class="row justify-content-start">
+          <div class="col-3">
+            <button id="snp500">S&P 500</button>
+            <button id="nasdaq100">Nasdaq 100</button>
+            <button id="dow30">Dow 30</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container" id="candlestick-chart">
+        <!-- The candlestick chart will be rendered here -->
+      </div>
+
+      <div class="container-fluid">
+        <div class="row justify-content-between">
+          <div class="col-3" id="interval-options">
+            <button id="allButton">All time</button>
+            <button id="1m">1 Month</button>
+            <button id="1wk">1 Week</button>
+          </div>
+          <div class="col-3" id="chart-type">
+            <button id="candlestick">Candlestick</button>
+            <button id="area">Area</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container" id="trending-container">
+        <div id="trending"></div>
+        <div id="active"></div>
+        <div id="gainer"></div>
+      </div>
+    </div>
+
+    <script>
+      // localStorage.clear();
+      var chart = null
+      var selectedSymbol = ''
+      var chartType = 'candlestick'
+      var tickerName = ''
+
+      const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
+
+      document.getElementById('stockSymbol').textContent = `Stock Symbol: ${tickerName} (All)`
+
+      async function fetchDataAndUpdateChart(interval = 'All') {
+        const dataCacheKey = `${selectedSymbol}-${interval}`
+
+        if (dataCache[dataCacheKey] && typeof dataCache[dataCacheKey] === 'object') {
+          const { chartData, tickerName } = dataCache[dataCacheKey]
+          renderChart(chartData)
+
+          // Display the tickerName
+          document.getElementById(
+            'stockSymbol'
+          ).textContent = `Stock Symbol: ${tickerName} (${interval})`
+        } else {
+          try {
+            const chartData = await fetchData(interval, selectedSymbol)
+
+            dataCache[dataCacheKey] = {
+              tickerName,
+              chartData
+            }
+
+            localStorage.setItem('dataCache', JSON.stringify(dataCache))
+
+            renderChart(chartData)
+
+            document.getElementById(
+              'stockSymbol'
+            ).textContent = `Stock Symbol: ${tickerName} (${interval})`
+          } catch (error) {
+            console.error(error)
+          }
+        }
+      }
+
+      async function renderChart(chartData) {
+        if (!chart) {
+          const chartOptions = {
+            chart: {
+              type: chartType,
+              name: selectedSymbol,
+              height: 400,
+              width: 1200
+            },
+            series: [
+              {
+                data: chartData
+              }
+            ],
+            xaxis: {
+              type: 'datetime'
+            },
+            yaxis: {
+              tooltip: {
+                enabled: true
+              }
+            },
+            dataLabels: {
+              enabled: false
+            }
+          }
+
+          // Render the chart
+          chart = new ApexCharts(document.querySelector('#candlestick-chart'), chartOptions)
+          chart.render()
+          console.log('Chart Rendered')
+        } else {
+          if (chartType == 'area') {
+            chart.updateSeries([
+              {
+                type: chartType,
+                data: chartData,
+                name: tickerName
+              }
+            ])
+          } else {
+            chart.updateSeries([
+              {
+                type: chartType,
+                data: chartData
+              }
+            ])
+          }
+          console.log('Chart Updated')
+        }
+      }
+
+      async function fetchData(interval, symbol = selectedSymbol) {
+        let historical_data = {
+          method: 'GET',
+          url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v3/get-historical-data',
+          params: {
+            symbol: symbol,
+            region: 'US'
+          },
+          headers: {
+            'X-RapidAPI-Key': '<!-- please enter your own key -->',
+            'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
+          }
+        }
+
+        let quotes = {
+          method: 'GET',
+          url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes',
+          params: {
+            region: 'US',
+            symbols: symbol
+          },
+          headers: {
+            'X-RapidAPI-Key': '<!-- please enter your own key -->',
+            'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
+          }
+        }
+
+        if (interval === 'Weekly') {
+          historical_data.params.period1 = Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60
+        } else if (interval === 'Monthly') {
+          historical_data.params.period1 = Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60
+        } else {
+          historical_data.params.period1 = '0' //default at ALL
+        }
+
+        try {
+          const response = await axios.request(historical_data)
+          console.log(response)
+          const response_quotes = await axios.request(quotes)
+          const stockData = response.data
+          const quotesData = response_quotes.data
+
+          tickerName = quotesData.quoteResponse.result[0].shortName
+
+          // Extract the data you need for the chart from stockData
+          let chartData = stockData.prices.map((price) => ({
+            x: new Date(price.date * 1000), // Convert timestamp to Date
+            y: [
+              price.open.toFixed(2),
+              price.high.toFixed(2),
+              price.low.toFixed(2),
+              price.close.toFixed(2)
+            ]
+          }))
+
+          if (interval === 'Weekly') {
+            chartData = chartData.slice(-7)
+          } else if (interval === 'Monthly') {
+            chartData = chartData.slice(-30)
+          } else {
+            // No need to filter for "All"
+          }
+
+          document.getElementById(
+            'stockSymbol'
+          ).textContent = `Stock Symbol: ${tickerName} (${interval})`
+
+          return chartData
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      document.getElementById('snp500').addEventListener('click', () => {
+        selectedSymbol = '^GSPC'
+        fetchDataAndUpdateChart()
+      })
+      document.getElementById('nasdaq100').addEventListener('click', () => {
+        selectedSymbol = '^NDX'
+        fetchDataAndUpdateChart()
+      })
+      document.getElementById('dow30').addEventListener('click', () => {
+        selectedSymbol = '^DJI'
+        fetchDataAndUpdateChart()
+      })
+
+      document.getElementById('1wk').addEventListener('click', () => {
+        fetchDataAndUpdateChart('Weekly')
+      })
+      document.getElementById('1m').addEventListener('click', () => {
+        fetchDataAndUpdateChart('Monthly')
+      })
+      document.getElementById('allButton').addEventListener('click', () => {
+        fetchDataAndUpdateChart()
+      })
+
+      document.getElementById('candlestick').addEventListener('click', () => {
+        chartType = 'candlestick'
+        fetchDataAndUpdateChart()
+      })
+      document.getElementById('area').addEventListener('click', () => {
+        chartType = 'area'
+        fetchDataAndUpdateChart()
+      })
+
+      window.addEventListener(
+        'load',
+        () => {
+          selectedSymbol = '^GSPC'
+          fetchDataAndUpdateChart()
+        },
+        false
+      )
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
+    <script src="trending.js"></script>
+  </body>
+</html>
