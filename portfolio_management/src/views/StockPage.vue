@@ -64,19 +64,33 @@
     </button>
 
     <div class="container" id="comments-form">
-      <input type="text" id="name-box" placeholder="Enter name" />
-      <input type="text" id="comment-box" placeholder="Enter comment" />
-      <button id="post">Comment</button>
+      <input type="text" id="name-box" v-model="nameInput" placeholder="Enter name" />
+      <input type="text" id="comment-box" v-model="commentInput" placeholder="Enter comment" />
+      <button id="post" @click="addComment()">Comment</button>
       <div id="comments-section">
-        <!-- Comments section-->
+        <div class="card m-3" v-for="comment in comments">
+          <div class="card-body">
+            <h5 class="card-title">{{ comment.name }}</h5>
+            <p class="card-text">{{ comment.comment }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted} from 'vue';
-
+import { ref, reactive, onMounted} from 'vue';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  onSnapshot,
+  orderBy,
+  serverTimestamp,
+  query
+} from 'firebase/firestore'
 import { useRouter } from 'vue-router';
 const route = useRouter();
 var selectedSymbol = route.currentRoute.value.params.symbol;
@@ -93,8 +107,9 @@ const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
 onMounted(() => {
   curr_interval.value = 'All';
-  selectSymbol(selectedSymbol)
-  fetchNews(1, selectedSymbol)  
+  selectSymbol(selectedSymbol);
+  fetchNews(1, selectedSymbol);
+  getComments();  
 })
 
 const selectSymbol = (symbol) => {
@@ -128,7 +143,6 @@ const fetchDataAndUpdateChart = async (interval) => {
     }
   }
 };
-
 
 const renderChart = (chartData) => {
   if (!chart) {
@@ -192,7 +206,7 @@ async function fetchData(interval, symbol) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
+      'X-RapidAPI-Key': 'pls add it yourself ty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -205,7 +219,7 @@ async function fetchData(interval, symbol) {
       symbols: symbol
     },
     headers: {
-      'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
+      'X-RapidAPI-Key': 'pls add it yourself ty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -251,9 +265,6 @@ async function fetchData(interval, symbol) {
   }
 }
 
-
-
-
 const currentQuery = ref('Tesla');
 const currentPage = ref(1);
 const newsData = ref({ articles: [] });
@@ -294,7 +305,39 @@ const toggleShowMore = () => {
   showButtonValue.value = !showButtonValue.value;
 };
 
+const db = getFirestore();
+const commRef = collection(db, 'stock-comments');
+const q = query(commRef, orderBy('createdAt', 'desc'));
 
+var comments = reactive([]);
+var nameInput = ref('');
+var commentInput = ref('');
+
+const getComments = async () => {
+  onSnapshot(q, (querySnapshot) => {
+    if (comments.length > 0) {
+      comments = [];
+    }
+    querySnapshot.forEach((doc) => {
+      comments.push(doc.data());
+    });
+  });
+};
+
+const addComment = () => {
+  addDoc(commRef, {
+    name: nameInput.value,
+    comment: commentInput.value,
+    createdAt: serverTimestamp()
+  })
+    .then(() => {
+      nameInput.value = ''
+      commentInput.value = ''
+    })
+    .catch((error) => {
+      console.error('Error adding comment: ', error)
+    })
+};
 
 </script>
 

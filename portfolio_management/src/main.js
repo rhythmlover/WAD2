@@ -12,12 +12,12 @@ const firebaseConfig = {
   messagingSenderId: '135258660698',
   appId: '1:135258660698:web:de8552be48855a29621d63',
   measurementId: 'G-P2WY9RPN04'
-}
+};
 
-initializeApp(firebaseConfig)
+initializeApp(firebaseConfig);
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(router)
+app.use(router);
 
-app.mount('#app')
+app.mount('#app');
