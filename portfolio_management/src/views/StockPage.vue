@@ -2,7 +2,7 @@
   <div class="container-fluid text-center">
     <div class="container">
       <!-- Display the selected stock symbol -->
-      <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
+      <h1 id="stockSymbol">{{`Stock Symbol: ${selectedSymbol} (${curr_interval})` }}</h1>
     </div>
 
     <div class="container" id="chart">
@@ -33,7 +33,7 @@
           <div v-for="article in newsData.articles.slice(0, 2)" :key="article.title" class="col-lg-6">
             <div class="card m-2" style="width:40rem">
               <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
-              <div class="card-body">
+              <div class="card-body" style="height: 200px;">
                 <h5 class="card-title">{{ article.title }}</h5>
                 <p v-if="article.description" class="card-text">{{ article.description.slice(0, 100) }}...</p>
                 <a :href="article.url" target="_blank" class="btn btn-primary">Read Article</a>
@@ -49,7 +49,7 @@
           <div v-for="article in newsData.articles.slice(2)" :key="article.title" class="col-lg-6">
             <div class="card m-2" style="width:40rem">
               <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
-              <div class="card-body">
+              <div class="card-body" style="height: 200px;">
                 <h5 class="card-title">{{ article.title }}</h5>
                 <p v-if="article.description" class="card-text">{{ article.description.slice(0, 100) }}...</p>
                 <a :href="article.url" target="_blank" class="btn btn-primary">Read Article</a>
@@ -75,27 +75,33 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted} from 'vue';
 
+import { useRouter } from 'vue-router';
+const route = useRouter();
+var selectedSymbol = route.currentRoute.value.params.symbol;
 
 var chart = null
 var chartType = 'candlestick'
 
-var tickerName = ref('');
+var tickerName = ref(selectedSymbol);
 var tickerSymbol = ref('');
 var curr_interval = ref('');
+
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
 onMounted(() => {
   curr_interval.value = 'All';
-  selectSymbol('TSLA')
+  selectSymbol(selectedSymbol)
+  fetchNews(1, selectedSymbol)  
 })
 
 const selectSymbol = (symbol) => {
   tickerSymbol.value = symbol;
   fetchDataAndUpdateChart(curr_interval.value);
 };
+
 
 const fetchDataAndUpdateChart = async (interval) => {
   curr_interval.value = interval;
@@ -265,7 +271,7 @@ const fetchNews = async (page, q) => {
   }
 };
 
-fetchNews(currentPage.value, currentQuery.value);
+// fetchNews(currentPage.value, currentQuery.value);
 
 const search = () => {
   currentQuery.value = searchInput.value;
@@ -292,3 +298,34 @@ const toggleShowMore = () => {
 
 </script>
 
+
+<style>
+.custom-card {
+  width: 20rem;
+  height: 30rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.custom-card .card-title {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+}
+
+.custom-card .card-text {
+  font-size: 1rem;
+  color: #555;
+}
+
+.custom-card .btn-primary {
+  margin-top: 1rem;
+}
+</style>
