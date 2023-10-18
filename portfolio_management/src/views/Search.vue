@@ -1,8 +1,3 @@
-
-
-
-
-
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -22,12 +17,9 @@
 
           <tr v-for="quote in gainers.quotes">
             <td>
-
               <RouterLink :to="{ name: 'stockpage', params: { symbol: quote.symbol } }">
                 {{ quote.symbol }}
               </RouterLink>
-
-
             </td>
             <td>
               {{ quote.shortName }}
@@ -120,22 +112,17 @@
       </div>
     </div>
   </div>
-
-  <!-- <div v-for="quote in gainers.quotes">
-    {{ quote }} 
-  </div> -->
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-// import { stockpage } from './StockPage.vue'
+
+onMounted(() => {
+  run()
+})
 
 const props = defineProps(['stockSymbol'])
-
-// const gainerList = ref([])
-// const loserList = ref([])
-// const activeList = ref([])
 
 console.log(gainers)
 var gainers = ref('')
@@ -144,7 +131,7 @@ var active = ref('')
 var options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
+    'X-RapidAPI-Key': 'empty',
     'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
   }
 }
@@ -153,19 +140,11 @@ const url1 = 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symb
 const url2 = 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=DAY_LOSERS&start=0&count=100'
 const url3 = 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=MOST_ACTIVES&start=0&count=100'
 
-onMounted(() => {
-  run()
-})
-
 async function run() {
   try {
 
     const responses = await Promise.all([fetch(url1, options), fetch(url2, options), fetch(url3, options)])
     const results = await Promise.all(responses.map(res => res.json()))
-
-    // let stockList = []
-    // let addhtml = ''
-
 
     const [result1, result2, result3] = results
     gainers.value = result1.finance.result[0]

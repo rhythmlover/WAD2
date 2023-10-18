@@ -28,7 +28,6 @@
         <div class="col-3" id="chart-type">
           <button id="candlestick" @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">Candlestick</button>
           <button id="area" @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">Area</button>
-          <button id="clearlocalstorage" @click="localStorage.clear()">Clear Local Storage</button>
         </div>
       </div>
     </div>
@@ -44,6 +43,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
+onMounted(() => {
+  curr_interval.value = 'All';
+  selectSymbol('^GSPC');
+});
+
+// CHART SECTION
 var chart = null;
 var chartType = 'candlestick';
 var tickerName = ref('');
@@ -51,11 +56,6 @@ var tickerSymbol = ref('');
 var curr_interval = ref('');
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {};
-
-onMounted(() => {
-  curr_interval.value = 'All';
-  selectSymbol('^GSPC');
-});
 
 const selectSymbol = (symbol) => {
   tickerSymbol.value = symbol;
@@ -149,7 +149,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -162,7 +162,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -197,7 +197,7 @@ async function fetchData(interval, symbol_selected) {
     } else if (interval === 'Monthly') {
       chartData = chartData.slice(-30)
     } else {
-      // No need to filter for "All"
+      chartData = chartData
     }
     
     return chartData
