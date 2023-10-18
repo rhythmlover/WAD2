@@ -2,7 +2,7 @@
   <div class="container-fluid text-center">
     <div class="container">
       <!-- Display the selected stock symbol -->
-      <h1 id="stockSymbol">{{`Stock Symbol: ${selectedSymbol} (${curr_interval})` }}</h1>
+      <h1 id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} (${curr_interval})` }}</h1>
     </div>
 
     <div class="container" id="chart">
@@ -28,7 +28,6 @@
     <div class="container">
       <div class="container-fluid" id="news">
         <!-- only first 2 will show -->
-
         <div class="row">
           <div v-for="article in newsData.articles.slice(0, 2)" :key="article.title" class="col-lg-6">
             <div class="card m-2" style="width:40rem">
@@ -41,7 +40,6 @@
             </div>
           </div>
         </div>
-
 
       </div>
       <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
@@ -80,43 +78,43 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted} from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import {
   getFirestore,
   collection,
-  getDocs,
   addDoc,
   onSnapshot,
   orderBy,
   serverTimestamp,
-  query
+  query,
 } from 'firebase/firestore'
 import { useRouter } from 'vue-router';
-const route = useRouter();
-var selectedSymbol = route.currentRoute.value.params.symbol;
 
-var chart = null
-var chartType = 'candlestick'
-
-var tickerName = ref(selectedSymbol);
-var tickerSymbol = ref('');
-var curr_interval = ref('');
-
-
-const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
-
+// INITIALIZE
 onMounted(() => {
   curr_interval.value = 'All';
   selectSymbol(selectedSymbol);
   fetchNews(1, selectedSymbol);
-  getComments();  
+  getComments();
 })
+
+// ROUTING
+const route = useRouter();
+var selectedSymbol = route.currentRoute.value.params.symbol;
+
+// CHART SECTION
+var chart = null
+var chartType = 'candlestick'
+var tickerName = ref(selectedSymbol);
+var tickerSymbol = ref('');
+var curr_interval = ref('');
+
+const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
 const selectSymbol = (symbol) => {
   tickerSymbol.value = symbol;
   fetchDataAndUpdateChart(curr_interval.value);
 };
-
 
 const fetchDataAndUpdateChart = async (interval) => {
   curr_interval.value = interval;
@@ -171,7 +169,6 @@ const renderChart = (chartData) => {
       },
     };
 
-
     // Render the chart
     chart = new ApexCharts(document.querySelector('#chart'), chartOptions)
     chart.render()
@@ -206,7 +203,7 @@ async function fetchData(interval, symbol) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'pls add it yourself ty',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -219,7 +216,7 @@ async function fetchData(interval, symbol) {
       symbols: symbol
     },
     headers: {
-      'X-RapidAPI-Key': 'pls add it yourself ty',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -240,7 +237,6 @@ async function fetchData(interval, symbol) {
 
     tickerName.value = quotesData.quoteResponse.result[0].shortName;
 
-    // Extract the data you need for the chart from stockData
     let chartData = stockData.prices.map((price) => ({
       x: new Date(price.date * 1000), // Convert timestamp to Date
       y: [
@@ -256,7 +252,7 @@ async function fetchData(interval, symbol) {
     } else if (interval === 'Monthly') {
       chartData = chartData.slice(-30);
     } else {
-      // No need to filter for "All"
+      chartData = chartData;
     }
 
     return chartData;
@@ -265,6 +261,7 @@ async function fetchData(interval, symbol) {
   }
 }
 
+// NEWS SECTION
 const currentQuery = ref('Tesla');
 const currentPage = ref(1);
 const newsData = ref({ articles: [] });
@@ -305,9 +302,10 @@ const toggleShowMore = () => {
   showButtonValue.value = !showButtonValue.value;
 };
 
+// COMMENTS SECTION
 const db = getFirestore();
-const commRef = collection(db, 'stock-comments');
-const q = query(commRef, orderBy('createdAt', 'desc'));
+const commentsRef = collection(db, selectedSymbol);
+const q = query(commentsRef, orderBy('createdAt', 'desc'));
 
 var comments = reactive([]);
 var nameInput = ref('');
@@ -325,7 +323,7 @@ const getComments = async () => {
 };
 
 const addComment = () => {
-  addDoc(commRef, {
+  addDoc(commentsRef, {
     name: nameInput.value,
     comment: commentInput.value,
     createdAt: serverTimestamp()
@@ -338,37 +336,4 @@ const addComment = () => {
       console.error('Error adding comment: ', error)
     })
 };
-
 </script>
-
-
-<style>
-.custom-card {
-  width: 20rem;
-  height: 30rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.custom-card .card-img-top {
-  height: 200px;
-  object-fit: cover;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-
-.custom-card .card-title {
-  font-size: 1.25rem;
-  margin-top: 1rem;
-}
-
-.custom-card .card-text {
-  font-size: 1rem;
-  color: #555;
-}
-
-.custom-card .btn-primary {
-  margin-top: 1rem;
-}
-</style>
