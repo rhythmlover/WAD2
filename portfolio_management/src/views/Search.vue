@@ -1,155 +1,228 @@
 <template>
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-4 box">
-        <table ref="gainerList" class="table table-dark">
-          <tr>
-            <th ref="gainer" colspan="4">
-              <h1>Top Gainers</h1>
-            </th>
-          </tr>
-          <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>%</th>
-          </tr>
-
-          <tr v-for="quote in gainers.quotes">
-            <td>
-              <RouterLink :to="{ name: 'stockpage', params: { symbol: quote.symbol } }">
-                {{ quote.symbol }}
-              </RouterLink>
-            </td>
-            <td>
-              {{ quote.shortName }}
-            </td>
-            <td>
-              {{ quote.regularMarketPrice.fmt }}
-            </td>
-            <td class='text-success'>
-              {{ quote.regularMarketChangePercent.fmt }}
-            </td>
-          </tr>
-
-
-
-
-        </table>
+    <div class="row justify-content-center">
+      <div class="col-8 my-4">
+        <div class="input-group rounded">
+          <input
+            type="search"
+            class="form-control rounded"
+            placeholder="Search"
+            v-model="searchInput"
+            @keyup="updateTable"
+          />
+        </div>
       </div>
-      <div class="col-4 box">
-        <table ref="loserList" class="table table-dark">
-          <tr>
-            <th ref="loser" colspan="4">
-              <h1>Top Losers</h1>
-            </th>
-          </tr>
-          <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>%</th>
-          </tr>
-
-          <tr v-for="quote in losers.quotes">
-            <td>
-
-              <RouterLink :to="{ name: 'stockpage', params: { symbol: quote.symbol } }">
-                <!-- <stockpage :selectedSymbol="quote.symbol" />  -->
-                {{ quote.symbol }}
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-8">
+        <table ref="activeList" class="table table-light table-hover" v-show="showActive">
+          <thead>
+            <tr>
+              <th ref="active" colspan="4">
+                <h3 style="text-align: center">Most Active</h3>
+              </th>
+            </tr>
+            <tr>
+              <th ref="active" colspan="4">
+                <div class="row mx-auto">
+                  <div class="col-3">
+                    <th>Symbol</th>
+                  </div>
+                  <div class="col-3">
+                    <th>Name</th>
+                  </div>
+                  <div class="col-3">
+                    <th>Price</th>
+                  </div>
+                  <div class="col-3">
+                    <th>Volume</th>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="stock in activeStockList" :key="stock.symbol">
+              <RouterLink
+                :to="{ name: 'stockpage', params: { symbol: stock.symbol } }"
+                style="text-decoration: none"
+              >
+                <div class="row mx-auto table-row-link">
+                  <div class="col-3">
+                    <tr>
+                      <td>{{ stock.symbol }}</td>
+                    </tr>
+                  </div>
+                  <div class="col-3">
+                    <tr>
+                      <td>{{ stock.shortName }}</td>
+                    </tr>
+                  </div>
+                  <div class="col-3">
+                    <tr>
+                      <td>{{ stock.price }}</td>
+                    </tr>
+                  </div>
+                  <div class="col-3">
+                    <tr>
+                      <td>{{ stock.volume }}</td>
+                    </tr>
+                  </div>
+                </div>
               </RouterLink>
-
-            </td>
-            <td>
-              {{ quote.shortName }}
-            </td>
-            <td>
-              {{ quote.regularMarketPrice.fmt }}
-            </td>
-            <td class='text-success'>
-              {{ quote.regularMarketChangePercent.fmt }}
-            </td>
-          </tr>
-
+            </template>
+          </tbody>
         </table>
-      </div>
-      <div class="col-4 box">
-        <table ref="activeList" class="table table-dark">
-          <tr>
-            <th ref="active" colspan="4">
-              <h1>Most Active</h1>
-            </th>
-          </tr>
-          <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Volume</th>
-          </tr>
-
-          <tr v-for="quote in active.quotes">
-            <td>
-
-              <RouterLink :to="{ name: 'stockpage', params: { symbol: quote.symbol } }">
-                <!-- <stockpage :selectedSymbol="quote.symbol" />  -->
-                {{ quote.symbol }}
+        <table ref="searchList" class="table table-light" v-show="showSearch">
+          <thead>
+            <tr>
+              <th ref="search" colspan="4">
+                <div class="row justify-content-between mx-auto">
+                  <div class="col-3">
+                    <h3 style="text-align: center">Search Results</h3>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th ref="active" colspan="4">
+                <div class="row mx-auto">
+                  <div class="col-4">
+                    <th>Symbol</th>
+                  </div>
+                  <div class="col-4">
+                    <th>Name</th>
+                  </div>
+                  <div class="col-4">
+                    <th>Exchange</th>
+                  </div>
+                </div>
+              </th>
+            </tr>
+            <template v-for="stock in searchedStocks" :key="stock.symbol">
+              <RouterLink
+                :to="{ name: 'stockpage', params: { symbol: stock.symbol } }"
+                style="text-decoration: none"
+              >
+                <div class="row table-row-link mx-auto">
+                  <div class="col-4">
+                    <tr>
+                      <td>{{ stock.symbol }}</td>
+                    </tr>
+                  </div>
+                  <div class="col-4">
+                    <tr>
+                      <td>{{ stock.name }}</td>
+                    </tr>
+                  </div>
+                  <div class="col-4">
+                    <tr>
+                      <td>{{ stock.exchange }}</td>
+                    </tr>
+                  </div>
+                </div>
               </RouterLink>
-
-
-            </td>
-            <td>
-              {{ quote.shortName }}
-            </td>
-            <td>
-              {{ quote.regularMarketPrice.fmt }}
-            </td>
-            <td class='text-success'>
-              {{ quote.regularMarketChangePercent.fmt }}
-            </td>
-          </tr>
-
+            </template>
+          </tbody>
         </table>
       </div>
     </div>
   </div>
 </template>
 
+<style>
+.table-row-link:hover {
+  background-color: lightgrey;
+  /* Change to your desired color */
+}
+</style>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 
-onMounted(() => {
-  run()
-})
+const activeStockList = ref([])
+var showActive = ref(true)
+const searchList = ref(null)
+var searchInput = ref('')
+var showSearch = ref(false)
+const resultsAll = ref([])
+const searchedStocks = ref([])
 
-const props = defineProps(['stockSymbol'])
-
-console.log(gainers)
-var gainers = ref('')
-var losers = ref('')
-var active = ref('')
-var options = {
+const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': 'empty',
+    'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
     'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
   }
 }
 
-const url1 = 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=DAY_GAINERS&start=0&count=100'
-const url2 = 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=DAY_LOSERS&start=0&count=100'
-const url3 = 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=MOST_ACTIVES&start=0&count=100'
+const url =
+  'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=MOST_ACTIVES&start=0&count=100'
+
+const optionsAll = {
+  method: 'GET',
+  params: {
+    country: 'US',
+    format: 'json'
+  },
+  headers: {
+    'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
+    'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
+  }
+}
+
+const urlAll = 'https://twelve-data1.p.rapidapi.com/stocks?country=US'
+
+onMounted(() => {
+  run()
+  getAllStock()
+})
+
+const updateTable = () => {
+  if (searchInput.value.trim() === '') {
+    showActive.value = true
+    showSearch.value = false
+  } else {
+    showActive.value = false
+    showSearch.value = true
+  }
+  const filteredStocks = resultsAll.value[0].data.filter((stock) => {
+    return (
+      stock.symbol.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+      stock.name.toLowerCase().includes(searchInput.value.toLowerCase())
+    )
+  })
+  searchedStocks.value = filteredStocks
+}
 
 async function run() {
   try {
+    const responses = await fetch(url, options)
+    const results = await responses.json()
 
-    const responses = await Promise.all([fetch(url1, options), fetch(url2, options), fetch(url3, options)])
-    const results = await Promise.all(responses.map(res => res.json()))
+    let active = results.finance.result[0]
+    let stockList = active.quotes.map((quote) => ({
+      symbol: quote.symbol,
+      shortName: quote.shortName,
+      price: quote.regularMarketPrice.fmt,
+      volume: quote.regularMarketVolume.fmt
+    }))
 
-    const [result1, result2, result3] = results
-    gainers.value = result1.finance.result[0]
-    losers.value = result2.finance.result[0]
-    active.value = result3.finance.result[0]
+    activeStockList.value = stockList
+    console.log(activeList.value)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+async function getAllStock() {
+  try {
+    const responsesAll = await Promise.all([fetch(urlAll, optionsAll)])
+    resultsAll.value = await Promise.all(responsesAll.map((res) => res.json()))
+    console.log(resultsAll.value)
   } catch (error) {
     console.error(error)
   }
@@ -158,182 +231,4 @@ async function run() {
 function AssignValue(symbol) {
   selectedSymbol = symbol
 }
-
 </script>
-
-
-
-
-
-<style>
-.box {
-  background-color: black;
-}
-
-.bull {
-  color: green;
-}
-
-.bear {
-  color: red;
-}
-
-th {
-  text-align: center;
-}
-
-td {
-  text-align: center;
-}
-</style>
-
-
-
-    <!-- <template>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-4 box">
-            <table ref="gainerList" class="table table-dark">
-              <tr>
-                <th ref="gainer" colspan="4">
-                  <h1>Top Gainers</h1>
-                </th>
-              </tr>
-              <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>%</th>
-              </tr>
-              <tr v-for="quote in gainerQuotes" :key="quote.symbol">
-                <td>
-                  <router-link :to="{ name: 'StockPage', params: { symbol: quote.symbol }}">
-                    {{ quote.symbol }}
-                  </router-link>
-                </td>
-                <td>{{ quote.shortName }}</td>
-                <td>{{ quote.regularMarketPrice.fmt }}</td>
-                <td class="text-success">{{ quote.regularMarketChangePercent.fmt }}</td>
-              </tr>
-            </table>
-          </div>
-          <div class="col-4 box">
-            <table ref="loserList" class="table table-dark">
-              <tr>
-                <th ref="loser" colspan="4">
-                  <h1>Top Losers</h1>
-                </th>
-              </tr>
-              <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>%</th>
-              </tr>
-              <tr v-for="quote in loserQuotes" :key="quote.symbol">
-                <td>
-                  <router-link :to="{ name: 'StockPage', params: { symbol: quote.symbol }}">
-                    {{ quote.symbol }}
-                  </router-link>
-                </td>
-                <td>{{ quote.shortName }}</td>
-                <td>{{ quote.regularMarketPrice.fmt }}</td>
-                <td class="text-danger">{{ quote.regularMarketChangePercent.fmt }}</td>
-              </tr>
-            </table>
-          </div>
-          <div class="col-4 box">
-            <table ref="activeList" class="table table-dark">
-              <tr>
-                <th ref="active" colspan="4">
-                  <h1>Most Active</h1>
-                </th>
-              </tr>
-              <tr>
-                <th>Symbol</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Volume</th>
-              </tr>
-              <tr v-for="quote in activeQuotes" :key="quote.symbol">
-                <td>
-                  <router-link :to="{ name: '/StockPage', params: { symbol: quote.symbol }}">
-                    {{ quote.symbol }}
-                  </router-link>
-                </td>
-                <td>{{ quote.shortName }}</td>
-                <td>{{ quote.regularMarketPrice.fmt }}</td>
-                <td class="text-info">{{ quote.regularMarketVolume.fmt }}</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </template>
-    
-    <script setup>
-    import { ref, onMounted } from 'vue';
-    
-    
-    const gainerList = ref(null);
-    const loserList = ref(null);
-    const activeList = ref(null);
-    
-    const options = {
-      method: 'GET',
-      headers: {
-        'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
-        'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
-      }
-    };
-    
-    const url1 =
-      'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=DAY_GAINERS&start=0&count=100';
-    const url2 =
-      'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=DAY_LOSERS&start=0&count=100';
-    const url3 =
-      'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=MOST_ACTIVES&start=0&count=100';
-    
-    let gainerQuotes = ref([]);
-    let loserQuotes = ref([]);
-    let activeQuotes = ref([]);
-    
-    onMounted(async () => {
-      try {
-        const [result1, result2, result3] = await Promise.all([
-          axios.get(url1, options),
-          axios.get(url2, options),
-          axios.get(url3, options)
-        ]);
-    
-        gainerQuotes.value = result1.data.finance.result[0].quotes;
-        loserQuotes.value = result2.data.finance.result[0].quotes;
-        activeQuotes.value = result3.data.finance.result[0].quotes;
-      } catch (error) {
-        console.error(error);
-      }
-    });
-    </script>
-    
-    <style>
-    .box {
-      background-color: black;
-    }
-    
-    .bull {
-      color: green;
-    }
-    
-    .bear {
-      color: red;
-    }
-    
-    th {
-      text-align: center;
-    }
-    
-    td {
-      text-align: center;
-    }
-    </style> -->
-    
