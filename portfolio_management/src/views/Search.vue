@@ -15,7 +15,7 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-8">
-        <table ref="activeList" class="table table-light table-hover" v-show="showActive">
+        <table class="table table-light table-hover" v-show="showActive">
           <thead>
             <tr>
               <th ref="active">
@@ -229,7 +229,6 @@ async function run() {
     }));
 
     activeStockList.value = stockList
-    console.log(activeList.value)
   } catch (error) {
     console.error(error);
   }
