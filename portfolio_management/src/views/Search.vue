@@ -127,9 +127,30 @@
             </template>
           </tbody>
         </table>
+          <table ref="searchList" class="table table-light table-hover" v-show="showSearch">
+          <thead>
+            <tr>
+            <th ref="search" colspan="3">
+              <h3>Search Results</h3>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Symbol</th>
+              <th>Name</th>
+              <th>Exchange</th>
+            </tr>
+            <tr v-for="stock in searchedStocks" :key="stock.symbol">
+              <td>{{ stock.symbol }}</td>
+              <td>{{ stock.name }}</td>
+              <td>{{ stock.exchange }}</td>
+            </tr>
+          </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <style>
@@ -209,12 +230,22 @@ async function run() {
       shortName: quote.shortName,
       price: quote.regularMarketPrice.fmt,
       volume: quote.regularMarketVolume.fmt
-    }))
+    }));
 
     activeStockList.value = stockList
     console.log(activeList.value)
   } catch (error) {
-    console.error(error)
+    console.error(error);
+  }
+}
+
+async function getAllStock() {
+  try {
+    const responsesAll = await Promise.all([fetch(urlAll, optionsAll)])
+    resultsAll.value = await Promise.all(responsesAll.map(res => res.json()))
+    console.log(resultsAll.value);
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -226,9 +257,5 @@ async function getAllStock() {
   } catch (error) {
     console.error(error)
   }
-}
-
-function AssignValue(symbol) {
-  selectedSymbol = symbol
 }
 </script>
