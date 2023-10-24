@@ -18,7 +18,7 @@
         <table ref="activeList" class="table table-light table-hover" v-show="showActive">
           <thead>
             <tr>
-              <th ref="active" colspan="4">
+              <th ref="active">
                 <h3 style="text-align: center">Most Active</h3>
               </th>
             </tr>
@@ -76,12 +76,8 @@
         <table ref="searchList" class="table table-light" v-show="showSearch">
           <thead>
             <tr>
-              <th ref="search" colspan="4">
-                <div class="row justify-content-between mx-auto">
-                  <div class="col-3">
-                    <h3 style="text-align: center">Search Results</h3>
-                  </div>
-                </div>
+              <th ref="search">
+                <h3 style="text-align: center">Search Results</h3>
               </th>
             </tr>
           </thead>
