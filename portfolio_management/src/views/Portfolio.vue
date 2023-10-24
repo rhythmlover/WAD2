@@ -116,7 +116,7 @@ const finalBeta = () => {
   }
 
   for (let i = 0; i < betaList.length; i++) {
-    totalBeta += betaList[i] * weightedList[i];
+    totalBeta.value += betaList[i] * weightedList[i];
   }
 
   showBeta.value = true;

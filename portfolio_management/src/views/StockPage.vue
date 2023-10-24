@@ -203,7 +203,7 @@ async function fetchData(interval, symbol) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -216,7 +216,7 @@ async function fetchData(interval, symbol) {
       symbols: symbol
     },
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
