@@ -150,13 +150,13 @@ const searchedStocks = ref([])
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
+    'X-RapidAPI-Key': 'ba7b0fde8dmshd20587e7d1e1e9bp181bb2jsnbf1afc5de773',
     'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
   }
 }
 
 const url =
-  'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=MOST_ACTIVES&start=0&count=100'
+  'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=MOST_ACTIVES&start=0&count=50'
 
 const optionsAll = {
   method: 'GET',
@@ -165,7 +165,7 @@ const optionsAll = {
     format: 'json'
   },
   headers: {
-    'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
+    'X-RapidAPI-Key': 'ba7b0fde8dmshd20587e7d1e1e9bp181bb2jsnbf1afc5de773',
     'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
   }
 }
@@ -185,13 +185,16 @@ const updateTable = () => {
     showActive.value = false
     showSearch.value = true
   }
-  const filteredStocks = resultsAll.value[0].data.filter((stock) => {
-    return (
-      stock.symbol.toLowerCase().includes(searchInput.value.toLowerCase()) ||
-      stock.name.toLowerCase().includes(searchInput.value.toLowerCase())
-    )
-  })
-  searchedStocks.value = filteredStocks
+  if (showSearch.value === true) {
+    const filteredStocks = resultsAll.value[0].data.filter((stock) => {
+      return (
+        stock.symbol.toLowerCase().includes(searchInput.value.toLowerCase()) ||
+        stock.name.toLowerCase().includes(searchInput.value.toLowerCase())
+      )
+    })
+    searchedStocks.value = filteredStocks.slice(0, 100)
+    console.log('run')
+  }
 }
 
 async function run() {
@@ -208,6 +211,7 @@ async function run() {
     }))
 
     activeStockList.value = stockList
+    console.log(stockList)
   } catch (error) {
     console.error(error)
   }
