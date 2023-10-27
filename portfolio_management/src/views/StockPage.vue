@@ -1,8 +1,8 @@
 <template>
-  <div class="container-fluid text-center">
+  <div class="container-fluid text-center mt-7">
     <div class="container">
       <!-- Display the selected stock symbol -->
-      <h1 id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} (${curr_interval})` }}</h1>
+      <h1 id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} ${selectedName }(${curr_interval})` }}</h1>
     </div>
 
     <div class="container" id="chart">
@@ -29,7 +29,7 @@
       <div class="container-fluid" id="news">
         <!-- only first 2 will show -->
         <div class="row">
-          <div v-for="article in newsData.articles.slice(0, 2)" :key="article.title" class="col-lg-6">
+          <div v-for="article in newsData.articles.slice(0, 2)" :key="article.title" class="col-xxl-6">
             <div class="card m-2" style="width:40rem">
               <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
               <div class="card-body" style="height: 200px;">
@@ -44,7 +44,7 @@
       </div>
       <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
         <div class="row justify-cotent-center">
-          <div v-for="article in newsData.articles.slice(2)" :key="article.title" class="col-lg-6">
+          <div v-for="article in newsData.articles.slice(2)" :key="article.title" class="col-xxl-6">
             <div class="card m-2" style="width:40rem">
               <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
               <div class="card-body" style="height: 200px;">
@@ -101,11 +101,11 @@ onMounted(() => {
 // ROUTING
 const route = useRouter();
 var selectedSymbol = route.currentRoute.value.params.symbol;
-
+var selectedName = route.currentRoute.value.params.name;
 // CHART SECTION
 var chart = null
 var chartType = 'candlestick'
-var tickerName = ref(selectedSymbol);
+var tickerName = ref(selectedName);
 var tickerSymbol = ref('');
 var curr_interval = ref('');
 
@@ -203,7 +203,7 @@ async function fetchData(interval, symbol) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
+      'X-RapidAPI-Key': '6da3574d9cmsh2f06bbb69119e81p1b4af4jsn3e2517723248',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -216,7 +216,7 @@ async function fetchData(interval, symbol) {
       symbols: symbol
     },
     headers: {
-      'X-RapidAPI-Key': 'ffa142738emsh5efab3a432e8f94p17e56djsn3cffa46a4bfe',
+      'X-RapidAPI-Key': '6da3574d9cmsh2f06bbb69119e81p1b4af4jsn3e2517723248',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -236,14 +236,14 @@ async function fetchData(interval, symbol) {
     const quotesData = response_quotes.data;
 
     tickerName.value = quotesData.quoteResponse.result[0].shortName;
-
+    console.log(stockData)
     let chartData = stockData.prices.map((price) => ({
       x: new Date(price.date * 1000), // Convert timestamp to Date
       y: [
-        price.open.toFixed(2),
-        price.high.toFixed(2),
-        price.low.toFixed(2),
-        price.close.toFixed(2)
+        Number(price.open).toFixed(2),
+        Number(price.high).toFixed(2),
+        Number(price.low).toFixed(2),
+        Number(price.close).toFixed(2)
       ]
     }));
 
@@ -262,7 +262,7 @@ async function fetchData(interval, symbol) {
 }
 
 // NEWS SECTION
-const currentQuery = ref('Tesla');
+const currentQuery = ref('');
 const currentPage = ref(1);
 const newsData = ref({ articles: [] });
 const showButtonValue = ref(false);

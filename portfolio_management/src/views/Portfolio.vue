@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mt-7">
     Ticker Symbol: <input type="text" v-model="tickerSymbol" /><span v-if="error_msg.length">{{ error_msg }}</span><br />
     Number of Shares Bought: <input type="number" v-model="numberOfShares" /><br />
     Purchase Price: <input type="text" v-model="purchasePrice" /><br />

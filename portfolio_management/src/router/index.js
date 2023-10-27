@@ -8,7 +8,7 @@ const router = createRouter({
     { path: '/login', component: () => import('../views/Login.vue') },
     { path: '/markets', component: () => import('../views/Markets.vue') },
     { path: '/stockList', component: () => import('../views/Search.vue') },
-    { name:'stockpage', path: '/stockpage/:symbol', component: () => import('../views/StockPage.vue') }
+    { name:'stockpage', path: '/stockpage/:symbol/:name', component: () => import('../views/StockPage.vue') }
   ]
 })
 
