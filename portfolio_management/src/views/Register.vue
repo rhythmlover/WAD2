@@ -1,11 +1,4 @@
 <template>
-  <!-- <h1>Create an Account</h1>
-  <p><input type="text" placeholder="username" v-model="username" /></p>
-  <p><input type="text" placeholder="email" v-model="email" /></p>
-  <p><input type="password" placeholder="password" v-model="password" /></p>
-  <p><button @click="register">Register</button></p>
-  <p><router-link to="/login">Already have an account?</router-link></p> -->
-
   <main class="main-content mt-0">
     <!-- min-vh-100 to scroll -->
     <section>
@@ -31,22 +24,20 @@
               <div class="card-body">
                 <form role="form text-left">
                   <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Name" aria-label="Name"
-                      aria-describedby="email-addon">
+                    <input type="text" class="form-control" placeholder="Name" v-model="username">
                   </div>
                   <div class="mb-3">
-                    <input type="email" class="form-control" placeholder="Email" aria-label="Email"
-                      aria-describedby="email-addon">
+                    <input type="email" class="form-control" placeholder="Email" v-model="email">
                   </div>
                   <div class="mb-3">
-                    <input type="password" class="form-control" placeholder="Password" aria-label="Password"
-                      aria-describedby="password-addon">
+                    <input type="password" class="form-control" placeholder="Password" v-model="password">
                   </div>
                   <div class="text-center">
-                    <button type="button" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign up</button>
+                    <button type="button" class="btn bg-gradient-dark w-100 my-4 mb-2" @click="register">Sign up</button>
                   </div>
-                  <p class="text-sm mt-3 mb-0">Already have an account? 
-                    <router-link to="/login" class="text-dark font-weight-bolder">Sign In</router-link></p>
+                  <p class="text-sm mt-3 mb-0">Already have an account?
+                    <router-link to="/login" class="text-dark font-weight-bolder">Sign In</router-link>
+                  </p>
                 </form>
               </div>
             </div>
@@ -61,26 +52,31 @@
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 const username = ref('')
 const email = ref('')
 const password = ref('')
 const router = useRouter()
 
+const db = getFirestore();
+const usersCollection = collection(db, 'users');
+
 const register = () => {
   createUserWithEmailAndPassword(getAuth(), email.value, password.value)
     .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user
-      console.log(user)
+      const userUID = userCredential.user.uid
+      addDoc(usersCollection, {
+        username: username.value,
+        email: email.value,
+        uid: userUID
+      })
       router.push('/login')
-      // ...
     })
     .catch((error) => {
       const errorCode = error.code
       const errorMessage = error.message
       console.log(errorCode, errorMessage)
-      // ..
     })
 }
 </script>

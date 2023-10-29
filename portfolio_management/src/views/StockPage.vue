@@ -111,6 +111,13 @@ var curr_interval = ref('');
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
+onMounted(() => {
+  curr_interval.value = 'All';
+  selectSymbol(selectedSymbol);
+  fetchNews(1, selectedSymbol);
+  getComments();
+})
+
 const selectSymbol = (symbol) => {
   tickerSymbol.value = symbol;
   fetchDataAndUpdateChart(curr_interval.value);

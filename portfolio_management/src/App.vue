@@ -8,7 +8,8 @@
     class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-10">
     <div class="container-fluid pe-0">
       <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3">
-        Portfolio Management
+        <span v-if="isLoggedIn">{{ username }}</span>
+        <span v-if="!isLoggedIn">Portfolio Management</span>
       </a>
       <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation"
         aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,21 +75,42 @@ import { RouterLink, RouterView } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
+import {
+  getFirestore,
+  collection,
+  getDocs,
+} from 'firebase/firestore'
 
-const isLoggedIn = ref(false)
+const isLoggedIn = ref(true)
 const router = useRouter()
+var username = ref('')
+var uid = ''
 
-let auth
+var auth = getAuth();
+
+const db = getFirestore();
+const userRef = collection(db, 'users');
+
 onMounted(() => {
-  auth = getAuth()
   onAuthStateChanged(auth, (user) => {
     if (user) {
+      uid = user.uid;
+      userDetailsInit() 
       isLoggedIn.value = true
     } else {
       isLoggedIn.value = false
     }
   })
 })
+
+const userDetailsInit = async () => {
+  const querySnapshot = await getDocs(userRef);
+  querySnapshot.forEach((doc) => {
+    if (doc.data().uid == uid) {
+      username.value = doc.data().username
+    }
+  });
+}
 
 const handleLogIn = () => {
   router.push('/login')

@@ -33,9 +33,3 @@ npm run build
 ```sh
 npm run lint
 ```
-
-### Compile webpack (Nigel's database bundler)
-
-```sh
-npm run webpack
-```

@@ -1,11 +1,4 @@
 <template>
-  <!-- <h1>Login</h1>
-  <p><input type="text" placeholder="email" v-model="email" /></p>
-  <p><input type="password" placeholder="password" v-model="password" /></p>
-  <p v-if="errMsg">{{ errMsg }}</p>
-  <p><button @click="login">Login</button></p>
-  <p><router-link to="/register">Create an Account</router-link></p> -->
-
   <main class="main-content mt-0">
     <section>
       <div class="page-header">
@@ -21,18 +14,16 @@
                   <form role="form">
                     <label>Email</label>
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Email" aria-label="Email"
-                        aria-describedby="email-addon" v-model="email">
+                      <input type="email" class="form-control" placeholder="Email" v-model="email">
                     </div>
                     <label>Password</label>
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Password" aria-label="Password"
-                        aria-describedby="password-addon" v-model="password">
+                      <input type="password" class="form-control" placeholder="Password" v-model="password">
                     </div>
-                    <div class="form-check form-switch">
+                    <!-- <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
                       <label class="form-check-label" for="rememberMe">Remember me</label>
-                    </div>
+                    </div> -->
                     <div class="text-center">
                       <button type="button" class="btn bg-gradient-dark w-100 mt-4 mb-0" @click="login">Sign in</button>
                     </div>
@@ -72,8 +63,8 @@ const router = useRouter()
 const login = () => {
   signInWithEmailAndPassword(getAuth(), email.value, password.value)
     .then((userCredential) => {
-      const user = userCredential.user
-      console.log(user)
+      // const user = userCredential.user
+      // console.log(user)
       router.push('/')
     })
     .catch((error) => {
