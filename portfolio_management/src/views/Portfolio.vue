@@ -1,5 +1,8 @@
 <template>
-  <div class="mt-7"> 
+  <div class="mt-10" v-if="!isLoggedIn">
+    <h1 class="text-center">Please sign in to see this page</h1>
+  </div>
+  <div class="mt-7" v-if="isLoggedIn">
     <div v-if="afterAnalysisClicked">
       Ticker Symbol: <input type="text" v-model="tickerSymbol" id="symbol" ref="name" /><span
         v-if="error_msg.length"
@@ -58,7 +61,6 @@
           <div>
             <button @click="showRecoTable">Generate Insights</button>
           </div>
-
         </div>
 
         <div class="col-md-6">
@@ -121,6 +123,7 @@ import axios from 'axios'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 ChartJS.register(ArcElement, Tooltip, Legend)
 import DoughnutChart from '../components/DoughnutChart.vue'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 export default {
   name: 'App',
@@ -145,10 +148,27 @@ export default {
       error_msg: '',
       showBeta: false,
       tickerSymbol: '',
-      showModal: false
+      showModal: false,
+
+      isLoggedIn: true,
+      auth: null
     }
   },
+  mounted() {
+    this.auth = getAuth()
+    this.checkLoggedIn()
+  },
   methods: {
+    checkLoggedIn() {
+      onAuthStateChanged(this.auth, (user) => {
+        if (user) {
+          this.isLoggedIn = true
+        } else {
+          this.isLoggedIn = false
+        }
+      })
+      return this.isLoggedIn
+    },
     addTicker() {
       //  Assuming Stock is inside the finalArr
 
@@ -169,7 +189,7 @@ export default {
             symbol: this.tickerSymbol
           },
           headers: {
-            'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+            'X-RapidAPI-Key': 'empty',
             'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
           }
         })
@@ -246,7 +266,7 @@ export default {
                 symbol: obj.name_of_stock.toUpperCase()
               },
               headers: {
-                'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+                'X-RapidAPI-Key': 'empty',
                 'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
               }
             })
@@ -427,10 +447,7 @@ export default {
 }
 </script>
 
-
-
-
-  <style scoped>
+<style scoped>
 .minus-small-circle-button {
   background-color: transparent;
   border: 2px solid #333;
@@ -445,7 +462,10 @@ export default {
   font-size: 16px;
   /* Adjust the font size as needed */
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    transform 0.3s;
 }
 
 .minus-small-circle-button:hover {
@@ -480,11 +500,13 @@ button:active {
 }
 
 .green-text {
-  color: green; /* Set your desired green color */
+  color: green;
+  /* Set your desired green color */
 }
 
 .red-text {
-  color: red; /* Set your desired red color */
+  color: red;
+  /* Set your desired red color */
 }
 
 .yellow-text {

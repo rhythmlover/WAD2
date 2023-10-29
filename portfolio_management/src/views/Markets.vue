@@ -26,7 +26,8 @@
           <button id="1wk" @click="fetchDataAndUpdateChart('Weekly')">1 Week</button>
         </div>
         <div class="col-3" id="chart-type">
-          <button id="candlestick" @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">Candlestick</button>
+          <button id="candlestick"
+            @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">Candlestick</button>
           <button id="area" @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">Area</button>
         </div>
       </div>
@@ -42,6 +43,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 onMounted(() => {
   curr_interval.value = 'All';
@@ -56,6 +58,11 @@ var tickerSymbol = ref('');
 var curr_interval = ref('');
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {};
+
+onMounted(() => {
+  curr_interval.value = 'All';
+  selectSymbol('^GSPC');
+});
 
 const selectSymbol = (symbol) => {
   tickerSymbol.value = symbol;
@@ -185,10 +192,10 @@ async function fetchData(interval, symbol_selected) {
     let chartData = stockData.prices.map((price) => ({
       x: new Date(price.date * 1000), // Convert timestamp to Date
       y: [
-        price.open.toFixed(2),
-        price.high.toFixed(2),
-        price.low.toFixed(2),
-        price.close.toFixed(2)
+        Number(price.open).toFixed(2),
+        Number(price.high).toFixed(2),
+        Number(price.low).toFixed(2),
+        Number(price.close).toFixed(2)
       ]
     }))
 
@@ -199,7 +206,7 @@ async function fetchData(interval, symbol_selected) {
     } else {
       chartData = chartData
     }
-    
+
     return chartData
   } catch (error) {
     console.error(error)
