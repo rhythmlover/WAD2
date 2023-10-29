@@ -2,154 +2,173 @@
   <link href="src/assets/css/table.css" rel="stylesheet" />
   <link href="src/assets/css/soft-ui-dashboard.css" rel="stylesheet" />
 
-<div class="background mx-auto" style="background-image: url('src/assets/img/curved-images/curved0.jpg');
-  width: 90%;height: 400px;background-repeat:
-   no-repeat;background-size: cover;border-radius: 30px;">
-  <div class="container-fluid mt-7">
-
- 
-
-    <div class="row justify-content-center">
-      <div class="col-10 my-4">
-        <div class="input-group rounded">
-          <!-- <input
-            type="search"
-            class="form-control rounded"
-            placeholder="Search"
-            v-model="searchInput"
-            @keyup="updateTable"
-          /> -->
-          <div class="input-group mb-4">
-          <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
-          <input class="form-control" placeholder="Search" type="search" v-model="searchInput"
-            @keyup="updateTable">
-        </div>
-
+  <div
+    class="background mx-auto"
+    style="
+      background-image: url('src/assets/img/curved-images/curved0.jpg');
+      width: 90%;
+      height: 400px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 30px;
+    "
+  >
+    <div class="container-fluid mt-7">
+      <div class="row justify-content-center">
+        <div class="col-10 mt-4">
+          <div class="input-group rounded">
+            <div class="input-group mb-4">
+              <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
+              <input
+                class="form-control"
+                placeholder="     Search"
+                type="search"
+                v-model="searchInput"
+                @keyup="updateTable"
+              />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div class="row justify-content-center">
-      
-      <div class="col-10">
-        <div class="card blur blur-rounded shadow" style="min-width: 800px">
-        <div class="table-responsive " style="min-width: 800px">
-        <table class="table table-hover align-items-center mb-0" v-show="showActive">
-          <thead>
-            <tr>
-              <th ref="active">
-                <h3 style="text-align: center">Most Active</h3>
-              </th>
-            </tr>
-            <tr>
-              <th ref="active" colspan="4">
-                <div class="row mx-auto">
-                  <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Symbol</th>
-                  </div>
-                  <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Name</th>
-                  </div>
-                  <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Price</th>
-                  </div>
-                  <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Volume</th>
-                  </div>
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="stock in activeStockList" :key="stock.symbol">
-              <RouterLink
-                :to="{ name: 'stockpage', params: { symbol: stock.symbol, name: stock.shortName} }"
-                style="text-decoration: none"
-              >
-                <div class="row mx-auto table-row-link ">
-                  <div class="col-3 mb-0">
-                    <tr>
-                      <td class="d-flex px-2 py-1">{{ stock.symbol }}</td>
-                    </tr>
-                  </div>
-                  <div class="col-3 mb-0">
-                    <tr>
-                      <td class="d-flex px-2 py-1">{{ stock.shortName }}</td>
-                    </tr>
-                  </div>
-                  <div class="col-3 mb-0">
-                    <tr>
-                      <td class="d-flex px-2 py-1">{{ stock.price }}</td>
-                    </tr>
-                  </div>
-                  <div class="col-3 mb-0">
-                    <tr>
-                      <td class="d-flex px-2 py-1">{{ stock.volume }}</td>
-                    </tr>
-                  </div>
-                </div>
-              </RouterLink>
-            </template>
-          </tbody>
-        </table>
-        <table ref="searchList" class="table align-items-center mb-0" v-show="showSearch">
-          <thead>
-            <tr>
-              <th ref="search">
-                <h3 style="text-align: center">Search Results</h3>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th ref="active" colspan="4">
-                <div class="row mx-auto">
-                  <div class="col-4  text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Symbol</th>
-                  </div>
-                  <div class="col-4  text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Name</th>
-                  </div>
-                  <div class="col-4  text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Exchange</th>
-                  </div>
-                </div>
-              </th>
-            </tr>
-            <template v-for="stock in searchedStocks" :key="stock.symbol">
-              <RouterLink
-                :to="{ name: 'stockpage', params: { symbol: stock.symbol, name: stock.shortName } }"
-                style="text-decoration: none"
-              >
-                <div class="row table-row-link mx-auto">
-                  <div class="col-4 mb-0">
-                    <tr>
-                      <td>{{ stock.symbol }}</td>
-                    </tr>
-                  </div>
-                  <div class="col-4 mb-0">
-                    <tr>
-                      <td>{{ stock.name }}</td>
-                    </tr>
-                  </div>
-                  <div class="col-4 mb-0">
-                    <tr>
-                      <td>{{ stock.exchange }}</td>
-                    </tr>
-                  </div>
-                </div>
-              </RouterLink>
-            </template>
-          </tbody>
-        </table>
+
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <div class="card blur blur-rounded shadow" style="min-width: 800px">
+            <div class="table-responsive" style="min-width: 800px">
+              <table class="table table-hover align-items-center mb-0" v-show="showActive">
+                <thead>
+                  <tr>
+                    <th ref="active">
+                      <h3 style="text-align: center">Most Active</h3>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th ref="active" colspan="4">
+                      <div class="row mx-auto">
+                        <div
+                          class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                        >
+                          <th>Symbol</th>
+                        </div>
+                        <div
+                          class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                        >
+                          <th>Name</th>
+                        </div>
+                        <div
+                          class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                        >
+                          <th>Price</th>
+                        </div>
+                        <div
+                          class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                        >
+                          <th>Volume</th>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template v-for="stock in activeStockList" :key="stock.symbol">
+                    <RouterLink
+                      :to="{
+                        name: 'stockpage',
+                        params: { symbol: stock.symbol, name: stock.shortName }
+                      }"
+                      style="text-decoration: none"
+                    >
+                      <div class="row mx-auto table-row-link">
+                        <div class="col-3 mb-0">
+                          <tr>
+                            <td class="d-flex px-2 py-1">{{ stock.symbol }}</td>
+                          </tr>
+                        </div>
+                        <div class="col-3 mb-0">
+                          <tr>
+                            <td class="d-flex px-2 py-1">{{ stock.shortName }}</td>
+                          </tr>
+                        </div>
+                        <div class="col-3 mb-0">
+                          <tr>
+                            <td class="d-flex px-2 py-1">{{ stock.price }}</td>
+                          </tr>
+                        </div>
+                        <div class="col-3 mb-0">
+                          <tr>
+                            <td class="d-flex px-2 py-1">{{ stock.volume }}</td>
+                          </tr>
+                        </div>
+                      </div>
+                    </RouterLink>
+                  </template>
+                </tbody>
+              </table>
+              <table ref="searchList" class="table align-items-center mb-0" v-show="showSearch">
+                <thead>
+                  <tr>
+                    <th ref="search">
+                      <h3 style="text-align: center">Search Results</h3>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th ref="active" colspan="4">
+                      <div class="row mx-auto">
+                        <div
+                          class="col-4 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                        >
+                          <th>Symbol</th>
+                        </div>
+                        <div
+                          class="col-4 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                        >
+                          <th>Name</th>
+                        </div>
+                        <div
+                          class="col-4 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                        >
+                          <th>Exchange</th>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                  <template v-for="stock in searchedStocks" :key="stock.symbol">
+                    <RouterLink
+                      :to="{
+                        name: 'stockpage',
+                        params: { symbol: stock.symbol, name: stock.shortName }
+                      }"
+                      style="text-decoration: none"
+                    >
+                      <div class="row table-row-link mx-auto">
+                        <div class="col-4 mb-0">
+                          <tr>
+                            <td>{{ stock.symbol }}</td>
+                          </tr>
+                        </div>
+                        <div class="col-4 mb-0">
+                          <tr>
+                            <td>{{ stock.name }}</td>
+                          </tr>
+                        </div>
+                        <div class="col-4 mb-0">
+                          <tr>
+                            <td>{{ stock.exchange }}</td>
+                          </tr>
+                        </div>
+                      </div>
+                    </RouterLink>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
     </div>
   </div>
-</div>
- 
-
-</div>
 </template>
 
 <style>
