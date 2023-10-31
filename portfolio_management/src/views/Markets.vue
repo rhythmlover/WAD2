@@ -1,34 +1,55 @@
 <template>
   <div class="container text-center mt-7">
-    <div class="container">
-      <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
-    </div>
-
-    <div class="container" id="indices-buttons">
-      <div class="row justify-content-start">
-        <div class="col-3">
-          <button id="snp500" @click="selectSymbol('^GSPC')">S&P 500</button>
-          <button id="nasdaq100" @click="selectSymbol('^NDX')">Nasdaq 100</button>
-          <button id="dow30" @click="selectSymbol('^DJI')">Dow 30</button>
+    <div class="col-lg-12">
+      <div class="card z-index-2 blur blur-rounded shadow-lg">
+        <div class="container-fluid" id="indices-buttons">
+          <div class="row justify-content-start">
+            <div class="col-lg-5 mt-4">
+              <button class="btn bg-gradient-primary mx-1" type="button" id="snp500" @click="selectSymbol('^GSPC')">
+                S&P 500
+              </button>
+              <button class="btn bg-gradient-primary mx-1" type="button" id="nasdaq100" @click="selectSymbol('^NDX')">
+                Nasdaq 100
+              </button>
+              <button class="btn bg-gradient-primary mx-1" type="button" id="dow30" @click="selectSymbol('^DJI')">
+                Dow 30
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container" id="candlestick-chart">
-      <!-- The candlestick chart will be rendered here -->
-    </div>
-
-    <div class="container-fluid">
-      <div class="row justify-content-between">
-        <div class="col-3" id="interval-options">
-          <button id="allButton">All time</button>
-          <button id="1m" @click="fetchDataAndUpdateChart('Monthly')">1 Month</button>
-          <button id="1wk" @click="fetchDataAndUpdateChart('Weekly')">1 Week</button>
+        <div class="card-header pb-0 pt-2">
+          <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
         </div>
-        <div class="col-3" id="chart-type">
-          <button id="candlestick"
-            @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">Candlestick</button>
-          <button id="area" @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">Area</button>
+        <div class="card-body p-3">
+          <div class="container-fluid" id="candlestick-chart">
+            <!-- The candlestick chart will be rendered here -->
+          </div>
+        </div>
+
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="col-lg-5 col-md-7 mb-3" id="interval-options">
+              <button class="btn bg-gradient-primary mx-1" id="allButton" @click="fetchDataAndUpdateChart('All')">
+                All time
+              </button>
+              <button class="btn bg-gradient-primary mx-1" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
+                1 Month
+              </button>
+              <button class="btn bg-gradient-primary mx-1" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
+                1 Week
+              </button>
+            </div>
+            <div class="col-md-5 mb-3" id="chart-type">
+              <button class="btn bg-gradient-primary mx-1" id="candlestick" @click="
+                chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
+                Candlestick
+              </button>
+              <button class="btn bg-gradient-primary mx-1" id="area" @click="
+                chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
+                Area
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -39,61 +60,209 @@
       <div id="gainer"></div>
     </div>
   </div>
+
+  <div class="container">
+    <div class="row my-4">
+      <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+        <div class="card blur blur-rounded shadow-lg">
+          <div class="card-header pb-0">
+            <div class="row align-center">
+              <div class="col-lg-6 col-7">
+                <h3>Day Gainers</h3>
+              </div>
+              <!-- <div class="col-lg-6 col-5 my-auto text-end">
+                <div class="dropdown float-lg-end pe-4">
+                  <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v text-secondary"></i>
+                  </a>
+                  <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                    <li>
+                      <a class="dropdown-item border-radius-md">Action</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item border-radius-md">Another action</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item border-radius-md">Something else here</a>
+                    </li>
+                  </ul>
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Company
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      Price ($)
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      Change (%)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="quote in gainer" :key="quote.symbol">
+                    <td>
+                      <div class="d-flex px-3 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ quote.longName }}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle text-sm">
+                      {{ quote.regularMarketPrice }}
+                    </td>
+                    <td class="align-middle text-sm">
+                      <span class="text-s font-weight-bold text-success"
+                        :class="{ 'text-danger': quote.regularMarketChangePercent < 0 }">
+                        {{ Number(quote.regularMarketChangePercent).toFixed(2) }} </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+        <div class="card blur blur-rounded shadow-lg">
+          <div class="card-header pb-0">
+            <div class="row align-center">
+              <div class="col-lg-6 col-7">
+                <h3>Best Sectors</h3>
+              </div>
+              <!-- <div class="col-lg-6 col-5 my-auto text-end">
+                <div class="dropdown float-lg-end pe-4">
+                  <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v text-secondary"></i>
+                  </a>
+                  <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                    <li>
+                      <a class="dropdown-item border-radius-md">Action</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item border-radius-md">Another action</a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item border-radius-md">Something else here</a>
+                    </li>
+                  </ul>
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Sector
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      Monthly Change (%)
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      YTD Change (%)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(sector, index) in top5Sectors" :key="index">
+                    <td>
+                      <div class="d-flex px-3 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm">{{ sector.description }}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle text-sm text-success" :class="{ 'text-danger': sector.monthChange < 0 }">
+                      {{ sector.monthChange }}
+                    </td>
+                    <td class="align-middle text-sm">
+                      <span class="text-s font-weight-bold text-success"
+                        :class="{ 'text-danger': sector.ytdChange < 0 }"> {{
+                          sector.ytdChange }} </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
+<style scoped>
+.dropdown-menu {
+  z-index: 10000;
+}
+</style>
+
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ref, onMounted } from 'vue'
+import { parseString } from 'xml2js';
 
 onMounted(() => {
-  curr_interval.value = 'All';
-  selectSymbol('^GSPC');
-});
+  curr_interval.value = 'All'
+  selectSymbol('^GSPC')
+})
 
 // CHART SECTION
-var chart = null;
-var chartType = 'candlestick';
-var tickerName = ref('');
-var tickerSymbol = ref('');
-var curr_interval = ref('');
+var chart = null
+var chartType = 'candlestick'
+var tickerName = ref('')
+var tickerSymbol = ref('')
+var curr_interval = ref('')
 
-const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {};
+const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
 onMounted(() => {
-  curr_interval.value = 'All';
-  selectSymbol('^GSPC');
-});
+  curr_interval.value = 'All'
+  selectSymbol('^GSPC')
+  getGainerData()
+  parseXML()
+})
 
 const selectSymbol = (symbol) => {
-  tickerSymbol.value = symbol;
-  fetchDataAndUpdateChart(curr_interval.value);
-};
+  tickerSymbol.value = symbol
+  fetchDataAndUpdateChart(curr_interval.value)
+}
 
 const fetchDataAndUpdateChart = async (interval) => {
-  curr_interval.value = interval;
-  const dataCacheKey = `${tickerSymbol.value}-${interval}`;
+  curr_interval.value = interval
+  const dataCacheKey = `${tickerSymbol.value}-${interval}`
 
   if (dataCache[dataCacheKey] && typeof dataCache[dataCacheKey] === 'object') {
-    const { tickerNameValue, chartData } = dataCache[dataCacheKey];
-    renderChart(chartData);
-    tickerName.value = tickerNameValue;
+    const { tickerNameValue, chartData } = dataCache[dataCacheKey]
+    renderChart(chartData)
+    tickerName.value = tickerNameValue
   } else {
     try {
-      const chartData = await fetchData(interval, tickerSymbol.value);
+      const chartData = await fetchData(interval, tickerSymbol.value)
 
       dataCache[dataCacheKey] = {
         tickerNameValue: tickerName.value,
-        chartData: chartData,
-      };
+        chartData: chartData
+      }
 
-      localStorage.setItem('dataCache', JSON.stringify(dataCache));
+      localStorage.setItem('dataCache', JSON.stringify(dataCache))
 
-      renderChart(chartData);
+      renderChart(chartData)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
-};
+}
 
 const renderChart = (chartData) => {
   if (!chart) {
@@ -102,50 +271,50 @@ const renderChart = (chartData) => {
         type: chartType,
         name: tickerSymbol.value,
         height: 400,
-        width: 1200,
+        width: 1200
       },
       series: [
         {
-          data: chartData,
-        },
+          data: chartData
+        }
       ],
       xaxis: {
-        type: 'datetime',
+        type: 'datetime'
       },
       yaxis: {
         tooltip: {
-          enabled: true,
-        },
+          enabled: true
+        }
       },
       dataLabels: {
-        enabled: false,
-      },
-    };
+        enabled: false
+      }
+    }
 
     // Render the chart
-    chart = new ApexCharts(document.querySelector('#candlestick-chart'), chartOptions);
-    chart.render();
-    console.log('Chart Rendered');
+    chart = new ApexCharts(document.querySelector('#candlestick-chart'), chartOptions)
+    chart.render()
+    console.log('Chart Rendered')
   } else {
     if (chartType == 'area') {
       chart.updateSeries([
         {
           type: chartType,
           data: chartData,
-          name: tickerName,
-        },
-      ]);
+          name: tickerName
+        }
+      ])
     } else {
       chart.updateSeries([
         {
           type: chartType,
-          data: chartData,
-        },
-      ]);
+          data: chartData
+        }
+      ])
     }
-    console.log('Chart Updated');
+    console.log('Chart Updated')
   }
-};
+}
 
 async function fetchData(interval, symbol_selected) {
   let historical_data = {
@@ -156,7 +325,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -169,7 +338,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -203,8 +372,6 @@ async function fetchData(interval, symbol_selected) {
       chartData = chartData.slice(-7)
     } else if (interval === 'Monthly') {
       chartData = chartData.slice(-30)
-    } else {
-      chartData = chartData
     }
 
     return chartData
@@ -212,4 +379,75 @@ async function fetchData(interval, symbol_selected) {
     console.error(error)
   }
 }
+
+const gainer = ref([])
+
+const getGainerData = async () => {
+  const url = 'https://yahoo-finance15.p.rapidapi.com/api/yahoo/co/collections/day_gainers?start=0'
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': '8a10594436msh268460701326c1ep1b3ccejsnd34c3997dbeb',
+      'X-RapidAPI-Host': 'yahoo-finance15.p.rapidapi.com'
+    }
+  }
+
+  try {
+    const response = await fetch(url, options)
+    const result = await response.json()
+    // console.log(result)
+    gainer.value = result.quotes.slice(0, 5)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const getSectorData = async () => {
+  const options = {
+    method: 'GET',
+    url: 'https://fidelity-investments.p.rapidapi.com/market/get-sectors',
+    headers: {
+      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+      'X-RapidAPI-Host': 'fidelity-investments.p.rapidapi.com'
+    }
+  };
+
+  try {
+    const response = await axios.request(options);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const top5Sectors = ref([]);
+
+// Define a function to clean and format the data
+const cleanData = (rawData) => {
+  return rawData.map((item) => ({
+    description: item["DESCRIPTION"][0], // Extract the first item from the array
+    monthChange: parseFloat(item["MONTH_CHANGE"][0]),
+    ytdChange: parseFloat(item["YTD_CHANGE"][0]),
+  }));
+};
+
+
+const parseXML = async () => {
+  const xmlData = await getSectorData(); // Wait for the promise to resolve
+  parseString(xmlData, (err, result) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    const sectors = result.Chart.Symbol;
+
+    // Sort sectors by MONTHLY Change in descending order
+    sectors.sort((a, b) => b.MONTH_CHANGE - a.MONTH_CHANGE);
+
+    // Clean and format the top 5 sectors data
+    const cleanedData = cleanData(sectors.slice(0, 5));
+    console.log(cleanedData);
+    top5Sectors.value = cleanedData;
+  });
+};
 </script>
