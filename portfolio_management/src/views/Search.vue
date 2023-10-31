@@ -74,7 +74,7 @@
                     <RouterLink
                       :to="{
                         name: 'stockpage',
-                        params: { symbol: stock.symbol, name: stock.shortName }
+                        params: { symbol: stock.symbol }
                       }"
                       style="text-decoration: none"
                     >
@@ -138,7 +138,7 @@
                     <RouterLink
                       :to="{
                         name: 'stockpage',
-                        params: { symbol: stock.symbol, name: stock.shortName }
+                        params: { symbol: stock.symbol }
                       }"
                       style="text-decoration: none"
                     >
