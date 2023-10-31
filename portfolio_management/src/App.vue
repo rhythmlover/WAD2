@@ -29,13 +29,13 @@
           </li>
           <li class="nav-item">
             <a class="nav-link me-2">
-              <i class="fa fa-user opacity-6 text-dark me-1"></i>
+              <i class="fas fa-poll opacity-6 text-dark me-1"></i>
               <RouterLink to="/markets">Markets</RouterLink>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link me-2">
-              <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
+              <i class="fas fa-search opacity-6 text-dark me-1"></i>
               <RouterLink to="/stockList">Search</RouterLink>
             </a>
           </li>
