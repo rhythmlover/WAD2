@@ -124,6 +124,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 ChartJS.register(ArcElement, Tooltip, Legend)
 import DoughnutChart from '../components/DoughnutChart.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getFirestore, collection, getDoc, updateDoc, doc } from 'firebase/firestore'
 
 export default {
   name: 'App',
@@ -151,27 +152,63 @@ export default {
       showModal: false,
 
       isLoggedIn: true,
-      auth: null
+      auth: null,
+      db: null,
+      userRef: null,
+      uid: ''
     }
   },
   mounted() {
     this.auth = getAuth()
-    this.checkLoggedIn()
-  },
-  methods: {
-    checkLoggedIn() {
+    this.db = getFirestore()
+    this.userRef = collection(this.db, 'users')
+
+    const authStateChangedPromise = new Promise((resolve) => {
       onAuthStateChanged(this.auth, (user) => {
         if (user) {
+          this.uid = user.uid
           this.isLoggedIn = true
         } else {
           this.isLoggedIn = false
         }
+        resolve()
       })
-      return this.isLoggedIn
+    })
+
+    authStateChangedPromise.then(() => {
+      this.getUserData()
+    })
+  },
+  methods: {
+    async userStoreData(array) {
+      const userDocRef = doc(this.db, 'users', this.uid)
+      await updateDoc(userDocRef, {
+        data: array
+      })
+    },
+    async getUserData() {
+      const userDocRef = doc(this.db, 'users', this.uid)
+      const docSnap = await getDoc(userDocRef)
+      if (docSnap.exists()) {
+        this.finalArr = docSnap.data().data
+        for (let obj of this.finalArr) {
+          const existingGraph = this.graph_arr.find((graph) => graph.sector_loc === obj.sector_loc)
+          if (existingGraph) {
+            existingGraph.sector_count = obj.sector_count
+          } else {
+            this.graph_arr.push({
+              sector_loc: obj.sector_loc,
+              sector_count: obj.sector_count
+            })
+          }
+        }
+        console.log('Document data:', docSnap.data())
+      } else {
+        console.log('No such document!')
+      }
     },
     addTicker() {
       //  Assuming Stock is inside the finalArr
-
       for (let obj of this.finalArr) {
         if (obj.name_of_stock.toUpperCase() === this.tickerSymbol.toUpperCase()) {
           this.tickerSymbol = ''
