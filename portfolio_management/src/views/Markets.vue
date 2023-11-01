@@ -187,8 +187,8 @@
                       {{ sector.monthChange }}
                     </td>
                     <td class="align-middle text-sm">
-                      <span class="text-s font-weight-bold text-success"
-                        :class="{ 'text-danger': sector.ytdChange < 0 }"> {{
+                      <span class="text-s font-weight-bold text-success" :class="{ 'text-danger': sector.ytdChange < 0 }">
+                        {{
                           sector.ytdChange }} </span>
                     </td>
                   </tr>
@@ -387,7 +387,7 @@ const getGainerData = async () => {
   const options = {
     method: 'GET',
     headers: {
-      'X-RapidAPI-Key': '8a10594436msh268460701326c1ep1b3ccejsnd34c3997dbeb',
+      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
       'X-RapidAPI-Host': 'yahoo-finance15.p.rapidapi.com'
     }
   }
@@ -395,7 +395,7 @@ const getGainerData = async () => {
   try {
     const response = await fetch(url, options)
     const result = await response.json()
-    // console.log(result)
+    console.log(result)
     gainer.value = result.quotes.slice(0, 5)
   } catch (error) {
     console.error(error)
