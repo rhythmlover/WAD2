@@ -193,7 +193,7 @@ const searchedStocks = ref([])
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': 'ba7b0fde8dmshd20587e7d1e1e9bp181bb2jsnbf1afc5de773',
+    'X-RapidAPI-Key': '985bf11bb6msh4df2b70c188b165p124b6fjsn68131220f132',
     'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
   }
 }
@@ -208,7 +208,7 @@ const optionsAll = {
     format: 'json'
   },
   headers: {
-    'X-RapidAPI-Key': 'ba7b0fde8dmshd20587e7d1e1e9bp181bb2jsnbf1afc5de773',
+    'X-RapidAPI-Key': '985bf11bb6msh4df2b70c188b165p124b6fjsn68131220f132',
     'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
   }
 }
