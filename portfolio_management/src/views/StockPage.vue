@@ -2,7 +2,7 @@
   <div class="container-fluid text-center mt-7">
     <div class="container">
       <!-- Display the selected stock symbol -->
-      <h1 id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} ${selectedName }(${curr_interval})` }}</h1>
+      <h1 id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} ${selectedName} (${curr_interval})` }}</h1>
     </div>
 
     <div class="container" id="chart">
@@ -24,18 +24,40 @@
       </div>
     </div>
 
+    <!-- market Sentiment -->
+    <div class="sentiment-label">Market Sentiment: 
+      <span :class="[sentimentBool ? 'text-positive' : 'text-negative']">{{ sentiment }}</span>
+    </div>
+    <div id="sentimentLine" class="table justify-content-center">
+      <table>
+        <tr>
+          <th>Positive:</th>
+          <th>Negative:</th>
+        </tr>
+
+        <tr>
+          <td>{{ positive }}</td>
+          <td>{{ negative }}</td>
+
+
+        </tr>
+      </table>
+    </div>
+
+
+
     <!-- news section-->
     <div class="container">
-      <div class="container-fluid" id="news">
+      <div class="container-fluid justify-content-center" id="news">
         <!-- only first 2 will show -->
-        <div class="row">
-          <div v-for="article in newsData.articles.slice(0, 2)" :key="article.title" class="col-xxl-6">
-            <div class="card m-2" style="width:40rem">
+        <div class="row justify-content-center">
+          <div v-for=" article  in  newsData.articles.slice(0, 2) " :key="article.title" class="col-xxl-6">
+            <div class="card m-2 news" style="width:500px">
               <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
-              <div class="card-body" style="height: 200px;">
+              <div class="card-body d-flex flex-column" style="height: 200px;">
                 <h5 class="card-title">{{ article.title }}</h5>
-                <p v-if="article.description" class="card-text">{{ article.description.slice(0, 100) }}...</p>
-                <a :href="article.url" target="_blank" class="btn btn-primary">Read Article</a>
+                <p v-if="article.description" class="card-text  text-truncate">{{ article.description }}...</p>
+                <a :href="article.url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
               </div>
             </div>
           </div>
@@ -44,13 +66,15 @@
       </div>
       <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
         <div class="row justify-cotent-center">
-          <div v-for="article in newsData.articles.slice(2)" :key="article.title" class="col-xxl-6">
-            <div class="card m-2" style="width:40rem">
+          <div v-for=" article  in  newsData.articles.slice(2) " :key="article.title"
+            class="col-xxl-6 justify-content-center">
+            <div class="card m-2 news" style="width:500px">
               <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
-              <div class="card-body" style="height: 200px;">
+              <div class="card-body d-flex flex-column" style="height: 200px;">
                 <h5 class="card-title">{{ article.title }}</h5>
-                <p v-if="article.description" class="card-text">{{ article.description.slice(0, 100) }}...</p>
-                <a :href="article.url" target="_blank" class="btn btn-primary">Read Article</a>
+                <p v-if="article.description" class="card-text text-truncate">{{ article.description.slice(0, 100) }}...
+                </p>
+                <a :href="article.url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
               </div>
             </div>
           </div>
@@ -66,7 +90,7 @@
       <input type="text" id="comment-box" v-model="commentInput" placeholder="Enter comment" />
       <button id="post" @click="addComment()">Comment</button>
       <div id="comments-section">
-        <div class="card m-3" v-for="comment in comments">
+        <div class="card m-3" v-for=" comment  in  comments ">
           <div class="card-body">
             <h5 class="card-title">{{ comment.name }}</h5>
             <p class="card-text">{{ comment.comment }}</p>
@@ -90,33 +114,56 @@ import {
 } from 'firebase/firestore'
 import { useRouter } from 'vue-router';
 
+
 // INITIALIZE
 onMounted(() => {
   curr_interval.value = 'All';
   selectSymbol(selectedSymbol);
-  fetchNews(1, selectedSymbol);
+  console.log(selectedName.value)
+  const fetchNewsPromise = new Promise((resolve) => {
+
+    const fetchNews = async (page = 1, q = selectedName.value) => {
+      try {
+        const apiKey = '8ed1d1256b4e4f41996101e7967ad3b5';
+        const url = `https://newsapi.org/v2/everything?language=en&q=${q}&pageSize=20&page=${page}&apiKey=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        newsData.value = data;
+        // console.log(newsData);
+
+        const titles = newsData.value.articles.map(article => article.title);
+        console.log(titles)
+        description.value = titles.join(' ');
+        console.log(description.value)
+        resolve();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchNews(1, selectedName.value)
+  })
+
+  fetchNewsPromise.then(() => {
+    console.log(typeof(description.value))
+    marketSentiment(description.value)
+  })
+
   getComments();
 })
 
 // ROUTING
 const route = useRouter();
 var selectedSymbol = route.currentRoute.value.params.symbol;
-var selectedName = route.currentRoute.value.params.name;
+var selectedName = ref('');
 // CHART SECTION
 var chart = null
 var chartType = 'candlestick'
-var tickerName = ref(selectedName);
+var tickerName = selectedName;
 var tickerSymbol = ref('');
 var curr_interval = ref('');
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
-onMounted(() => {
-  curr_interval.value = 'All';
-  selectSymbol(selectedSymbol);
-  fetchNews(1, selectedSymbol);
-  getComments();
-})
 
 const selectSymbol = (symbol) => {
   tickerSymbol.value = symbol;
@@ -243,7 +290,8 @@ async function fetchData(interval, symbol) {
     const quotesData = response_quotes.data;
 
     tickerName.value = quotesData.quoteResponse.result[0].shortName;
-    console.log(stockData)
+    selectedName.value = quotesData.quoteResponse.result[0].shortName;
+    // console.log(stockData)
     let chartData = stockData.prices.map((price) => ({
       x: new Date(price.date * 1000), // Convert timestamp to Date
       y: [
@@ -269,45 +317,100 @@ async function fetchData(interval, symbol) {
 }
 
 // NEWS SECTION
-const currentQuery = ref('');
-const currentPage = ref(1);
 const newsData = ref({ articles: [] });
 const showButtonValue = ref(false);
-
-const fetchNews = async (page, q) => {
-  try {
-    const apiKey = '8ed1d1256b4e4f41996101e7967ad3b5';
-    const url = `https://newsapi.org/v2/everything?language=en&q=${q}&pageSize=20&page=${page}&apiKey=${apiKey}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    newsData.value = data;
-  } catch (error) {
-    console.error(error);
-  }
-};
+const description = ref('');
+// const fetchNews = async (page, q) => {
+//   try {
+//     const apiKey = '8ed1d1256b4e4f41996101e7967ad3b5';
+//     const url = `https://newsapi.org/v2/everything?language=en&q=${q}&pageSize=20&page=${page}&apiKey=${apiKey}`;
+//     const response = await fetch(url);
+//     const data = await response.json();
+//     newsData.value = data;
+//     console.log(newsData)
+//     for (let i = 0; i < 3; i++) {
+//       description.value += newsData.value.articles[i].description + ' ';
+//     }
+//     console.log(description)
+//     resolve()
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 // fetchNews(currentPage.value, currentQuery.value);
 
-const search = () => {
-  currentQuery.value = searchInput.value;
-  fetchNews(1, currentQuery.value);
-};
+// const search = () => {
+//   currentQuery.value = searchInput.value;
+//   fetchNews(1, currentQuery.value);
+// };
 
-const prev = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-    fetchNews(currentPage.value, currentQuery.value);
-  }
-};
+// const prev = () => {
+//   if (currentPage.value > 1) {
+//     currentPage.value--;
+//     fetchNews(currentPage.value, currentQuery.value);
+//   }
+// };
 
-const next = () => {
-  currentPage.value++;
-  fetchNews(currentPage.value, currentQuery.value);
-};
+// const next = () => {
+//   currentPage.value++;
+//   fetchNews(currentPage.value, currentQuery.value);
+// };
 
 const toggleShowMore = () => {
   showButtonValue.value = !showButtonValue.value;
 };
+
+
+// Market Sentiment Section
+
+const sentiment = ref('Positive');
+const positive = ref('0.67');
+const mixed = ref('0.20');
+const negative = ref('0.13');
+const sentimentBool = ref(true)
+
+
+
+async function marketSentiment(newsdata) {
+  const options = {
+    method: 'GET',
+    url: 'https://easy-sentiment-analysis.p.rapidapi.com/sentiment1',
+    params: {
+      text: newsdata
+    },
+    headers: {
+      'X-RapidAPI-Key': '985bf11bb6msh4df2b70c188b165p124b6fjsn68131220f132',
+      'X-RapidAPI-Host': 'easy-sentiment-analysis.p.rapidapi.com'
+    }
+  };
+
+  try {
+    const response = await axios.request(options);
+    console.log(response.data)
+
+    // sentiment.value = response.data.Sentiment.Sentiment;
+    if (sentiment.value !== 'Positive') {
+      sentimentBool.value = false
+    }
+
+    console.log(response.data.Sentiment.SentimentScore.Positive)
+    positive.value = Number(response.data.Sentiment.SentimentScore.Positive).toFixed(3);
+    negative.value = Number(response.data.Sentiment.SentimentScore.Negative).toFixed(3);
+    mixed.value = Number(response.data.Sentiment.SentimentScore.Mixed).toFixed(3);
+
+    if(positive.value > negative.value){
+      sentiment.value = "Positive"
+    }
+    else{
+      sentiment.value = "Negative"
+    }
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 // COMMENTS SECTION
 const db = getFirestore();
@@ -344,3 +447,37 @@ const addComment = () => {
     })
 };
 </script>
+
+<style>
+.sentiment-label {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+
+.news {
+  transition: all 0.3s;
+}
+
+.news:hover {
+  transform: scale(1.1);
+}
+
+.news:hover .card-text {
+  display: block;
+  white-space: normal;
+}
+
+
+
+.text-positive {
+  color: green;
+}
+
+.text-negative {
+  color: red;
+}
+</style>
+
+
