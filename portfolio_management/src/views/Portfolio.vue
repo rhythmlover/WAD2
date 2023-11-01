@@ -2,155 +2,179 @@
   <div class="mt-10" v-if="!isLoggedIn">
     <h1 class="text-center">Please sign in to see this page</h1>
   </div>
-  <div v-if="isLoggedIn">
+  <div v-if="isLoggedIn" class="mt-7">
     <main>
-      <div v-if="afterAnalysisClicked">
-        <div class="row">
-            <div class="container form-group font-weight-bold mt-7 mb-3 ms-0">
-              Ticker Symbol: &nbsp; <input class="form-control col-lg-10 col-md-10 col-sm-10" type="text" v-model="tickerSymbol" id="symbol" ref="name"/>
-              <span v-if="error_msg.length">{{ error_msg }}</span>
-            </div> 
-
-            <div class="container justify-content-start ms-0 my-3">
-              <button class="btn btn-sm mb-0 ms-1" name="add" @click="addTicker">ADD</button>
-              <button class="btn btn-sm mb-0 ms-1" name="confirm" @click="finalBeta">
-                <a href="#result"></a>
-                GET ANALYSIS REPORT
-              </button>
-            </div>   
-          </div>
-      </div>
-    
-      <div id="result" v-if="finalArr.length > 0" class="container mt-7">
-        <div class="row">
-          <div v-if="!showBeta">
-            <h2 style="text-align: center;">Breakdown of Portfolio:</h2>
-            <table class="table">
-              <thead class="text-center">
-                  <tr>
-                    <th class="col-4">Ticker Symbol</th>
-                    <th class="col-4">Sector</th>
-                    <th class="col-4">Beta</th>
-                    <!-- <th>Number of Stocks</th> -->
-                    <!-- <th>Remove Stock?</th> -->
-                  </tr>
-                </thead>
-                
-                <tbody class="text-center">
-                  <tr v-for="(stock, index) in finalArr" :key="index">
-                    <td>{{ stock.name_of_stock.toUpperCase() }}</td>
-                    <td>{{ stock.sector_loc }}</td>
-                    <td>{{ stock.beta_value }}</td>
-                    <!-- <td>{{ stock.sector_count }}</td> -->
-                    <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
-                  </tr>
-                </tbody>
-            </table>
-          </div>
-
-          <div v-else class="col-lg-6 col-md-6 col-sm-12 center">
-            <h2 style="text-align: center;">Breakdown of Portfolio:</h2>
-            <table class="table">
-              <thead class="text-center">
-                  <tr>
-                    <th class="col-4">Ticker Symbol</th>
-                    <th class="col-4">Sector</th>
-                    <th class="col-4">Beta</th>
-                    <!-- <th>Number of Stocks</th> -->
-                    <!-- <th>Remove Stock?</th> -->
-                  </tr>
-                </thead>
-                
-                <tbody class="text-center">
-                  <tr v-for="(stock, index) in finalArr" :key="index">
-                    <td>{{ stock.name_of_stock.toUpperCase() }}</td>
-                    <td>{{ stock.sector_loc }}</td>
-                    <td>{{ stock.beta_value }}</td>
-                    <!-- <td>{{ stock.sector_count }}</td> -->
-                    <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
-                  </tr>
-                </tbody>
-            </table>
-          </div>
-
-          <div class="col-6 mt-5">
-            <div id="show_reco" v-if="showBeta" class="container text-center">
-              <h2 style="text-align: center">Sector Breakdown</h2>
-              <p style="text-align: center">
-                  The weighted beta is: {{ weightedBeta }} and your portfolio has
-                  <span
-                    :class="{
-                      'green-text': volatileOrNot >= 1.0 && volatileOrNot <= 1.2,
-                      'red-text': volatileOrNot > 1.2,
-                      'yellow-text': volatileOrNot < 1.0
-                    }"
-                    >{{ volatileOrNot }}</span
-                  >
-                </p>
-
-                <DoughnutChart
-                  style="text-align: center"
-                  :data="sectorPercentages"
-                  :labels="sectorGraph"
-                  :backgroundColors="randomBackgroundColors"
-                ></DoughnutChart>
-
-                <div class="text-center m-5">
-                    <button class="btn" @click="showRecoTable">
-                      <a href="#analysis"></a>
-                      Generate Insights
-                    </button>
+      <div class="container-fluid px-10 mt-3">
+        <div class="card rounded-5" v-if="afterAnalysisClicked">
+          <div class="card-header shadow-lg rounded-5 pb-0 pt-2">
+            <div>
+              <div class="row">
+                <div class="container form-group font-weight-bold mt-2">
+                  Ticker Symbol: &nbsp; <input class="form-control col-lg-10 col-md-10 col-sm-10" type="text"
+                    v-model="tickerSymbol" id="symbol" ref="name" />
+                  <span v-if="error_msg.length">{{ error_msg }}</span>
                 </div>
+              </div>
+
+              <div class="container justify-content-start ms-0 my-3">
+                <button class="btn btn-sm mb-0 ms-1" name="add" @click="addTicker">ADD</button>
+                <button class="btn btn-sm mb-0 ms-1" name="confirm" @click="finalBeta">
+                  <a href="#result"></a>
+                  GET ANALYSIS REPORT
+                </button>
+              </div>
             </div>
           </div>
         </div>
-    </div>
-      
-      <div v-if="showTable" id="analysis" class="container text-center">
-        <h2 class="pl-2">Analysis of Portfolio</h2>
-        <table class="mx-2 table">
-          <thead>
-            <tr class="col">
-              <th>Ticker Symbol</th>
-              <th>Overvalued / Undervalued</th>
-              <th>Recommendation Verdict</th>
-            </tr>
-          </thead>
-          
-          <tbody>
-            <tr v-for="(stock, index) in new_table_recommendations" :key="index">
-              <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
-              <td
-                :class="{
-                  'green-text': stock.recommendation_verdict === 'HOLD',
-                  'red-text': stock.recommendation_verdict === 'SELL'
-                }"
-              >
-                {{ stock.valuation }}
-              </td>
-              <td
-                :class="{
-                  'green-text': stock.recommendation_verdict === 'HOLD',
-                  'red-text': stock.recommendation_verdict === 'SELL'
-                }"
-              >
-                {{ stock.recommendation_verdict }}
-              </td>
-            </tr>
-          </tbody>            
-        </table>
 
-        <div class="container mt-5">
-          <h3>Recommendations for a balanced Portfolio</h3>
-          <div class="row">
-            <div class="col-lg-3 col-md-2 col-sm-1 m-5" style="width: 18rem" v-for="(stock, index) in this.randomStocks" :key="index">
-              <div class="card-body">
-                <h5 class="card-title">{{ stock.name }}</h5>
-                <p class="card-text">
-                  {{ stock.description }}<br />
-                  {{ stock.discount_stat }}
-                </p>
+        <div class="card blur blur-rounded shadow-lg mt-5" v-if="afterAnalysisClicked">
+          <div id="result" v-if="finalArr.length > 0" class="container mt-5">
+            <div class="row">
+              <div v-if="!showBeta">
+                <h2 style="text-align: center;">Breakdown of Portfolio:</h2>
+                <table class="table">
+                  <thead class="text-center">
+                    <tr>
+                      <th class="col-4">Ticker Symbol</th>
+                      <th class="col-4">Sector</th>
+                      <th class="col-4">Beta</th>
+                      <!-- <th>Number of Stocks</th> -->
+                      <!-- <th>Remove Stock?</th> -->
+                    </tr>
+                  </thead>
+
+                  <tbody class="text-center">
+                    <tr v-for="(stock, index) in finalArr" :key="index">
+                      <td>{{ stock.name_of_stock.toUpperCase() }}</td>
+                      <td>{{ stock.sector_loc }}</td>
+                      <td>{{ stock.beta_value }}</td>
+                      <!-- <td>{{ stock.sector_count }}</td> -->
+                      <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid" v-if="!afterAnalysisClicked">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="card blur blur-rounded shadow-lg mx-auto">
+                <div class="mt-4 mb-2 mx-3">
+                  <h2 style="text-align: center;">Breakdown of Portfolio:</h2>
+                  <table class="table">
+                    <thead class="text-center">
+                      <tr>
+                        <th class="col-4">Ticker Symbol</th>
+                        <th class="col-4">Sector</th>
+                        <th class="col-4">Beta</th>
+                        <!-- <th>Number of Stocks</th> -->
+                        <!-- <th>Remove Stock?</th> -->
+                      </tr>
+                    </thead>
+
+                    <tbody class="text-center">
+                      <tr v-for="(stock, index) in finalArr" :key="index">
+                        <td>{{ stock.name_of_stock.toUpperCase() }}</td>
+                        <td>{{ stock.sector_loc }}</td>
+                        <td>{{ stock.beta_value }}</td>
+                        <!-- <td>{{ stock.sector_count }}</td> -->
+                        <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-6 col-sm-12">
+              <div class="card blur blur-rounded shadow-lg mx-auto">
+                <div class="mt-4 mb-4 mx-3">
+                  <div id="show_reco" v-if="showBeta" class="container-fluid text-center">
+                    <h2 style="text-align: center">Sector Breakdown</h2>
+                    <p style="text-align: center">
+                      The weighted beta is: {{ weightedBeta }} and your portfolio has
+                      <span :class="{
+                        'green-text': volatileOrNot >= 1.0 && volatileOrNot <= 1.2,
+                        'red-text': volatileOrNot > 1.2,
+                        'yellow-text': volatileOrNot < 1.0
+                      }">{{ volatileOrNot }}</span>
+                    </p>
+                    <div class="d-flex justify-content-center">
+                      <DoughnutChart style="text-align: center; max-width: 300px;" :data="sectorPercentages"
+                        :labels="sectorGraph" :backgroundColors="randomBackgroundColors"></DoughnutChart>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                  <button class="btn" @click="showRecoTable">
+                    <a href="#analysis"></a>
+                    Generate Insights
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-12 col-sm-12">
+            <div class="card blur blur-rounded shadow-lg mx-auto mt-5">
+              <div v-if="showTable" id="analysis" class="container text-center mt-4">
+                <h2 class="pl-2">Analysis of Portfolio</h2>
+                <table class="mx-2 table">
+                  <thead>
+                    <tr class="col">
+                      <th>Ticker Symbol</th>
+                      <th>Overvalued / Undervalued</th>
+                      <th>Recommendation Verdict</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr v-for="(stock, index) in new_table_recommendations" :key="index">
+                      <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
+                      <td :class="{
+                        'green-text': stock.recommendation_verdict === 'HOLD',
+                        'red-text': stock.recommendation_verdict === 'SELL'
+                      }">
+                        {{ stock.valuation }}
+                      </td>
+                      <td :class="{
+                        'green-text': stock.recommendation_verdict === 'HOLD',
+                        'red-text': stock.recommendation_verdict === 'SELL'
+                      }">
+                        {{ stock.recommendation_verdict }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-12 col-sm-12">
+              <div class="card blur blur-rounded shadow-lg mx-auto mt-5">
+                <div v-if="showTable" class="container text-center mt-4 mb-3">
+                  <h2>Recommendations for a balanced Portfolio</h2>
+                  <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4"
+                      v-for="(stock, index) in this.randomStocks" :key="index">
+                      <div class="card blur blur-rounded shadow-lg">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ stock.name }}</h5>
+                          <p class="card-text">
+                            {{ stock.description }}<br />
+                            {{ stock.discount_stat }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pb-10">
             </div>
           </div>
         </div>
@@ -161,37 +185,36 @@
 
 <style>
 * {
-    margin: 0;
-    line-height: 1.5;
-    box-sizing: border-box;
+  margin: 0;
+  line-height: 1.5;
+  box-sizing: border-box;
 }
 
 main {
-    height: 100vh;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
+  height: 100vh !important;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
 }
 
+main::-webkit-scrollbar {
+  display: none;
+}
 
 html,
 body {
-    overflow: hidden;
-    height: 100%;
-}
-
-.center{
-    padding: 15%;
+  overflow: hidden;
+  height: 100%;
 }
 
 .donut {
-    overflow: auto;
-    position: relative; 
-    max-width: 100%; 
-    max-height: 100vh;
-} 
+  overflow: auto;
+  position: relative;
+  max-width: 100%;
+  max-height: 100vh;
+}
 
 button:active {
-    transform: scale(1);
+  transform: scale(1);
 }
 </style>
 
@@ -358,7 +381,7 @@ export default {
               sector_count: 1
             })
           }
-
+          this.userStoreData(this.finalArr)
           this.tickerSymbol = ''
         })
         .catch((error) => {
@@ -548,7 +571,7 @@ export default {
         'F',
         'IBM'
       ]
-      while (random_list.length != 5) {
+      while (random_list.length != 4) {
         const randomIndex = Math.floor(Math.random() * stockSymbols.length)
         const selectedStock = stockSymbols[randomIndex]
         if (!random_list.includes(selectedStock)) {

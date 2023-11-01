@@ -1,6 +1,6 @@
 <template>
   <div class="container text-center mt-7">
-    <div class="col-lg-12">
+    <div class="col-lg-12 mx-auto">
       <div class="card z-index-2 blur blur-rounded shadow-lg">
         <div class="container-fluid" id="indices-buttons">
           <div class="row justify-content-start">
@@ -21,8 +21,13 @@
           <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
         </div>
         <div class="card-body p-3">
-          <div class="container-fluid" id="candlestick-chart">
-            <!-- The candlestick chart will be rendered here -->
+          <div class="container-fluid">
+            <div class="row justify-content-center">
+              <div class="col-12 mx-auto"  id="candlestick-chart">
+                <!-- The candlestick chart will be rendered here -->
+                hello
+              </div>
+            </div>
           </div>
         </div>
 
@@ -271,7 +276,7 @@ const renderChart = (chartData) => {
         type: chartType,
         name: tickerSymbol.value,
         height: 400,
-        width: 1200
+        width: 1150
       },
       series: [
         {
