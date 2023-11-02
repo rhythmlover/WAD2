@@ -9,7 +9,11 @@ const router = createRouter({
     { path: '/markets', component: () => import('../views/Markets.vue') },
     { path: '/stockList', component: () => import('../views/Search.vue') },
     { name: 'stockpage', path: '/stockpage/:symbol/', component: () => import('../views/StockPage.vue') }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    // always scroll to top
+    return { left: 0, top: 0 }
+  },
 })
 
 export default router

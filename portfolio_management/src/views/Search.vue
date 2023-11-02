@@ -1,7 +1,7 @@
 <template>
   <link href="src/assets/css/soft-ui-dashboard.css" rel="stylesheet" />
-
-  <div class="background mx-auto" style="
+  <main>
+    <div class="background mx-auto" style="
       background-image: url('src/assets/img/curved-images/curved0.jpg');
       width: 90%;
       height: 400px;
@@ -9,146 +9,147 @@
       background-size: cover;
       border-radius: 30px;
     ">
-    <div class="container-fluid mt-7">
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-md-12 mt-4">
-          <div class="input-group rounded">
-            <div class="input-group mb-4">
-              <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
-              <input class="form-control" placeholder="     Search" type="search" v-model="searchInput"
-                @keyup="updateTable" />
+      <div class="container-fluid mt-7">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12 mt-4">
+            <div class="input-group rounded">
+              <div class="input-group mb-4">
+                <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
+                <input class="form-control" placeholder="     Search" type="search" v-model="searchInput"
+                  @keyup="updateTable" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="container-fluid">
-      <div class="row justify-content-center">
-        <div class="col-lg-10 col-md-12">
-          <div class="card blur blur-rounded shadow rounded-bottom">
-            <div class="table-responsive">
-              <table class="table align-items-center mb-0" v-show="showActive">
-                <thead>
-                  <tr>
-                    <th ref="active">
-                      <h3 style="text-align: center">Most Active</h3>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th ref="active" colspan="4">
-                      <div class="row mx-8px">
-                        <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                    <th>Symbol</th>
-            </div>
-            <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-              <th>Name</th>
-            </div>
-            <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-              <th>Price</th>
-            </div>
-            <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-              <th>Recommendation</th>
-            </div>
-          </div>
-          </th>
-          </tr>
-          </thead>
-          <tbody>
-            <template v-for="stock in activeStockList" :key="stock.symbol">
-              <RouterLink :to="{
-                name: 'stockpage',
-                params: { symbol: stock.symbol }
-              }" style="text-decoration: none">
-                <div class="row mx-auto table-row-link">
-                  <div class="col-3 mb-0">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-md-12">
+            <div class="card blur blur-rounded shadow rounded-bottom">
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0" v-show="showActive">
+                  <thead>
                     <tr>
-                      <td>{{ stock.symbol }}</td>
+                      <th ref="active">
+                        <h3 style="text-align: center">Most Active</h3>
+                      </th>
                     </tr>
-                  </div>
-                  <div class="col-3 mb-0">
                     <tr>
-                      <td>{{ stock.shortName }}</td>
-                    </tr>
-                  </div>
-                  <div class="col-3 mb-0">
-                    <tr>
-                      <td>{{ stock.price }}</td>
-                    </tr>
-                  </div>
-                  <div class="col-3 mb-0">
-                    <tr>
-                      <td>{{ stock.recommendation }}</td>
-                    </tr>
-                  </div>
-                </div>
-              </RouterLink>
-            </template>
-          </tbody>
-          </table>
-          <table ref="searchList" class="table align-items-center mb-0" v-show="showSearch">
-            <thead>
-              <tr>
-                <th ref="search">
-                  <h3 style="text-align: center">Search Results</h3>
-                </th>
-              </tr>
+                      <th ref="active" colspan="4">
+                        <div class="row mx-8px">
+                          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+                      <th>Symbol</th>
+              </div>
+              <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+                <th>Name</th>
+              </div>
+              <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+                <th>Price</th>
+              </div>
+              <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+                <th>Recommendation</th>
+              </div>
+            </div>
+            </th>
+            </tr>
             </thead>
             <tbody>
-              <tr>
-                <th ref="search" colspan="4">
-                  <div class="row mx-auto">
-                    <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-                <th>Symbol</th>
-        </div>
-        <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-          <th>Name</th>
-        </div>
-        <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-          <th>Price</th>
-        </div>
-        <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
-          <th>Recommendation</th>
-        </div>
-      </div>
-      </th>
-      </tr>
-      <template v-for="stock in searchedStocks" :key="stock.symbol">
-        <RouterLink :to="{
-          name: 'stockpage',
-          params: { symbol: stock.symbol }
-        }" style="text-decoration: none">
-          <div class="row table-row-link mx-auto">
-            <div class="col-3 mb-0">
-              <tr>
-                <td>{{ stock.symbol }}</td>
-              </tr>
-            </div>
-            <div class="col-3 mb-0">
-              <tr>
-                <td>{{ stock.name }}</td>
-              </tr>
-            </div>
-            <div class="col-3 mb-0">
-              <tr>
-                <td>{{ stock.price }}</td>
-              </tr>
-            </div>
-            <div class="col-3 mb-0">
-              <tr>
-                <td>{{ stock.recommendation }}</td>
-              </tr>
-            </div>
+              <template v-for="stock in activeStockList" :key="stock.symbol">
+                <RouterLink :to="{
+                  name: 'stockpage',
+                  params: { symbol: stock.symbol }
+                }" style="text-decoration: none">
+                  <div class="row mx-auto table-row-link">
+                    <div class="col-3 mb-0">
+                      <tr>
+                        <td>{{ stock.symbol }}</td>
+                      </tr>
+                    </div>
+                    <div class="col-3 mb-0">
+                      <tr>
+                        <td>{{ stock.shortName }}</td>
+                      </tr>
+                    </div>
+                    <div class="col-3 mb-0">
+                      <tr>
+                        <td>{{ stock.price }}</td>
+                      </tr>
+                    </div>
+                    <div class="col-3 mb-0">
+                      <tr>
+                        <td>{{ stock.recommendation }}</td>
+                      </tr>
+                    </div>
+                  </div>
+                </RouterLink>
+              </template>
+            </tbody>
+            </table>
+            <table ref="searchList" class="table align-items-center mb-0" v-show="showSearch">
+              <thead>
+                <tr>
+                  <th ref="search">
+                    <h3 style="text-align: center">Search Results</h3>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th ref="search" colspan="4">
+                    <div class="row mx-auto">
+                      <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+                  <th>Symbol</th>
           </div>
-        </RouterLink>
-      </template>
-      </tbody>
-      </table>
+          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+            <th>Name</th>
+          </div>
+          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+            <th>Price</th>
+          </div>
+          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+            <th>Recommendation</th>
+          </div>
+        </div>
+        </th>
+        </tr>
+        <template v-for="stock in searchedStocks" :key="stock.symbol">
+          <RouterLink :to="{
+            name: 'stockpage',
+            params: { symbol: stock.symbol }
+          }" style="text-decoration: none">
+            <div class="row table-row-link mx-auto">
+              <div class="col-3 mb-0">
+                <tr>
+                  <td>{{ stock.symbol }}</td>
+                </tr>
+              </div>
+              <div class="col-3 mb-0">
+                <tr>
+                  <td>{{ stock.name }}</td>
+                </tr>
+              </div>
+              <div class="col-3 mb-0">
+                <tr>
+                  <td>{{ stock.price }}</td>
+                </tr>
+              </div>
+              <div class="col-3 mb-0">
+                <tr>
+                  <td>{{ stock.recommendation }}</td>
+                </tr>
+              </div>
+            </div>
+          </RouterLink>
+        </template>
+        </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-  </div>
-  </div>
-  </div>
-  </div>
+    </div>
+    </div>
+    </div>
+    </div>
+  </main>
 </template>
 
 <style>
