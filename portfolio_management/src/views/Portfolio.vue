@@ -1,6 +1,12 @@
 <template>
-  <div class="mt-10" v-if="!isLoggedIn">
-    <h1 class="text-center">Please sign in to see this page</h1>
+  <div class="mt-8" v-if="!isLoggedIn">
+    <div class="container-fluid w-50">
+      <div class="card blur blur-rounded shadow rounded-5" v-if="afterAnalysisClicked">
+        <div class="card-header shadow-lg rounded-5 pb-0 pt-2">
+          <h4 class="text-center">Please sign in to see this page</h4>
+        </div>
+      </div>
+    </div>
   </div>
   <div v-if="isLoggedIn" class="mt-7">
     <main>
@@ -157,8 +163,8 @@
                 <div v-if="showTable" class="container text-center mt-4 mb-3">
                   <h2>Recommendations for a balanced Portfolio</h2>
                   <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4"
-                      v-for="(stock, index) in this.randomStocks" :key="index">
+                    <div class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4" v-for="(stock, index) in this.randomStocks"
+                      :key="index">
                       <div class="card blur blur-rounded shadow-lg">
                         <div class="card-body">
                           <h5 class="card-title">{{ stock.name }}</h5>
@@ -194,6 +200,7 @@ main {
   height: 100vh !important;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 }
 
 main::-webkit-scrollbar {
@@ -302,7 +309,6 @@ export default {
             })
           }
         }
-        console.log('Document data:', docSnap.data())
       } else {
         console.log('No such document!')
       }
@@ -326,7 +332,7 @@ export default {
             symbol: this.tickerSymbol
           },
           headers: {
-            'X-RapidAPI-Key': '6a4770bf58msh4060c0ec2686b7cp12f5dajsn63b18f3e5c8f',
+            'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
             'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
           }
         })
@@ -340,7 +346,8 @@ export default {
               this.error_msg = ''
             }
           }
-          var sector = response.data.assetProfile.sector
+          console.log(response.data.body)
+          var sector = response.data.body.sector
           var beta = (0.8 + Math.random() * 0.5).toFixed(2)
 
           //  Check if a stock with the same sector already exists in finalArr
@@ -403,14 +410,14 @@ export default {
                 symbol: obj.name_of_stock.toUpperCase()
               },
               headers: {
-                'X-RapidAPI-Key': '6a4770bf58msh4060c0ec2686b7cp12f5dajsn63b18f3e5c8f',
+                'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
                 'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
               }
             })
             .then((response) => {
               const randomNumber = (15 + Math.random() * 5).toFixed(2)
 
-              const recommendation_status = response.data.financialData.recommendationKey
+              const recommendation_status = response.data.body.recommendationKey
               if (recommendation_status == 'buy') {
                 this.new_table_recommendations.push({
                   name_of_stock: obj.name_of_stock,

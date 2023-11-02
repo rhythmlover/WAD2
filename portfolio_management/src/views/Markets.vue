@@ -321,7 +321,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -334,7 +334,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -385,7 +385,7 @@ const getGainerData = async () => {
     url: 'https://yahoo-finance15.p.rapidapi.com/api/yahoo/co/collections/day_gainers',
     params: { start: '0' },
     headers: {
-      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'yahoo-finance15.p.rapidapi.com'
     }
   };
@@ -404,7 +404,7 @@ const getSectorData = async () => {
     method: 'GET',
     url: 'https://fidelity-investments.p.rapidapi.com/market/get-sectors',
     headers: {
-      'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+      'X-RapidAPI-Key': 'empty',
       'X-RapidAPI-Host': 'fidelity-investments.p.rapidapi.com'
     }
   };
