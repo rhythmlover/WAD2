@@ -3,55 +3,96 @@
   <link id="pagestyle" href="src/assets/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
   <link href="src/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="src/assets/css/nucleo-svg.css" rel="stylesheet" />
-
-  <nav
-    class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-10">
-    <div class="container-fluid pe-0">
-      <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3">
-        <span v-if="isLoggedIn">{{ username }}</span>
-        <span v-if="!isLoggedIn">Portfolio Management</span>
-      </a>
-      <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation"
-        aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon mt-2">
-          <span class="navbar-toggler-bar bar1"></span>
-          <span class="navbar-toggler-bar bar2"></span>
-          <span class="navbar-toggler-bar bar3"></span>
-        </span>
-      </button>
-      <div class="collapse navbar-collapse" id="navigation">
-        <ul class="navbar-nav mx-auto ms-xl-auto">
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center me-2">
-              <i class="fa fa-chart-pie opacity-6 text-dark me-1"></i>
-              <RouterLink to="/">Portfolio</RouterLink>
+  <div class="container-fluid position-sticky z-index-sticky top-0">
+    <div class="row">
+      <div class="col-12">
+        <nav
+          class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-7">
+          <div class="container-fluid pe-0 me-8">
+            <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3">
+              <span>Portfolio Management</span>
             </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link me-2">
-              <i class="fas fa-poll opacity-6 text-dark me-1"></i>
-              <RouterLink to="/markets">Markets</RouterLink>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link me-2">
-              <i class="fas fa-search opacity-6 text-dark me-1"></i>
-              <RouterLink to="/stockList">Search</RouterLink>
-            </a>
-          </li>
-        </ul>
-        <ul class="navbar-nav d-lg-block d-none">
-          <li class="nav-item">
-            <a class="btn btn-sm btn-round mb-0 me-1 bg-gradient-dark" @click="handleLogIn" v-if="!isLoggedIn">Sign In</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-sm btn-round mb-0 me-1 bg-gradient-dark" @click="handleLogOut" v-if="isLoggedIn">Sign Out</a>
-          </li>
-        </ul>
+            <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
+              aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon mt-2">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navigation">
+              <ul class="navbar-nav mx-lg-auto ms-xl-auto">
+                <li class="nav-item">
+                  <a class="nav-link me-2">
+                    <i class="fa fa-chart-pie opacity-6 text-dark me-1"></i>
+                    <RouterLink to="/">Portfolio</RouterLink>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-2">
+                    <i class="fas fa-poll opacity-6 text-dark me-1"></i>
+                    <RouterLink to="/markets">Markets</RouterLink>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-2">
+                    <i class="fas fa-search opacity-6 text-dark me-1"></i>
+                    <RouterLink to="/stockList">Search</RouterLink>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link font-weight-bold" style="cursor: pointer;" @click="handleLogIn" v-if="!isLoggedIn">
+                    <i class="fa fa-user me-sm-1"></i>
+                    Sign In
+                  </a>
+                </li>
+                <li class="nav-item dropdown" v-if="isLoggedIn">
+                  <a class="nav-link me-2" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                    <li class="mb-2">
+                      <span class="text-truncate">Welcome! {{ username }}</span>
+                    </li>
+                    <li class="mb-2">
+                      <a class="dropdown-item border-radius-md">
+                        <div class="d-flex">
+                          <div class="my-auto me-2">
+                            <i class="fa fa-user me-sm-1 me-3"></i>
+                          </div>
+                          <div class="d-flex flex-column justify-content-center">
+                            <RouterLink to="/profile"><h6 class="text-sm font-weight-normal my-auto">
+                              <span class="font-weight-bold">Profile</span>
+                            </h6></RouterLink>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li class="">
+                      <a class="dropdown-item border-radius-md" @click="handleLogOut">
+                        <div class="d-flex">
+                          <div class="my-auto me-2">
+                            <i class="fas fa-sign-out-alt me-sm-1 me-3"></i>
+                          </div>
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="text-sm font-weight-normal my-auto">
+                              <span class="font-weight-bold">Sign Out</span>
+                            </h6>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <RouterView />
       </div>
     </div>
-  </nav>
-  <RouterView />
+  </div>
 </template>
 ``
 <style scoped>
@@ -95,7 +136,7 @@ onMounted(() => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       uid = user.uid;
-      userDetailsInit() 
+      userDetailsInit()
       isLoggedIn.value = true
     } else {
       isLoggedIn.value = false

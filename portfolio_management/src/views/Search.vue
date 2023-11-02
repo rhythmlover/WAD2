@@ -175,7 +175,7 @@ var current = ref('')
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': '985bf11bb6msh4df2b70c188b165p124b6fjsn68131220f132',
+    'X-RapidAPI-Key': 'empty',
     'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
   }
 }
@@ -190,7 +190,7 @@ const optionsAll = {
     format: 'json'
   },
   headers: {
-    'X-RapidAPI-Key': '985bf11bb6msh4df2b70c188b165p124b6fjsn68131220f132',
+    'X-RapidAPI-Key': 'empty',
     'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
   }
 }
@@ -219,14 +219,16 @@ const updateTable = async () => {
         stock.name.toLowerCase().includes(searchInput.value.toLowerCase())
       )
     })
-    searchedStocks.value = filteredStocks.slice(0, 2)
+    searchedStocks.value = filteredStocks.slice(0, 3)
     searchedStocks.value.forEach(async (stock) => {
       current.value = stock.symbol;
-      let [recc, price] = await getReco()
-      console.log(recc, price)
-      stock.recommendation = recc;
-      stock.price = price
-      console.log('run')
+      setTimeout(async () => {
+        let [recc, price] = await getReco();
+        console.log(recc, price);
+        stock.recommendation = recc;
+        stock.price = price;
+        console.log('run');
+      }, 500);
     });
     console.log(searchedStocks.value);
   }
@@ -237,7 +239,6 @@ async function run() {
   try {
     const responses = await fetch(url, options)
     const results = await responses.json()
-
     let active = results.finance.result[0];
     let stockList = active.quotes.map(async (quote) => {
       current.value = quote.symbol;
@@ -251,7 +252,6 @@ async function run() {
     });
 
     activeStockList.value = await Promise.all(stockList);
-    //console.log(stockList)
   } catch (error) {
     console.error(error)
   }
@@ -261,7 +261,6 @@ async function getAllStock() {
   try {
     const responsesAll = await Promise.all([fetch(urlAll, optionsAll)])
     resultsAll.value = await Promise.all(responsesAll.map((res) => res.json()))
-    //console.log(resultsAll.value)
   } catch (error) {
     console.error(error)
   }
@@ -274,13 +273,13 @@ async function getReco() {
         symbol: current.value
       },
       headers: {
-        'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+        'X-RapidAPI-Key': 'empty',
         'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
       }
     });
-    console.log(response.data.financialData.recommendationKey, response.data.financialData.currentPrice.fmt)
-    return [response.data.financialData.recommendationKey,
-    response.data.financialData.currentPrice.fmt];
+    console.log(response.data.body.recommendationKey, response.data.body.currentPrice.fmt)
+    return [response.data.body.recommendationKey,
+    response.data.body.currentPrice.fmt];
   }
   catch (error) {
     console.error(error);

@@ -8,6 +8,7 @@ const router = createRouter({
     { path: '/login', component: () => import('../views/Login.vue') },
     { path: '/markets', component: () => import('../views/Markets.vue') },
     { path: '/stockList', component: () => import('../views/Search.vue') },
+    { path: '/profile', component: () => import('../views/Profile.vue') },
     { name: 'stockpage', path: '/stockpage/:symbol/', component: () => import('../views/StockPage.vue') }
   ],
   scrollBehavior(to, from, savedPosition) {
