@@ -127,5 +127,3 @@ const handleLogOut = () => {
     })
 }
 </script>
-
-<style></style>

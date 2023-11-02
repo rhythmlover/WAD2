@@ -1,81 +1,75 @@
 <template>
-  <div class="container text-center mt-7">
-    <div class="col-lg-12 mx-auto">
-      <div class="card z-index-2 blur blur-rounded shadow-lg">
-        <div class="container-fluid" id="indices-buttons">
-          <div class="row justify-content-start">
-            <div class="col-lg-5 mt-4">
-              <button class="btn bg-gradient-primary mx-1" type="button" id="snp500" @click="selectSymbol('^GSPC')">
-                S&P 500
-              </button>
-              <button class="btn bg-gradient-primary mx-1" type="button" id="nasdaq100" @click="selectSymbol('^NDX')">
-                Nasdaq 100
-              </button>
-              <button class="btn bg-gradient-primary mx-1" type="button" id="dow30" @click="selectSymbol('^DJI')">
-                Dow 30
-              </button>
+  <main>
+    <div class="container text-center mt-7">
+      <div class="col-lg-12 mx-auto">
+        <div class="card z-index-2 blur blur-rounded shadow-lg">
+          <div class="container-fluid" id="indices-buttons">
+            <div class="row justify-content-start">
+              <div class="col-lg-5 mt-4">
+                <button class="btn bg-gradient-primary mx-1" type="button" id="snp500" @click="selectSymbol('^GSPC')">
+                  S&P 500
+                </button>
+                <button class="btn bg-gradient-primary mx-1" type="button" id="nasdaq100" @click="selectSymbol('^NDX')">
+                  Nasdaq 100
+                </button>
+                <button class="btn bg-gradient-primary mx-1" type="button" id="dow30" @click="selectSymbol('^DJI')">
+                  Dow 30
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card-header pb-0 pt-2">
-          <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
-        </div>
-        <div class="card-body p-3">
+          <div class="card-header pb-0 pt-2">
+            <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
+          </div>
+          <div class="card-body p-3">
+            <div class="container-fluid">
+              <div class="row justify-content-center">
+                <div class="col-12 mx-auto" id="candlestick-chart">
+                  <!-- The candlestick chart will be rendered here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="container-fluid">
-            <div class="row justify-content-center">
-              <div class="col-12 mx-auto"  id="candlestick-chart">
-                <!-- The candlestick chart will be rendered here -->
-                hello
+            <div class="row justify-content-between">
+              <div class="col-lg-5 col-md-7 mb-3" id="interval-options">
+                <button class="btn bg-gradient-primary mx-1" id="allButton" @click="fetchDataAndUpdateChart('All')">
+                  All time
+                </button>
+                <button class="btn bg-gradient-primary mx-1" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
+                  1 Month
+                </button>
+                <button class="btn bg-gradient-primary mx-1" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
+                  1 Week
+                </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="container-fluid">
-          <div class="row justify-content-between">
-            <div class="col-lg-5 col-md-7 mb-3" id="interval-options">
-              <button class="btn bg-gradient-primary mx-1" id="allButton" @click="fetchDataAndUpdateChart('All')">
-                All time
-              </button>
-              <button class="btn bg-gradient-primary mx-1" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
-                1 Month
-              </button>
-              <button class="btn bg-gradient-primary mx-1" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
-                1 Week
-              </button>
-            </div>
-            <div class="col-md-5 mb-3" id="chart-type">
-              <button class="btn bg-gradient-primary mx-1" id="candlestick" @click="
-                chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
-                Candlestick
-              </button>
-              <button class="btn bg-gradient-primary mx-1" id="area" @click="
-                chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
-                Area
-              </button>
+              <div class="col-md-5 mb-3" id="chart-type">
+                <button class="btn bg-gradient-primary mx-1" id="candlestick" @click="
+                  chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
+                  Candlestick
+                </button>
+                <button class="btn bg-gradient-primary mx-1" id="area" @click="
+                  chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
+                  Area
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container" id="trending-container">
-      <div id="trending"></div>
-      <div id="active"></div>
-      <div id="gainer"></div>
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="row my-4">
-      <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
-        <div class="card blur blur-rounded shadow-lg">
-          <div class="card-header pb-0">
-            <div class="row align-center">
-              <div class="col-lg-6 col-7">
-                <h3>Day Gainers</h3>
-              </div>
-              <!-- <div class="col-lg-6 col-5 my-auto text-end">
+    <div class="container">
+      <div class="row my-4">
+        <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+          <div class="card blur blur-rounded shadow-lg">
+            <div class="card-header pb-0">
+              <div class="row align-center">
+                <div class="col-lg-6 col-7">
+                  <h3>Day Gainers</h3>
+                </div>
+                <!-- <div class="col-lg-6 col-5 my-auto text-end">
                 <div class="dropdown float-lg-end pe-4">
                   <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-ellipsis-v text-secondary"></i>
@@ -93,57 +87,57 @@
                   </ul>
                 </div>
               </div> -->
+              </div>
             </div>
-          </div>
-          <div class="card-body px-0 pb-2">
-            <div class="table-responsive">
-              <table class="table mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                      Company
-                    </th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Price ($)
-                    </th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Change (%)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="quote in gainer" :key="quote.symbol">
-                    <td>
-                      <div class="d-flex px-3 py-1">
-                        <div class="d-flex flex-column justify-content-center">
-                          <h6 class="mb-0 text-sm">{{ quote.longName }}</h6>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive">
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Company
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        Price ($)
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        Change (%)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="quote in gainer" :key="quote.symbol">
+                      <td>
+                        <div class="d-flex px-3 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ quote.longName }}</h6>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td class="align-middle text-sm">
-                      {{ quote.regularMarketPrice }}
-                    </td>
-                    <td class="align-middle text-sm">
-                      <span class="text-s font-weight-bold text-success"
-                        :class="{ 'text-danger': quote.regularMarketChangePercent < 0 }">
-                        {{ Number(quote.regularMarketChangePercent).toFixed(2) }} </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      </td>
+                      <td class="align-middle text-sm">
+                        {{ quote.regularMarketPrice }}
+                      </td>
+                      <td class="align-middle text-sm">
+                        <span class="text-s font-weight-bold text-success"
+                          :class="{ 'text-danger': quote.regularMarketChangePercent < 0 }">
+                          {{ Number(quote.regularMarketChangePercent).toFixed(2) }} </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
-        <div class="card blur blur-rounded shadow-lg">
-          <div class="card-header pb-0">
-            <div class="row align-center">
-              <div class="col-lg-6 col-7">
-                <h3>Best Sectors</h3>
-              </div>
-              <!-- <div class="col-lg-6 col-5 my-auto text-end">
+        <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+          <div class="card blur blur-rounded shadow-lg">
+            <div class="card-header pb-0">
+              <div class="row align-center">
+                <div class="col-lg-6 col-7">
+                  <h3>Best Sectors</h3>
+                </div>
+                <!-- <div class="col-lg-6 col-5 my-auto text-end">
                 <div class="dropdown float-lg-end pe-4">
                   <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-ellipsis-v text-secondary"></i>
@@ -161,66 +155,57 @@
                   </ul>
                 </div>
               </div> -->
+              </div>
             </div>
-          </div>
-          <div class="card-body px-0 pb-2">
-            <div class="table-responsive">
-              <table class="table mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                      Sector
-                    </th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      Monthly Change (%)
-                    </th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                      YTD Change (%)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(sector, index) in top5Sectors" :key="index">
-                    <td>
-                      <div class="d-flex px-3 py-1">
-                        <div class="d-flex flex-column justify-content-center">
-                          <h6 class="mb-0 text-sm">{{ sector.description }}</h6>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive">
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Sector
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        Monthly Change (%)
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        YTD Change (%)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(sector, index) in top5Sectors" :key="index">
+                      <td>
+                        <div class="d-flex px-3 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{ sector.description }}</h6>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td class="align-middle text-sm text-success" :class="{ 'text-danger': sector.monthChange < 0 }">
-                      {{ sector.monthChange }}
-                    </td>
-                    <td class="align-middle text-sm">
-                      <span class="text-s font-weight-bold text-success" :class="{ 'text-danger': sector.ytdChange < 0 }">
-                        {{
-                          sector.ytdChange }} </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      </td>
+                      <td class="align-middle text-sm text-success" :class="{ 'text-danger': sector.monthChange < 0 }">
+                        {{ sector.monthChange }}
+                      </td>
+                      <td class="align-middle text-sm">
+                        <span class="text-s font-weight-bold text-success"
+                          :class="{ 'text-danger': sector.ytdChange < 0 }">
+                          {{
+                            sector.ytdChange }} </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </template>
-
-<style scoped>
-.dropdown-menu {
-  z-index: 10000;
-}
-</style>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { parseString } from 'xml2js';
-
-onMounted(() => {
-  curr_interval.value = 'All'
-  selectSymbol('^GSPC')
-})
 
 // CHART SECTION
 var chart = null
@@ -231,11 +216,17 @@ var curr_interval = ref('')
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
-onMounted(() => {
+onMounted(async () => {
   curr_interval.value = 'All'
   selectSymbol('^GSPC')
-  getGainerData()
-  parseXML()
+  const getDataPromise = new Promise((resolve) => {
+    getGainerData()
+    parseXML()
+    resolve()
+  })
+  getDataPromise.then(() => {
+
+  })
 })
 
 const selectSymbol = (symbol) => {
@@ -391,17 +382,18 @@ const getGainerData = async () => {
   const url = 'https://yahoo-finance15.p.rapidapi.com/api/yahoo/co/collections/day_gainers?start=0'
   const options = {
     method: 'GET',
+    url: 'https://yahoo-finance15.p.rapidapi.com/api/yahoo/co/collections/day_gainers',
+    params: { start: '0' },
     headers: {
       'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
       'X-RapidAPI-Host': 'yahoo-finance15.p.rapidapi.com'
     }
-  }
+  };
 
   try {
     const response = await fetch(url, options)
     const result = await response.json()
-    console.log(result)
-    gainer.value = result.quotes.slice(0, 5)
+    gainer.value = result.body.slice(0, 5)
   } catch (error) {
     console.error(error)
   }
