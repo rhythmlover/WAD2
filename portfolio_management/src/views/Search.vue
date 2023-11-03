@@ -16,7 +16,7 @@
               <div class="input-group mb-4">
                 <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
                 <input class="form-control" placeholder="     Search" type="search" v-model="searchInput"
-                  @keyup="updateTable" />
+                  @keyup="updateTableWithDelay" />
               </div>
             </div>
           </div>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-3 mb-0">
                       <tr>
-                        <td>{{ stock.shortName }}</td>
+                        <td>{{ stock.displayName }}</td>
                       </tr>
                     </div>
                     <div class="col-3 mb-0">
@@ -118,22 +118,22 @@
             params: { symbol: stock.symbol }
           }" style="text-decoration: none">
             <div class="row table-row-link mx-auto">
-              <div class="col-3 mb-0">
+              <div class="col-3 mb-0 text-center wrap-text">
                 <tr>
                   <td>{{ stock.symbol }}</td>
                 </tr>
               </div>
-              <div class="col-3 mb-0">
+              <div class="col-3 mb-0 text-center wrap-text">
                 <tr>
                   <td>{{ stock.name }}</td>
                 </tr>
               </div>
-              <div class="col-3 mb-0">
+              <div class="col-3 mb-0 text-center wrap-text">
                 <tr>
                   <td>{{ stock.price }}</td>
                 </tr>
               </div>
-              <div class="col-3 mb-0">
+              <div class="col-3 mb-0 text-center wrap-text">
                 <tr>
                   <td>{{ stock.recommendation }}</td>
                 </tr>
@@ -157,6 +157,14 @@
   background-color: lightgrey;
   /* Change to your desired color */
 }
+
+.wrap-text {
+    word-wrap: break-word;
+  }
+
+.text-center{
+  text-align: center  ;
+}
 </style>
 
 <script setup>
@@ -174,14 +182,15 @@ var current = ref('')
 
 const options = {
   method: 'GET',
+  params: {start: '0'},
   headers: {
-    'X-RapidAPI-Key': 'empty',
-    'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
+    'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
+    'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
   }
 }
 
 const url =
-  'https://apidojo-yahoo-finance-v1.p.rapidapi.com/screeners/get-symbols-by-predefined?scrIds=MOST_ACTIVES&start=0&count=2'
+  'https://mboum-finance.p.rapidapi.com/co/collections/most_actives'
 
 const optionsAll = {
   method: 'GET',
@@ -190,12 +199,12 @@ const optionsAll = {
     format: 'json'
   },
   headers: {
-    'X-RapidAPI-Key': 'empty',
+    'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
     'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
   }
 }
 
-const urlAll = 'https://twelve-data1.p.rapidapi.com/stocks?country=US'
+const urlAll = 'https://twelve-data1.p.rapidapi.com/stocks?country=US&exchange=NASDAQ'
 
 const urlReco = 'https://mboum-finance.p.rapidapi.com/qu/quote/financial-data'
 
@@ -203,6 +212,13 @@ onMounted(() => {
   run()
   getAllStock()
 })
+
+let timeout = null;
+
+const updateTableWithDelay = () => {
+  clearTimeout(timeout);
+  timeout = setTimeout(updateTable, 500); // 500 milliseconds delay
+};
 
 const updateTable = async () => {
   if (searchInput.value.trim() === '') {
@@ -220,16 +236,18 @@ const updateTable = async () => {
       )
     })
     searchedStocks.value = filteredStocks.slice(0, 3)
-    searchedStocks.value.forEach(async (stock) => {
+    for (const stock of searchedStocks.value) {
+      stock.recommendation = "Loading...";
+      stock.price = "Loading...";
+    }
+    for(const stock of searchedStocks.value) {
       current.value = stock.symbol;
-      setTimeout(async () => {
         let [recc, price] = await getReco();
         console.log(recc, price);
         stock.recommendation = recc;
         stock.price = price;
         console.log('run');
-      }, 500);
-    });
+    };
     console.log(searchedStocks.value);
   }
 }
@@ -239,13 +257,13 @@ async function run() {
   try {
     const responses = await fetch(url, options)
     const results = await responses.json()
-    let active = results.finance.result[0];
-    let stockList = active.quotes.map(async (quote) => {
+    let active = results.body.slice(0,2);
+    let stockList = active.map(async (quote) => {
       current.value = quote.symbol;
       let [recc, price] = await getReco();
       return {
         symbol: quote.symbol,
-        shortName: quote.shortName,
+        displayName: quote.displayName,
         recommendation: recc,
         price: price
       };
@@ -273,16 +291,16 @@ async function getReco() {
         symbol: current.value
       },
       headers: {
-        'X-RapidAPI-Key': 'empty',
+        'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
         'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
       }
     });
-    console.log(response.data.body.recommendationKey, response.data.body.currentPrice.fmt)
-    return [response.data.body.recommendationKey,
+    return [response.data.body.recommendationKey.toUpperCase(),
     response.data.body.currentPrice.fmt];
   }
   catch (error) {
     console.error(error);
+    return ["None","None"]
   }
 }
 </script>
