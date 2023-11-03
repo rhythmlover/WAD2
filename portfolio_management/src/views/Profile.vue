@@ -66,7 +66,7 @@
                                 </li>
                             </ul>
                             <div class="d-flex justify-content-center pt-3">
-                                <button type="button" class="btn bg-gradient-primary w-50"
+                                <button type="button" class="btn bg-gradient-danger text-white w-50"
                                     @click="clearPortfolio">Clear</button>
                             </div>
                             <div class="text-center text-danger" v-if="dataClearedBool">

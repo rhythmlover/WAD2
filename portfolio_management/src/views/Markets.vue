@@ -196,10 +196,34 @@
                 </table>
               </div>
             </div>
+
           </div>
         </div>
       </div>
     </div>
+
+      <div class="container">
+    <div class="row my-4">
+      <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+      <div v-for="(article, index) in newsData" :key="index">
+        <div class="card m-2 news blur blur-rounded shadow-lg" style="width: 800px; height: 150px;">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img :src="article.article_photo_url" class="img-fluid rounded-start" style="object-fit: cover;max-width: 266px; max-height: 150px;">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ article.article_title }}</h5>
+                <p class="card-text">{{ article.article_summary }}</p>
+                <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   </main>
 </template>
 
@@ -239,6 +263,8 @@ const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 onMounted(async () => {
   curr_interval.value = 'All'
   selectSymbol('^GSPC')
+  getMarketNews()
+
   const getDataPromise = new Promise((resolve) => {
     getGainerData()
     parseXML()
@@ -500,7 +526,7 @@ const getGainerData = async () => {
     url: 'https://yahoo-finance15.p.rapidapi.com/api/yahoo/co/collections/day_gainers',
     params: { start: '0' },
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': '7e1df04ca4mshc42d90db4b929b5p114deejsn28c65bd112fb',
       'X-RapidAPI-Host': 'yahoo-finance15.p.rapidapi.com'
     }
   };
@@ -531,6 +557,38 @@ const getSectorData = async () => {
     console.error(error);
   }
 }
+
+
+// News Section
+const newsData = ref([]);
+
+const getMarketNews = async () => {
+
+  const options = {
+    method: 'GET',
+    url: 'https://real-time-finance-data.p.rapidapi.com/market-trends',
+    params: {
+      trend_type: 'MOST_ACTIVE',
+      country: 'us',
+      language: 'en'
+    },
+    headers: {
+      'X-RapidAPI-Key': '7e1df04ca4mshc42d90db4b929b5p114deejsn28c65bd112fb',
+      'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com'
+    }
+  };
+
+  try {
+    const response = await axios.request(options);
+    console.log(response.data.data.news);
+    newsData.value = response.data.data.news
+    console.log(newsData.value)
+  } catch (error) {
+    console.error(error);
+
+  }
+}
+
 
 const top5Sectors = ref([]);
 
@@ -563,3 +621,19 @@ const parseXML = async () => {
   });
 };
 </script>
+
+<style>
+.news {
+  transition: all 0.3s;
+}
+
+.news:hover {
+  transform: scale(1.1);
+}
+
+.news:hover .card-text {
+  display: block;
+  white-space: normal;
+}
+
+</style>
