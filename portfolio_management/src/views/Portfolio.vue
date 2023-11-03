@@ -16,8 +16,52 @@
             <div>
               <div class="row">
                 <div class="container form-group font-weight-bold mt-2">
-                  Ticker Symbol: &nbsp; <input class="form-control col-lg-10 col-md-10 col-sm-10" type="text"
-                    v-model="tickerSymbol" id="symbol" ref="name" />
+                  Ticker Symbol: &nbsp;
+                  <input
+                    class="form-control col-lg-10 col-md-10 col-sm-10"
+                    type="text"
+                    v-model="tickerSymbol"
+                    id="symbol"
+                    ref="name"
+                    @keyup="updateTable"
+                  />
+                  <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
+                    <tbody>
+                      <!-- <tr>
+                        <th ref="search" colspan="4">
+                          <div class="row mx-auto">
+                            <div
+                              class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                            >
+                              <th>Symbol</th>
+                            </div>
+                            <div
+                              class="col-9 text-uppercase text-dark text-lg font-weight-bolder opacity-7"
+                            >
+                              <th>Name</th>
+                            </div>
+                          </div>
+                        </th>
+                      </tr> -->
+                      <template v-for="stock in searchedStocks" :key="stock.symbol">
+                        <div @click="addTicker(stock.symbol)"
+                        >
+                          <div class="row table-row-link mx-auto">
+                            <div class="col-3 mb-0">
+                              <tr>
+                                <td>{{ stock.symbol }}</td>
+                              </tr>
+                            </div>
+                            <div class="col-3 mb-0">
+                              <tr>
+                                <td>{{ stock.name }}</td>
+                              </tr>
+                            </div>
+                          </div>
+                        </div>
+                      </template>
+                    </tbody>
+                  </table>
                   <span v-if="error_msg.length">{{ error_msg }}</span>
                 </div>
               </div>
@@ -37,7 +81,7 @@
           <div id="result" v-if="finalArr.length > 0" class="container mt-5">
             <div class="row">
               <div v-if="!showBeta">
-                <h2 style="text-align: center;">Breakdown of Portfolio:</h2>
+                <h2 style="text-align: center">Breakdown of Portfolio:</h2>
                 <table class="table">
                   <thead class="text-center">
                     <tr>
@@ -69,7 +113,7 @@
             <div class="col-lg-6 col-md-6 col-sm-12">
               <div class="card blur blur-rounded shadow-lg mx-auto">
                 <div class="mt-4 mb-2 mx-3">
-                  <h2 style="text-align: center;">Breakdown of Portfolio:</h2>
+                  <h2 style="text-align: center">Breakdown of Portfolio:</h2>
                   <table class="table">
                     <thead class="text-center">
                       <tr>
@@ -102,15 +146,22 @@
                     <h2 style="text-align: center">Sector Breakdown</h2>
                     <p style="text-align: center">
                       The weighted beta is: {{ weightedBeta }} and your portfolio has
-                      <span :class="{
-                        'green-text': volatileOrNot >= 1.0 && volatileOrNot <= 1.2,
-                        'red-text': volatileOrNot > 1.2,
-                        'yellow-text': volatileOrNot < 1.0
-                      }">{{ volatileOrNot }}</span>
+                      <span
+                        :class="{
+                          'green-text': volatileOrNot >= 1.0 && volatileOrNot <= 1.2,
+                          'red-text': volatileOrNot > 1.2,
+                          'yellow-text': volatileOrNot < 1.0
+                        }"
+                        >{{ volatileOrNot }}</span
+                      >
                     </p>
                     <div class="d-flex justify-content-center">
-                      <DoughnutChart style="text-align: center; max-width: 300px;" :data="sectorPercentages"
-                        :labels="sectorGraph" :backgroundColors="randomBackgroundColors"></DoughnutChart>
+                      <DoughnutChart
+                        style="text-align: center; max-width: 300px"
+                        :data="sectorPercentages"
+                        :labels="sectorGraph"
+                        :backgroundColors="randomBackgroundColors"
+                      ></DoughnutChart>
                     </div>
                   </div>
                 </div>
@@ -140,16 +191,20 @@
                   <tbody>
                     <tr v-for="(stock, index) in new_table_recommendations" :key="index">
                       <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
-                      <td :class="{
-                        'green-text': stock.recommendation_verdict === 'HOLD',
-                        'red-text': stock.recommendation_verdict === 'SELL'
-                      }">
+                      <td
+                        :class="{
+                          'green-text': stock.recommendation_verdict === 'HOLD',
+                          'red-text': stock.recommendation_verdict === 'SELL'
+                        }"
+                      >
                         {{ stock.valuation }}
                       </td>
-                      <td :class="{
-                        'green-text': stock.recommendation_verdict === 'HOLD',
-                        'red-text': stock.recommendation_verdict === 'SELL'
-                      }">
+                      <td
+                        :class="{
+                          'green-text': stock.recommendation_verdict === 'HOLD',
+                          'red-text': stock.recommendation_verdict === 'SELL'
+                        }"
+                      >
                         {{ stock.recommendation_verdict }}
                       </td>
                     </tr>
@@ -163,8 +218,11 @@
                 <div v-if="showTable" class="container text-center mt-4 mb-3">
                   <h2>Recommendations for a balanced Portfolio</h2>
                   <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4" v-for="(stock, index) in this.randomStocks"
-                      :key="index">
+                    <div
+                      class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4"
+                      v-for="(stock, index) in this.randomStocks"
+                      :key="index"
+                    >
                       <div class="card blur blur-rounded shadow-lg">
                         <div class="card-body">
                           <h5 class="card-title">{{ stock.name }}</h5>
@@ -180,8 +238,7 @@
               </div>
             </div>
 
-            <div class="pb-10">
-            </div>
+            <div class="pb-10"></div>
           </div>
         </div>
       </div>
@@ -223,6 +280,11 @@ body {
 button:active {
   transform: scale(1);
 }
+
+.table-row-link:hover {
+  background-color: lightgrey;
+  /* Change to your desired color */
+}
 </style>
 
 <script>
@@ -262,7 +324,12 @@ export default {
       auth: null,
       db: null,
       userRef: null,
-      uid: ''
+      uid: '',
+
+      //for autocomplete
+      resultsAll: [],
+      showTable: false,
+      searchedStocks: []
     }
   },
   mounted() {
@@ -285,8 +352,48 @@ export default {
     authStateChangedPromise.then(() => {
       this.getUserData()
     })
+
+    this.getAllStock()
   },
   methods: {
+    async getAllStock() {
+      let urlAll = "https://twelve-data1.p.rapidapi.com/stocks?country=US"
+      let optionsAll = {
+        method: 'GET',
+        params: {
+          country: 'US',
+          format: 'json'
+        },
+        headers: {
+          'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
+          'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
+        }
+      }
+      try {
+        const responsesAll = await Promise.all([fetch(urlAll, optionsAll)])
+        this.resultsAll = await Promise.all(responsesAll.map((res) => res.json()))
+        console.log(this.resultsAll)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async updateTable() {
+      if (this.tickerSymbol === ""){
+        this.showTable = false
+      }
+      else{
+        this.showTable = true
+        const filteredStocks = this.resultsAll[0].data.filter((stock) => {
+      return (
+        stock.symbol.toLowerCase().includes(this.tickerSymbol.toLowerCase())||
+        stock.name.toLowerCase().includes(this.tickerSymbol.toLowerCase())
+      )
+    })
+        this.searchedStocks = filteredStocks.slice(0, 3)
+      }
+    },
+
     async userStoreData(array) {
       const userDocRef = doc(this.db, 'users', this.uid)
       await updateDoc(userDocRef, {
@@ -313,7 +420,10 @@ export default {
         console.log('No such document!')
       }
     },
-    addTicker() {
+    addTicker(symbol) {
+      //from clicking, set symbol
+      this.tickerSymbol = symbol
+
       //  Assuming Stock is inside the finalArr
       for (let obj of this.finalArr) {
         if (obj.name_of_stock.toUpperCase() === this.tickerSymbol.toUpperCase()) {
