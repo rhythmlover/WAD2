@@ -16,7 +16,7 @@
             <div>
               <div class="row">
                 <div class="container form-group font-weight-bold mt-2">
-                  Ticker Symbol: &nbsp;
+                  Analyze your portfolio by keying in the stocks in your portfolio: &nbsp;
                   <input
                     class="form-control col-lg-10 col-md-10 col-sm-10"
                     type="text"
@@ -24,7 +24,9 @@
                     id="symbol"
                     ref="name"
                     @keyup="updateTable"
+                    placeholder="Ticker Symbol"
                   />
+
                   <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
                     <tbody>
                       <!-- <tr>
@@ -44,8 +46,7 @@
                         </th>
                       </tr> -->
                       <template v-for="stock in searchedStocks" :key="stock.symbol">
-                        <div @click="addTicker(stock.symbol)"
-                        >
+                        <div @click="addTicker(stock.symbol)">
                           <div class="row table-row-link mx-auto">
                             <div class="col-3 mb-0">
                               <tr>
@@ -65,9 +66,8 @@
                   <span v-if="error_msg.length">{{ error_msg }}</span>
                 </div>
               </div>
-
               <div class="container justify-content-start ms-0 my-3">
-                <button class="btn btn-sm mb-0 ms-1" name="add" @click="addTicker">ADD</button>
+                <button class="btn btn-sm mb-0 ms-1" name="add" @click="addTicker()">ADD</button>
                 <button class="btn btn-sm mb-0 ms-1" name="confirm" @click="finalBeta">
                   <a href="#result"></a>
                   GET ANALYSIS REPORT
@@ -88,8 +88,7 @@
                       <th class="col-4">Ticker Symbol</th>
                       <th class="col-4">Sector</th>
                       <th class="col-4">Beta</th>
-                      <!-- <th>Number of Stocks</th> -->
-                      <!-- <th>Remove Stock?</th> -->
+                      <th>Remove Stock?</th>
                     </tr>
                   </thead>
 
@@ -98,8 +97,15 @@
                       <td>{{ stock.name_of_stock.toUpperCase() }}</td>
                       <td>{{ stock.sector_loc }}</td>
                       <td>{{ stock.beta_value }}</td>
-                      <!-- <td>{{ stock.sector_count }}</td> -->
-                      <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
+                      <td>
+                        <button
+                          type="button"
+                          class="btn btn-sm mb-0 ms-1"
+                          @click="removeTicker(index)"
+                        >
+                          Remove Stock
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -110,18 +116,17 @@
 
         <div class="container-fluid" v-if="!afterAnalysisClicked">
           <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="col-6 col-md-6 col-sm-12">
               <div class="card blur blur-rounded shadow-lg mx-auto">
                 <div class="mt-4 mb-2 mx-3">
                   <h2 style="text-align: center">Breakdown of Portfolio:</h2>
                   <table class="table">
                     <thead class="text-center">
                       <tr>
-                        <th class="col-4">Ticker Symbol</th>
-                        <th class="col-4">Sector</th>
-                        <th class="col-4">Beta</th>
-                        <!-- <th>Number of Stocks</th> -->
-                        <!-- <th>Remove Stock?</th> -->
+                        <th class="col-3">Ticker Symbol</th>
+                        <th class="col-3">Sector</th>
+                        <th class="col-3">Beta</th>
+                        <th class="col-3">Remove Stock?</th>
                       </tr>
                     </thead>
 
@@ -130,8 +135,15 @@
                         <td>{{ stock.name_of_stock.toUpperCase() }}</td>
                         <td>{{ stock.sector_loc }}</td>
                         <td>{{ stock.beta_value }}</td>
-                        <!-- <td>{{ stock.sector_count }}</td> -->
-                        <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
+                        <td>
+                          <button
+                            type="button"
+                            class="btn btn-sm mb-0 ms-1"
+                            @click="removeTicker(index)"
+                          >
+                            Remove Ticker
+                          </button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -144,17 +156,7 @@
                 <div class="mt-4 mb-4 mx-3">
                   <div id="show_reco" v-if="showBeta" class="container-fluid text-center">
                     <h2 style="text-align: center">Sector Breakdown</h2>
-                    <p style="text-align: center">
-                      The weighted beta is: {{ weightedBeta }} and your portfolio has
-                      <span
-                        :class="{
-                          'green-text': volatileOrNot >= 1.0 && volatileOrNot <= 1.2,
-                          'red-text': volatileOrNot > 1.2,
-                          'yellow-text': volatileOrNot < 1.0
-                        }"
-                        >{{ volatileOrNot }}</span
-                      >
-                    </p>
+
                     <div class="d-flex justify-content-center">
                       <DoughnutChart
                         style="text-align: center; max-width: 300px"
@@ -163,6 +165,21 @@
                         :backgroundColors="randomBackgroundColors"
                       ></DoughnutChart>
                     </div>
+                    <p style="text-align: center">
+                      <em
+                        ><span
+                          :class="{
+                            'green-text': weightedBeta <= 1.2,
+                            'red-text': weightedBeta > 1.2
+                          }"
+                          style="font-size: 24px; font-family: 'Roboto', sans-serif"
+                          >{{ volatileOrNot }}</span
+                        ></em
+                      >
+                      <span style="font-size: 24px; font-family: 'Roboto', sans-serif"
+                        >Volatility</span
+                      >
+                    </p>
                   </div>
                 </div>
                 <div class="d-flex justify-content-center mt-2">
@@ -216,7 +233,16 @@
             <div class="col-12 col-md-12 col-sm-12">
               <div class="card blur blur-rounded shadow-lg mx-auto mt-5">
                 <div v-if="showTable" class="container text-center mt-4 mb-3">
-                  <h2>Recommendations for a balanced Portfolio</h2>
+                  <p><em>Type of Stocks Recommended for balanced portfolio:</em></p>
+                  <h1 style="text-align: center">
+                    <span class="green-text" v-if="determineType === 'Defensive'">
+                      <em>{{ determineType }}</em></span
+                    >
+                    <span class="red-text" v-if="determineType === 'Growth'"
+                      ><em>{{ determineType }}</em></span
+                    >
+                  </h1>
+
                   <div class="row justify-content-center">
                     <div
                       class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4"
@@ -230,6 +256,7 @@
                             {{ stock.description }}<br />
                             {{ stock.discount_stat }}
                           </p>
+                          <!-- <a href="#" class="btn btn-primary">Read More</a> &nbsp; -->
                         </div>
                       </div>
                     </div>
@@ -313,6 +340,9 @@ export default {
       randomStocks: [],
       generateTable: false,
       tableValid: true,
+      volatilityLevel: 1.5, // Example: 1.5 for extreme, 1.0 for moderate, 0.5 for acceptable
+      extremeThreshold: 1.3,
+      moderateThreshold: 1.0,
 
       //  Reference factors
       error_msg: '',
@@ -328,7 +358,7 @@ export default {
 
       //for autocomplete
       resultsAll: [],
-      showTable: false,
+      // showTable: false,
       searchedStocks: []
     }
   },
@@ -357,7 +387,7 @@ export default {
   },
   methods: {
     async getAllStock() {
-      let urlAll = "https://twelve-data1.p.rapidapi.com/stocks?country=US"
+      let urlAll = 'https://twelve-data1.p.rapidapi.com/stocks?country=US'
       let optionsAll = {
         method: 'GET',
         params: {
@@ -365,7 +395,7 @@ export default {
           format: 'json'
         },
         headers: {
-          'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
+          'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
           'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
         }
       }
@@ -379,17 +409,16 @@ export default {
     },
 
     async updateTable() {
-      if (this.tickerSymbol === ""){
+      if (this.tickerSymbol === '') {
         this.showTable = false
-      }
-      else{
+      } else {
         this.showTable = true
         const filteredStocks = this.resultsAll[0].data.filter((stock) => {
-      return (
-        stock.symbol.toLowerCase().includes(this.tickerSymbol.toLowerCase())||
-        stock.name.toLowerCase().includes(this.tickerSymbol.toLowerCase())
-      )
-    })
+          return (
+            stock.symbol.toLowerCase().includes(this.tickerSymbol.toLowerCase()) ||
+            stock.name.toLowerCase().includes(this.tickerSymbol.toLowerCase())
+          )
+        })
         this.searchedStocks = filteredStocks.slice(0, 3)
       }
     },
@@ -425,6 +454,7 @@ export default {
       this.tickerSymbol = symbol
 
       //  Assuming Stock is inside the finalArr
+      this.error_msg = ''
       for (let obj of this.finalArr) {
         if (obj.name_of_stock.toUpperCase() === this.tickerSymbol.toUpperCase()) {
           this.tickerSymbol = ''
@@ -456,8 +486,9 @@ export default {
               this.error_msg = ''
             }
           }
-          console.log(response.data.body)
+          console.log(response.data)
           var sector = response.data.body.sector
+
           var beta = (0.8 + Math.random() * 0.5).toFixed(2)
 
           //  Check if a stock with the same sector already exists in finalArr
@@ -503,11 +534,13 @@ export default {
         })
         .catch((error) => {
           console.log(error.message)
+          this.error_msg = 'Please key in a valid ticker symbol!'
+          this.tickerSymbol = ''
         })
     },
 
     finalBeta() {
-      if (this.finalArr.length < 1) {
+      if (this.finalArr.length < 4) {
         alert('Please input at least 4 stocks to have a more accurate test! ')
       } else {
         this.afterAnalysisClicked = false
@@ -578,7 +611,7 @@ export default {
       this.showModal = !this.showModal
       this.tableValid = false
 
-      if (this.randomStocks.length != 5) {
+      if (this.randomStocks.length != 4) {
         const min = 5
         const max = 15
         var discount_status = ''
@@ -591,6 +624,7 @@ export default {
           } else {
             discount_status = 'Small Discount!!'
           }
+
           this.randomStocks.push({
             name: stock,
             description: 'Undervalued: ' + randomFloat.toFixed(2) + '%',
@@ -646,11 +680,9 @@ export default {
     volatileOrNot() {
       var final_status = ''
       if (this.weightedBeta > 1.2) {
-        final_status = ' High Volatility'
-      } else if (this.weightedBeta <= 1.2 && this.weightedBeta > 1.0) {
-        final_status = ' Stable Volatility '
-      } else {
-        final_status = 'Low Volatility'
+        final_status = 'High'
+      } else if (this.weightedBeta <= 1.2) {
+        final_status = 'Low '
       }
       return final_status
     },
@@ -696,6 +728,13 @@ export default {
         }
       }
       return random_list
+    },
+    determineType() {
+      if (this.volatileOrNot === 'High') {
+        return 'Defensive'
+      } else {
+        return 'Growth'
+      }
     }
   }
 }
@@ -716,10 +755,7 @@ export default {
   font-size: 16px;
   /* Adjust the font size as needed */
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s,
-    transform 0.3s;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
 
 .minus-small-circle-button:hover {
