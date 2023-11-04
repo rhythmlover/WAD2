@@ -21,10 +21,10 @@
           <div class="card-header pb-0 pt-2">
             <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
           </div>
-          <div class="card-body p-3">
+          <div class="card-body py-3 px-0">
             <div class="container-fluid">
               <div class="row justify-content-center">
-                <div class="col-12 mx-auto" style="overflow-x:auto; max-width: 100%;" id="candlestick-chart">
+                <div class="col-12 mx-0" style="overflow-y:hidden; max-width: 100%;" id="candlestick-chart">
                   <!-- The candlestick chart will be rendered here -->
                 </div>
               </div>
@@ -203,6 +203,26 @@
   </main>
 </template>
 
+<style>
+@media (min-width: 0px) {
+  #candlestick-chart {
+    overflow-x: auto;
+  }
+}
+
+@media (min-width: 576px) {
+  #candlestick-chart {
+    overflow-x: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  #candlestick-chart {
+    overflow-x: hidden;
+  }
+}
+</style>
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { parseString } from 'xml2js';
@@ -267,8 +287,73 @@ const renderChart = (chartData) => {
         type: chartType,
         name: tickerSymbol.value,
         height: 400,
-        width: 1700
-      },
+        width: 1700,
+        labels: {
+          style: {
+            fontSize: '40px'
+          }
+        },
+        responsive: [
+          {
+            breakpoint: 576,
+            options: {
+              chart: {
+                height: 100,
+                width: 300 // Adjust width for screens <576px
+              },
+              labels: {
+                style: {
+                  fontSize: '0.5rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 768,
+            options: {
+              chart: {
+                height: 200,
+                width: 500 // Adjust width for screens >=576px and <768px
+              },
+              labels: {
+                style: {
+                  fontSize: '0.6rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 992,
+            options: {
+              labels: {
+                style: {
+                  fontSize: '0.8rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 1200,
+            options: {
+              labels: {
+                style: {
+                  fontSize: '0.8rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 1600,
+            options: {
+              labels: {
+                style: {
+                  fontSize: '1rem'
+                }
+              }
+            }
+          }
+        ]
+      },      
       series: [
         {
           data: chartData
@@ -285,6 +370,12 @@ const renderChart = (chartData) => {
       dataLabels: {
         enabled: false
       }
+    }
+
+    
+    // Destroy the existing chart if it exists
+    if (chart) {
+      chart.destroy();
     }
 
     // Render the chart
@@ -317,25 +408,25 @@ const renderChart = (chartData) => {
 
 const resizeChart = () => {
   const screenWidth = window.innerWidth;
-
   if (chart) {
-    if (screenWidth < 576) {
+    if (screenWidth < 768){
       chart.updateOptions({
-        chart: {
-          height: 400,
-          width: 450, 
-        },
-      });
-    } else {
+      chart: {
+        height: 250,
+        width: 400,
+      },
+    });
+    }
+    else{
       chart.updateOptions({
-        chart: {
-          height: 400,
-          width: document.querySelector('#candlestick-chart').clientWidth,
-        },
-      });
+      chart: {
+        width: document.querySelector('#candlestick-chart').clientWidth,
+      },
+    });
     }
   }
 };
+
 
 // const resizeChart = () => {
 //   if (chart) {

@@ -9,10 +9,10 @@
           </div>
 
 
-          <div class="card-body p-3">
+          <div class="card-body py-3 px-0">
             <div class="container-fluid">
               <div class="row justify-content-center">
-                <div class="col-12 mx-auto" style="overflow-x:auto; max-width: 100%;" id="chart">
+                <div class="col-12 mx-0" style="overflow-y:hidden; max-width: 100%;" id="chart">
                   <!-- The candlestick chart will be rendered here -->
                 </div>
               </div>
@@ -23,9 +23,9 @@
             <div class="row justify-content-between">
               <div class="col-lg-6 col-md-7 mb-3" id="interval-options">
               <!-- <div class="col-4 col-lg-6 text-center" id="intervalOptions"> -->
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton" @click="fetchDataAndUpdateChart('All')">All Time</button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1m" @click="fetchDataAndUpdateChart('Monthly')">Monthly</button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">Weekly</button>
+                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton" @click="fetchDataAndUpdateChart('All')">All Time</button>
+                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1m" @click="fetchDataAndUpdateChart('Monthly')">Monthly</button>
+                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">Weekly</button>
               </div>
 
               <div class="col-xl-2 col-lg-1 col-md-6 mb-3" style="min-width: 25vh;" id="chart-type">
@@ -312,7 +312,72 @@ const renderChart = (chartData) => {
         type: chartType,
         name: tickerSymbol.value,
         height: 400,
-        width: 1700
+        width: 1700,
+        labels: {
+          style: {
+            fontSize: '40px'
+          }
+        },
+        responsive: [
+          {
+            breakpoint: 576,
+            options: {
+              chart: {
+                height: 100,
+                width: 300 // Adjust width for screens <576px
+              },
+              labels: {
+                style: {
+                  fontSize: '0.5rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 768,
+            options: {
+              chart: {
+                height: 200,
+                width: 500 // Adjust width for screens >=576px and <768px
+              },
+              labels: {
+                style: {
+                  fontSize: '0.6rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 992,
+            options: {
+              labels: {
+                style: {
+                  fontSize: '0.8rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 1200,
+            options: {
+              labels: {
+                style: {
+                  fontSize: '0.8rem'
+                }
+              }
+            }
+          },
+          {
+            breakpoint: 1600,
+            options: {
+              labels: {
+                style: {
+                  fontSize: '1rem'
+                }
+              }
+            }
+          }
+        ]
       },
       series: [
         {
@@ -332,10 +397,15 @@ const renderChart = (chartData) => {
       }
     }
 
+    // Destroy the existing chart if it exists
+    if (chart) {
+      chart.destroy();
+    }
+
     // Render the chart
-    chart = new ApexCharts(document.querySelector('#chart'), chartOptions)
-    chart.render()
-    console.log('Chart Rendered')
+    chart = new ApexCharts(document.querySelector('#chart'), chartOptions);
+    chart.render();
+    console.log('Chart Rendered');
 
     // Handle window resize events
     window.addEventListener('resize', resizeChart);
@@ -364,20 +434,20 @@ const resizeChart = () => {
   const screenWidth = window.innerWidth;
 
   if (chart) {
-    if (screenWidth < 576) {
+    if (screenWidth < 768){
       chart.updateOptions({
-        chart: {
-          height: 400,
-          width: 450, 
-        },
-      });
-    } else {
+      chart: {
+        height: 250,
+        width: 400,
+      },
+    });
+    }
+    else{
       chart.updateOptions({
-        chart: {
-          height: 400,
-          width: document.querySelector('#candlestick-chart').clientWidth,
-        },
-      });
+      chart: {
+        width: document.querySelector('#chart').clientWidth,
+      },
+    });
     }
   }
 };
@@ -636,7 +706,6 @@ const addComment = () => {
     font-size: 0.7rem;
   }
 
-  
   .responsive-h1 {
     font-size: 24px;
   }
@@ -648,6 +717,10 @@ const addComment = () => {
   .responsive-h5 {
     font-size: 0.9rem;
     font-weight: bold;
+  }
+  
+  #chart {
+    overflow-x: auto;
   }
 }
 
@@ -668,6 +741,10 @@ const addComment = () => {
     font-size: 17px;
     font-weight: bold;
   }
+
+  #chart {
+    overflow-x: auto;
+  }
 }
 
 @media (min-width: 768px) {
@@ -686,6 +763,10 @@ const addComment = () => {
   .responsive-h5 {
     font-size: 16px;
     font-weight: bold;
+  }
+
+  #chart {
+    overflow-x: hidden;
   }
 }
 
@@ -706,6 +787,10 @@ const addComment = () => {
     font-size: 25px;
     font-weight: bold;
   }
+
+  #chart {
+    overflow-x: hidden;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -724,6 +809,10 @@ const addComment = () => {
   .responsive-h5 {
     font-size: 25px;
     font-weight: bold;
+  }
+
+  #chart {
+    overflow-x: hidden;
   }
 }
 </style>
