@@ -584,6 +584,8 @@ export default {
       const removedStock = this.finalArr[index]
       this.finalArr.splice(index, 1)
 
+      this.userStoreData(this.finalArr)
+
       //  Find and update the corresponding sector in finalArr
       const finalIndex = this.finalArr.findIndex(
         (stock) => stock.sector_loc === removedStock.sector_loc
