@@ -1,18 +1,18 @@
 <template>
   <main>
-    <div class="container text-center mt-7">
+    <div class="container-fluid mt-7">
       <div class="col-lg-12 mx-auto">
         <div class="card z-index-2 blur blur-rounded shadow-lg">
           <div class="container-fluid" id="indices-buttons">
             <div class="row justify-content-start">
               <div class="col-lg-5 mt-4">
-                <button class="btn bg-gradient-primary mx-1" type="button" id="snp500" @click="selectSymbol('^GSPC')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="snp500" @click="selectSymbol('^GSPC')">
                   S&P 500
                 </button>
-                <button class="btn bg-gradient-primary mx-1" type="button" id="nasdaq100" @click="selectSymbol('^NDX')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="nasdaq100" @click="selectSymbol('^NDX')">
                   Nasdaq 100
                 </button>
-                <button class="btn bg-gradient-primary mx-1" type="button" id="dow30" @click="selectSymbol('^DJI')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="dow30" @click="selectSymbol('^DJI')">
                   Dow 30
                 </button>
               </div>
@@ -24,7 +24,7 @@
           <div class="card-body p-3">
             <div class="container-fluid">
               <div class="row justify-content-center">
-                <div class="col-12 mx-auto" id="candlestick-chart">
+                <div class="col-12 mx-auto" style="overflow-x:auto; max-width: 100%;" id="candlestick-chart">
                   <!-- The candlestick chart will be rendered here -->
                 </div>
               </div>
@@ -33,18 +33,18 @@
 
           <div class="container-fluid">
             <div class="row justify-content-between">
-              <div class="col-lg-5 col-md-7 mb-3" id="interval-options">
-                <button class="btn bg-gradient-primary mx-1" id="allButton" @click="fetchDataAndUpdateChart('All')">
+              <div class="col-lg-6 col-md-7 mb-3" id="interval-options">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton" @click="fetchDataAndUpdateChart('All')">
                   All time
                 </button>
-                <button class="btn bg-gradient-primary mx-1" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
                   1 Month
                 </button>
-                <button class="btn bg-gradient-primary mx-1" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
                   1 Week
                 </button>
               </div>
-              <div class="col-md-5 mb-3" id="chart-type">
+              <div class="col-xl-2 col-lg-1 col-md-6 mb-3" style="min-width: 25vh;" id="chart-type">
                 <button class="btn bg-gradient-primary mx-1" id="candlestick" @click="
                   chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
                   Candlestick
@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="row my-4">
         <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
           <div class="card blur blur-rounded shadow-lg">
@@ -267,7 +267,7 @@ const renderChart = (chartData) => {
         type: chartType,
         name: tickerSymbol.value,
         height: 400,
-        width: 1150
+        width: 1700
       },
       series: [
         {
@@ -291,6 +291,9 @@ const renderChart = (chartData) => {
     chart = new ApexCharts(document.querySelector('#candlestick-chart'), chartOptions)
     chart.render()
     console.log('Chart Rendered')
+
+    // Handle window resize events
+    window.addEventListener('resize', resizeChart);
   } else {
     if (chartType == 'area') {
       chart.updateSeries([
@@ -311,6 +314,39 @@ const renderChart = (chartData) => {
     console.log('Chart Updated')
   }
 }
+
+const resizeChart = () => {
+  const screenWidth = window.innerWidth;
+
+  if (chart) {
+    if (screenWidth < 576) {
+      chart.updateOptions({
+        chart: {
+          height: 400,
+          width: 450, 
+        },
+      });
+    } else {
+      chart.updateOptions({
+        chart: {
+          height: 400,
+          width: document.querySelector('#candlestick-chart').clientWidth,
+        },
+      });
+    }
+  }
+};
+
+// const resizeChart = () => {
+//   if (chart) {
+//     chart.updateOptions({
+//       chart: {
+//         height: document.querySelector('#candlestick-chart').clientHeight,
+//         width: document.querySelector('#candlestick-chart').clientWidth,
+//       },
+//     });
+//   }
+// };
 
 async function fetchData(interval, symbol_selected) {
   let historical_data = {
