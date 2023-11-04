@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-12">
         <nav
-          class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-7">
+          class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-7 hide-at-small-screen">
           <div class="container-fluid pe-0 me-8">
             <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3">
               <span>Portfolio Management</span>
@@ -62,9 +62,11 @@
                             <i class="fa fa-user me-sm-1 me-3"></i>
                           </div>
                           <div class="d-flex flex-column justify-content-center">
-                            <RouterLink to="/profile"><h6 class="text-sm font-weight-normal my-auto">
-                              <span class="font-weight-bold">Profile</span>
-                            </h6></RouterLink>
+                            <RouterLink to="/profile">
+                              <h6 class="text-sm font-weight-normal my-auto">
+                                <span class="font-weight-bold">Profile</span>
+                              </h6>
+                            </RouterLink>
                           </div>
                         </div>
                       </a>
@@ -108,6 +110,16 @@ li a {
 
 .router-link-active {
   text-decoration: underline;
+}
+
+.hide-at-small-screen {
+  display: block;
+}
+
+@media (max-width: 490px) {
+  .hide-at-small-screen {
+    display: none;
+  }
 }
 </style>
 

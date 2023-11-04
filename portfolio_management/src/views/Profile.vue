@@ -123,9 +123,7 @@ const userDetailsInit = async () => {
                 username.value = doc.data().username
             }
         });
-        data_msg.value = 'Data cleared!'
     } catch (e) {
-        data_msg.value = 'Error clearing data!'
         console.log(e)
     }
 }
@@ -141,15 +139,22 @@ const changeUsername = async () => {
         username: changedUsername.value
     })
     changeUsername.value = ''
-    username_msg.value = 'Username changed! Please refresh the page.' 
+    username_msg.value = 'Username changed! Please refresh the page.'
     usernameChangedBool.value = true
 }
 
 const clearPortfolio = async () => {
-    const userDocRef = doc(db, 'users', uid)
-    await updateDoc(userDocRef, {
-        data: []
-    })
-    dataClearedBool.value = true
+    try {
+        const userDocRef = doc(db, 'users', uid)
+        await updateDoc(userDocRef, {
+            data: []
+        })
+        data_msg.value = 'Data cleared!'
+        dataClearedBool.value = true
+    } catch (e) {
+        data_msg.value = 'Error clearing data!'
+        console.log(e)
+
+    }
 }
 </script>
