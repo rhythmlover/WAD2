@@ -264,7 +264,9 @@
                 </div>
               </div>
             </div>
-
+            <div style="margin-top: 20px">
+              <button @click="goToMarkets">Compare to Market</button>
+            </div>
             <div class="pb-10"></div>
           </div>
         </div>
@@ -321,15 +323,27 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 import DoughnutChart from '../components/DoughnutChart.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore, collection, getDoc, updateDoc, doc } from 'firebase/firestore'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'App',
   components: {
     DoughnutChart
   },
+  setup() {
+    const router = useRouter()
+
+    function goToMarkets() {
+      router.push('/markets')
+    }
+    return {
+      goToMarkets, // Expose the function to the template
+    };
+  },
   data() {
     return {
       //  Main List to be used for Chart
+      router_link: null,
       finalArr: [],
       sector_list: [],
       graph_arr: [],
@@ -363,6 +377,7 @@ export default {
     }
   },
   mounted() {
+    this.router_link = this.$route.path
     this.auth = getAuth()
     this.db = getFirestore()
     this.userRef = collection(this.db, 'users')
@@ -540,7 +555,7 @@ export default {
     },
 
     finalBeta() {
-      if (this.finalArr.length < 4) {
+      if (this.finalArr.length < 1) {
         alert('Please input at least 4 stocks to have a more accurate test! ')
       } else {
         this.afterAnalysisClicked = false
