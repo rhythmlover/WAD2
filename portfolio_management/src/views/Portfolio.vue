@@ -17,15 +17,8 @@
               <div class="row">
                 <div class="container form-group font-weight-bold mt-2">
                   Analyze your portfolio by keying in the stocks in your portfolio: &nbsp;
-                  <input
-                    class="form-control col-lg-10 col-md-10 col-sm-10"
-                    type="text"
-                    v-model="tickerSymbol"
-                    id="symbol"
-                    ref="name"
-                    @keyup="updateTable"
-                    placeholder="Ticker Symbol"
-                  />
+                  <input class="form-control col-lg-10 col-md-10 col-sm-10" type="text" v-model="tickerSymbol" id="symbol"
+                    ref="name" @keyup="updateTable" placeholder="Ticker Symbol" />
 
                   <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
                     <tbody>
@@ -98,11 +91,7 @@
                       <td>{{ stock.sector_loc }}</td>
                       <td>{{ stock.beta_value }}</td>
                       <td>
-                        <button
-                          type="button"
-                          class="btn btn-sm mb-0 ms-1"
-                          @click="removeTicker(index)"
-                        >
+                        <button type="button" class="btn btn-sm mb-0 ms-1" @click="removeTicker(index)">
                           Remove Stock
                         </button>
                       </td>
@@ -136,11 +125,7 @@
                         <td>{{ stock.sector_loc }}</td>
                         <td>{{ stock.beta_value }}</td>
                         <td>
-                          <button
-                            type="button"
-                            class="btn btn-sm mb-0 ms-1"
-                            @click="removeTicker(index)"
-                          >
+                          <button type="button" class="btn btn-sm mb-0 ms-1" @click="removeTicker(index)">
                             Remove Ticker
                           </button>
                         </td>
@@ -158,27 +143,15 @@
                     <h2 style="text-align: center">Sector Breakdown</h2>
 
                     <div class="d-flex justify-content-center">
-                      <DoughnutChart
-                        style="text-align: center; max-width: 300px"
-                        :data="sectorPercentages"
-                        :labels="sectorGraph"
-                        :backgroundColors="randomBackgroundColors"
-                      ></DoughnutChart>
+                      <DoughnutChart style="text-align: center; max-width: 300px" :data="sectorPercentages"
+                        :labels="sectorGraph" :backgroundColors="randomBackgroundColors"></DoughnutChart>
                     </div>
                     <p style="text-align: center">
-                      <em
-                        ><span
-                          :class="{
-                            'green-text': weightedBeta <= 1.2,
-                            'red-text': weightedBeta > 1.2
-                          }"
-                          style="font-size: 24px; font-family: 'Roboto', sans-serif"
-                          >{{ volatileOrNot }}</span
-                        ></em
-                      >
-                      <span style="font-size: 24px; font-family: 'Roboto', sans-serif"
-                        >Volatility</span
-                      >
+                      <em><span :class="{
+                        'green-text': weightedBeta <= 1.2,
+                        'red-text': weightedBeta > 1.2
+                      }" style="font-size: 24px; font-family: 'Roboto', sans-serif">{{ volatileOrNot }}</span></em>
+                      <span style="font-size: 24px; font-family: 'Roboto', sans-serif">Volatility</span>
                     </p>
                   </div>
                 </div>
@@ -208,20 +181,16 @@
                   <tbody>
                     <tr v-for="(stock, index) in new_table_recommendations" :key="index">
                       <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
-                      <td
-                        :class="{
-                          'green-text': stock.recommendation_verdict === 'HOLD',
-                          'red-text': stock.recommendation_verdict === 'SELL'
-                        }"
-                      >
+                      <td :class="{
+                        'green-text': stock.recommendation_verdict === 'HOLD',
+                        'red-text': stock.recommendation_verdict === 'SELL'
+                      }">
                         {{ stock.valuation }}
                       </td>
-                      <td
-                        :class="{
-                          'green-text': stock.recommendation_verdict === 'HOLD',
-                          'red-text': stock.recommendation_verdict === 'SELL'
-                        }"
-                      >
+                      <td :class="{
+                        'green-text': stock.recommendation_verdict === 'HOLD',
+                        'red-text': stock.recommendation_verdict === 'SELL'
+                      }">
                         {{ stock.recommendation_verdict }}
                       </td>
                     </tr>
@@ -236,19 +205,13 @@
                   <p><em>Type of Stocks Recommended for balanced portfolio:</em></p>
                   <h1 style="text-align: center">
                     <span class="green-text" v-if="determineType === 'Defensive'">
-                      <em>{{ determineType }}</em></span
-                    >
-                    <span class="red-text" v-if="determineType === 'Growth'"
-                      ><em>{{ determineType }}</em></span
-                    >
+                      <em>{{ determineType }}</em></span>
+                    <span class="red-text" v-if="determineType === 'Growth'"><em>{{ determineType }}</em></span>
                   </h1>
 
                   <div class="row justify-content-center">
-                    <div
-                      class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4"
-                      v-for="(stock, index) in this.randomStocks"
-                      :key="index"
-                    >
+                    <div class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4" v-for="(stock, index) in this.randomStocks"
+                      :key="index">
                       <div class="card blur blur-rounded shadow-lg">
                         <div class="card-body">
                           <h5 class="card-title">{{ stock.name }}</h5>
@@ -265,7 +228,9 @@
               </div>
             </div>
             <div style="margin-top: 20px">
-              <button @click="goToMarkets">Compare to Market</button>
+              <router-link to="/markets">
+                <button>Compare to Market</button>
+              </router-link>
             </div>
             <div class="pb-10"></div>
           </div>
@@ -323,27 +288,15 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 import DoughnutChart from '../components/DoughnutChart.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore, collection, getDoc, updateDoc, doc } from 'firebase/firestore'
-import { useRouter } from 'vue-router'
 
 export default {
   name: 'App',
   components: {
     DoughnutChart
   },
-  setup() {
-    const router = useRouter()
-
-    function goToMarkets() {
-      router.push('/markets')
-    }
-    return {
-      goToMarkets, // Expose the function to the template
-    };
-  },
   data() {
     return {
       //  Main List to be used for Chart
-      router_link: null,
       finalArr: [],
       sector_list: [],
       graph_arr: [],
