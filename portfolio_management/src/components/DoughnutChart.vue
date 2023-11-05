@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- <h2 style="text-align: center">{{ header }}</h2> -->
-      <Doughnut :data="chartData" :options="chartOptions" ></Doughnut>
+    <Doughnut :data="chartData" :options="chartOptions"></Doughnut>
   </div>
 </template>
 
@@ -37,3 +36,4 @@ export default {
   }
 }
 </script> 
+
