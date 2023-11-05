@@ -1,9 +1,9 @@
 <template>
   <main>
-    <div class="container-fluid mt-7" style="background-image: url('src\assets\img\curved-images\curved-10.jpg')">
+    <div class="container-fluid mt-7">
       <div class="col-lg-12 mx-auto">
         <div class="card z-index-2 blur blur-rounded shadow-lg rounded-5 mt-7">
-          <div class="card-header pb-0 pt-2">
+          <div class="card-header pb-0 pt-2 text-center responsive-h1">
             <!-- Display the selected stock symbol -->
             <h1 class="text-center responsive-h1" id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} ${selectedName}
                           (${curr_interval})` }}</h1>
@@ -22,22 +22,49 @@
 
           <div class="container-fluid">
             <div class="row justify-content-between">
-              <div class="col-lg-6 col-md-7 mb-3" id="interval-options">
-                <!-- <div class="col-4 col-lg-6 text-center" id="intervalOptions"> -->
-                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton"
-                  @click="fetchDataAndUpdateChart('All')">All Time</button>
-                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1m"
-                  @click="fetchDataAndUpdateChart('Monthly')">Monthly</button>
-                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk"
-                  @click="fetchDataAndUpdateChart('Weekly')">Weekly</button>
+              <div class="col-lg-6 col-md-6 mb-sm-3 mb-0" id="interval-options">
+              <!-- <div class="col-4 col-lg-6 text-center" id="intervalOptions"> -->
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 ms-0 mx-1 my-1 text-xs" 
+                  id="allButton" @click="fetchDataAndUpdateChart('All')">
+                  All Time
+                </button>
+
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  id="1m" @click="fetchDataAndUpdateChart('Monthly')">
+                  Monthly
+                </button>
+
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
+                  Weekly</button>
               </div>
 
-              <div class="col-xl-2 col-lg-1 col-md-6 mb-3" style="min-width: 25vh;" id="chart-type">
-                <!-- <div class="col-3 col-lg-4 text-center" id="chart-type"> -->
-                <button class="btn bg-gradient-primary mx-1" id="candlestick"
-                  @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">Candlestick</button>
-                <button class="btn bg-gradient-primary mx-1" id="area"
-                  @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">Area</button>
+              <div class="col-md-5 mb-3 ps-md-5 text-md-end" id="chart-type">
+              <!-- <div class="col-3 col-lg-4 text-center" id="chart-type"> -->
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  id="candlestick" @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
+                  Candlestick
+                </button>
+
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
+                  Area
+                </button>
               </div>
             </div>
           </div>
@@ -57,7 +84,7 @@
 
                 <div class="col-md-6 col-sm-12 col-12">
                   <div id="sentimentLine" class="table-responsive">
-                    <table class="table my-2">
+                    <table class="table my-3">
                       <thead>
                         <tr>
                           <th class="text-uppercase text-secondary font-weight-bolder opacity-7 p-0 p-sm-2">Positive</th>
@@ -133,8 +160,12 @@
               </div>
             </div>
 
-            <div class="row mt-2 mx-3">
-              <button @click="toggleShowMore" id="showButton" class="btn bg-gradient-primary">
+            <div class="row mt-3 mx-3">
+              <button class="btn bg-gradient-primary
+                  px-lg-4 mx-lg-2
+                  px-md-3 py-md-3
+                  px-2 py-2 ms-0 mb-4 text-xs"
+                  @click="toggleShowMore" id="showButton">
                 {{ showButtonValue ? 'Show Less' : 'Show More' }}
               </button>
             </div>
@@ -156,7 +187,13 @@
             </div>
 
             <div class="row mx-3 mb-sm-5 m-4">
-              <button class="btn bg-gradient-primary" id="post" @click="addComment()">Comment</button>
+              <button class="btn bg-gradient-primary
+                  px-lg-4 mx-lg-2
+                  px-md-3 py-md-3
+                  px-2 py-2 ms-0 mb-3 text-xs"
+                  id="post" @click="addComment()">
+                  Comment
+                </button>
             </div>
 
             <div class="row mx-3" v-for="comment in comments">
@@ -198,7 +235,7 @@ onMounted(() => {
 
     const fetchNews = async (page = 1, q = selectedName.value) => {
       try {
-        const apiKey = '8ed1d1256b4e4f41996101e7967ad3b5';
+        const apiKey = '0b7989de4324420794d8726f9b503ffd';
         const url = `https://newsapi.org/v2/everything?language=en&q=${q}&pageSize=20&page=${page}&apiKey=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
@@ -285,7 +322,7 @@ const renderChart = (chartData) => {
       chart: {
         type: chartType,
         name: tickerSymbol.value,
-        height: 400,
+        height: 450,
         width: 1700,
         labels: {
           style: {
@@ -418,10 +455,11 @@ const resizeChart = () => {
     }
     else {
       chart.updateOptions({
-        chart: {
-          width: document.querySelector('#chart').clientWidth,
-        },
-      });
+      chart: {
+        height: 450,
+        width: document.querySelector('#chart').clientWidth,
+      },
+    });
     }
   }
 };
@@ -506,12 +544,11 @@ const toggleShowMore = () => {
 
 // Market Sentiment Section
 
-const sentiment = ref('');
+const sentiment = ref('Positive');
+const sentimentBool = ref(true)
 const positive = ref('0.67');
 const mixed = ref('0.20');
 const negative = ref('0.13');
-const sentimentBool = ref(true)
-
 
 
 async function marketSentiment(newsdata) {
@@ -546,6 +583,7 @@ async function marketSentiment(newsdata) {
     }
     else {
       sentiment.value = "Negative"
+      sentimentBool.value = false
     }
 
   } catch (error) {
@@ -650,20 +688,15 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.7rem;
   }
-
   .responsive-h1 {
-    font-size: 24px;
+    font-size: 25px;
   }
-
   .responsive-h3 {
     font-size: 22px;
   }
-
-  .responsive-h5 {
-    font-size: 0.9rem;
-    font-weight: bold;
+  .responsive-h{
+    height:90vw;
   }
-
   #chart {
     overflow-x: auto;
   }
@@ -673,20 +706,15 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.6rem;
   }
-
   .responsive-h1 {
     font-size: 29px;
   }
-
   .responsive-h3 {
     font-size: 23px;
   }
-
-  .responsive-h5 {
-    font-size: 17px;
-    font-weight: bold;
+  .responsive-h{
+    height:60vw;
   }
-
   #chart {
     overflow-x: auto;
   }
@@ -696,22 +724,20 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.8rem;
   }
-
   .responsive-h1 {
     font-size: 42px;
   }
-
   .responsive-h3 {
     font-size: 24px;
   }
-
-  .responsive-h5 {
-    font-size: 16px;
-    font-weight: bold;
+  .responsive-h{
+    height:50vw;
   }
-
   #chart {
     overflow-x: hidden;
+  }
+  img{
+    height:200px
   }
 }
 
@@ -719,22 +745,17 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.8rem;
   }
-
   .responsive-h1 {
     font-size: 50px;
   }
-
   .responsive-h3 {
     font-size: 30px;
   }
-
-  .responsive-h5 {
-    font-size: 25px;
-    font-weight: bold;
+  .responsive-h{
+    height: 45vw;
   }
-
-  #chart {
-    overflow-x: hidden;
+  img{
+    height:250px
   }
 }
 
@@ -742,22 +763,50 @@ const addComment = () => {
   .responsive-text {
     font-size: 1rem;
   }
-
   .responsive-h1 {
     font-size: 50px;
   }
-
   .responsive-h3 {
     font-size: 30px;
   }
-
-  .responsive-h5 {
-    font-size: 25px;
-    font-weight: bold;
+  .responsive-h{
+    height:35vw;
   }
+  img{
+    height:350px
+  }
+}
 
-  #chart {
-    overflow-x: hidden;
+@media (min-width: 2200px) {
+  .responsive-h{
+    height: 33vw;
+  }
+  img{
+    height:400px
+  }
+}
+
+@media (min-width: 2300px) {
+  .responsive-h{
+    height: 31vw;
+  }
+  img{
+    height:450px
+  }
+}
+
+@media (min-width: 2400px) {
+  .responsive-h{
+    height: 29vw;
+  }
+  img{
+    height:550px
+  }
+}
+
+@media (min-width: 2500px) {
+  .responsive-h{
+    height: 28vw;
   }
 }
 </style>
