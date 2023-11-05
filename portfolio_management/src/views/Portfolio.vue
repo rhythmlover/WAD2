@@ -8,26 +8,38 @@
       </div>
     </div>
   </div>
+
   <div v-if="isLoggedIn" class="mt-7">
     <main>
-      <div class="container-fluid px-10 mt-3">
-        <div class="card rounded-5" v-if="afterAnalysisClicked">
-          <div class="card-header shadow-lg rounded-5 pb-0 pt-2">
-            <div>
-              <div class="row">
-                <div class="container form-group font-weight-bold mt-2">
-                  Ticker Symbol: &nbsp;
-                  <input
-                    class="form-control col-lg-10 col-md-10 col-sm-10"
-                    type="text"
-                    v-model="tickerSymbol"
-                    id="symbol"
-                    ref="name"
-                    @keyup="updateTable"
-                  />
-                  <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
-                    <tbody>
-                      <!-- <tr>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-8 col-sm-10 col-12 mx-auto">
+            <div class="header-text">
+              "Diversification is a protection against ignorance. It makes very little sense for
+              those who know what they're doing." - Warren Buffet
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid px-md-5 mt-3">
+        <div class="card rounded-5 card-header shadow-lg p-0 pt-2" v-if="afterAnalysisClicked">
+          <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <div class="container form-group font-weight-bold mt-2">
+                Enter the stocks in your portfolio to see how healthy your portfolio is! &nbsp;
+                <input
+                  class="form-control"
+                  type="text"
+                  v-model="tickerSymbol"
+                  id="symbol"
+                  ref="name"
+                  @keyup="updateTable"
+                  placeholder="Ticker Symbol"
+                />
+
+                <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
+                  <tbody>
+                    <!-- <tr>
                         <th ref="search" colspan="4">
                           <div class="row mx-auto">
                             <div
@@ -43,53 +55,59 @@
                           </div>
                         </th>
                       </tr> -->
-                      <template v-for="stock in searchedStocks" :key="stock.symbol">
-                        <div @click="addTicker(stock.symbol)"
-                        >
-                          <div class="row table-row-link mx-auto">
-                            <div class="col-3 mb-0">
-                              <tr>
-                                <td>{{ stock.symbol }}</td>
-                              </tr>
-                            </div>
-                            <div class="col-3 mb-0">
-                              <tr>
-                                <td>{{ stock.name }}</td>
-                              </tr>
-                            </div>
+                    <template v-for="stock in searchedStocks" :key="stock.symbol">
+                      <div @click="addTicker(stock.symbol)">
+                        <div class="row table-row-link mx-auto">
+                          <div class="col-3 mb-0">
+                            <tr>
+                              <td>{{ stock.symbol }}</td>
+                            </tr>
+                          </div>
+                          <div class="col-9 mb-0">
+                            <tr>
+                              <td>{{ stock.name }}</td>
+                            </tr>
                           </div>
                         </div>
-                      </template>
-                    </tbody>
-                  </table>
-                  <span v-if="error_msg.length">{{ error_msg }}</span>
-                </div>
+                      </div>
+                    </template>
+                  </tbody>
+                </table>
+                <span v-if="error_msg.length">{{ error_msg }}</span>
               </div>
-
-              <div class="container justify-content-start ms-0 my-3">
-                <button class="btn btn-sm mb-0 ms-1" name="add" @click="addTicker">ADD</button>
-                <button class="btn btn-sm mb-0 ms-1" name="confirm" @click="finalBeta">
-                  <a href="#result"></a>
-                  GET ANALYSIS REPORT
-                </button>
-              </div>
+            </div>
+            <div class="container justify-content-start text-center my-3">
+              <button
+                class="btn btn-sm mb-0 ms-1"
+                name="add"
+                v-if="!showBeta"
+                @click="addTicker(this.tickerSymbol)"
+              >
+                ADD
+              </button>
             </div>
           </div>
         </div>
 
         <div class="card blur blur-rounded shadow-lg mt-5" v-if="afterAnalysisClicked">
-          <div id="result" v-if="finalArr.length > 0" class="container mt-5">
-            <div class="row">
-              <div v-if="!showBeta">
-                <h2 style="text-align: center">Breakdown of Portfolio:</h2>
+          <div id="result" v-if="finalArr.length > 0" class="container mt-5 container-fluid">
+            <div v-if="!showBeta">
+              <div class="row justify-content-center">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                  <h2 style="text-align: center">Breakdown of Portfolio:</h2>
+                </div>
+              </div>
+              <div
+                class="table-responsive"
+                style="max-height: 300px; overflow-y: auto; overflow-x: auto"
+              >
                 <table class="table">
                   <thead class="text-center">
                     <tr>
-                      <th class="col-4">Ticker Symbol</th>
-                      <th class="col-4">Sector</th>
-                      <th class="col-4">Beta</th>
-                      <!-- <th>Number of Stocks</th> -->
-                      <!-- <th>Remove Stock?</th> -->
+                      <th class="col-6 col-md-3 col-lg-3">Ticker Symbol</th>
+                      <th class="col-6 col-md-3 col-lg-3">Sector</th>
+                      <th class="col-6 col-md-3 col-lg-3">Beta</th>
+                      <th class="col-6 col-md-3 col-lg-3">Remove Stock?</th>
                     </tr>
                   </thead>
 
@@ -98,8 +116,15 @@
                       <td>{{ stock.name_of_stock.toUpperCase() }}</td>
                       <td>{{ stock.sector_loc }}</td>
                       <td>{{ stock.beta_value }}</td>
-                      <!-- <td>{{ stock.sector_count }}</td> -->
-                      <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
+                      <td>
+                        <button
+                          type="button"
+                          class="btn btn-sm mb-0 ms-1"
+                          @click="removeTicker(index)"
+                        >
+                          Remove Stock
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -108,30 +133,207 @@
           </div>
         </div>
 
+        <div class="row justify-content-center">
+          <button
+            class="btn btn-sm col-lg-12 col-12 col-sm-12 col-md-12 mt-5"
+            data-toggle="modal"
+            data-target="#exampleModal"
+            v-if="!showBeta"
+            name="confirm"
+            @click="finalBeta"
+          >
+            <a href="#result"></a>
+            GET ANALYSIS REPORT
+          </button>
+        </div>
+        <div class="pb-10"></div>
+
         <div class="container-fluid" v-if="!afterAnalysisClicked">
+          <div class="col-12 col-md-12 col-sm-12">
+            <div class="card blur blur-rounded shadow-lg mx-2 my-4">
+              <div class="row justify-content-center">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                  <h3 style="text-align: center">Breakdown of Portfolio:</h3>
+                </div>
+              </div>
+              <div
+                class="table-responsive"
+                style="max-height: 300px; overflow-y: auto overflow-x: auto;"
+              >
+                <table class="table">
+                  <thead class="text-center">
+                    <tr>
+                      <th class="col-4 col-md-4 col-lg-4">Ticker Symbol</th>
+                      <th class="col-4 col-md-4 col-lg-4">Sector</th>
+                      <th class="col-4 col-md-4 col-lg-4">Beta</th>
+                    </tr>
+                  </thead>
+
+                  <tbody class="text-center">
+                    <tr v-for="(stock, index) in finalArr" :key="index">
+                      <td class="col-4 col-md-4 col-lg-3.5">
+                        {{ stock.name_of_stock.toUpperCase() }}
+                      </td>
+                      <td class="col-4 col-md-4 col-lg-3.5">{{ stock.sector_loc }}</td>
+                      <td class="col-4 col-md-4 col-lg-3.5">{{ stock.beta_value }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-12 col-sm-12">
+            <div class="card blur blur-rounded shadow-lg mx-2 my-4">
+              <div class="mt-4 mb-4 container">
+                <h3 style="text-align: center">Sector Breakdown</h3>
+                <div class="row">
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="aspect-ratio-container">
+                      <DoughnutChart
+                        style="text-align: center; width: 100%; height: 100%"
+                        :data="sectorPercentages"
+                        :labels="sectorGraph"
+                        :backgroundColors="randomBackgroundColors"
+                        class="img-fluid"
+                      ></DoughnutChart>
+                    </div>
+                    <h3 class="mt-5" style="text-align: center" v-if="sectorGraph.length > 3">
+                      Portfolio Diversification : <span class="green-text">Wide</span>
+                    </h3>
+                    <h3 class="mt-5" style="text-align: center" v-if="sectorGraph.length <= 3">
+                      Portfolio Diversification : <span class="red-text">Narrow</span>
+                    </h3>
+                  </div>
+
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                    <!-- Offset for center alignment in medium screens -->
+                    <h3 style="text-align: center"><em>Volatility:</em></h3>
+                    <p style="text-align: center">
+                      <em
+                        :class="{
+                          'green-text': weightedBeta <= 1.2,
+                          'red-text': weightedBeta > 1.2
+                        }"
+                        style="font-size: 100px; font-family: 'Roboto', sans-serif"
+                      >
+                        {{ volatileOrNot }}
+                      </em>
+                    </p>
+                    <h3 style="text-align: center"><em>Weighted Beta</em></h3>
+
+                    <p style="text-align: center">
+                      <em
+                        :class="{
+                          'green-text': weightedBeta <= 1.2,
+                          'red-text': weightedBeta > 1.2
+                        }"
+                        style="font-size: 100px; font-family: 'Roboto', sans-serif"
+                      >
+                        {{ weightedBeta }}
+                      </em>
+                    </p>
+                    <div>
+                      <p>Experts' Recommendation of Beta Level</p>
+                      <div class="progress">
+                        <div
+                          class="progress-bar progress-bar-striped bg-success"
+                          role="progressbar"
+                          style="width: 50%"
+                          aria-valuenow="100"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        ></div>
+                      </div>
+                      <div v-if="weightedBeta > 1.2">
+                        <p style="margin-top: 20px">
+                          Your Portfolio: <span class="red-text">Risky</span>
+                        </p>
+                        <div class="progress">
+                          <div
+                            class="progress-bar progress-bar-striped bg-danger"
+                            role="progressbar"
+                            style="width: 70%"
+                            aria-valuenow="100"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div v-if="weightedBeta < 1.2">
+                        <p style="margin-top: 20px">
+                          Your Portfolio: <span class="green-text">Healthy</span>
+                        </p>
+
+                        <div class="progress">
+                          <div
+                            class="progress-bar progress-bar-striped bg-warning"
+                            role="progressbar"
+                            style="width: 45%"
+                            aria-valuenow="100"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-12 mt-5">
+                    <div class="d-flex justify-content-center">
+                      <button class="btn" @click="showRecoTable">
+                        <a href="#analysis"></a>
+                        Recommendations for Portfolio
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12">
-              <div class="card blur blur-rounded shadow-lg mx-auto">
-                <div class="mt-4 mb-2 mx-3">
-                  <h2 style="text-align: center">Breakdown of Portfolio:</h2>
+            <div v-if="showTable" class="col-12 col-md-12 col-sm-12">
+              <div class="card blur blur-rounded shadow-lg mx-2 my-4">
+                <div class="row justify-content-center">
+                  <div class="col-10 col-sm-10 col-md-12 col-lg-12">
+                    <h3 style="text-align: center">Analysis of Portfolio:</h3>
+                  </div>
+                </div>
+                <div
+                  class="table-responsive"
+                  style="max-height: 300px; overflow-y: auto; overflow-x: auto"
+                >
                   <table class="table">
                     <thead class="text-center">
                       <tr>
-                        <th class="col-4">Ticker Symbol</th>
-                        <th class="col-4">Sector</th>
-                        <th class="col-4">Beta</th>
-                        <!-- <th>Number of Stocks</th> -->
-                        <!-- <th>Remove Stock?</th> -->
+                        <th class="col-3 col-md-4 col-lg-4">Ticker Symbol</th>
+                        <th class="col-3 col-md-4 col-lg-4">Overvalued/Undervalued</th>
+                        <th class="col-3 col-md-4 col-lg-4">Recommendation Verdict</th>
                       </tr>
                     </thead>
 
                     <tbody class="text-center">
-                      <tr v-for="(stock, index) in finalArr" :key="index">
-                        <td>{{ stock.name_of_stock.toUpperCase() }}</td>
-                        <td>{{ stock.sector_loc }}</td>
-                        <td>{{ stock.beta_value }}</td>
-                        <!-- <td>{{ stock.sector_count }}</td> -->
-                        <!-- <td><button class="minus-small-circle-button" @click="removeTicker(index)"></button></td> -->
+                      <tr v-for="(stock, index) in new_table_recommendations" :key="index">
+                        <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
+                        <td
+                          :class="{
+                            'green-text': stock.recommendation_verdict === 'HOLD',
+                            'red-text': stock.recommendation_verdict === 'SELL'
+                          }"
+                        >
+                          {{ stock.valuation }}
+                        </td>
+                        <td
+                          :class="{
+                            'green-text': stock.recommendation_verdict === 'HOLD',
+                            'red-text': stock.recommendation_verdict === 'SELL'
+                          }"
+                        >
+                          {{ stock.recommendation_verdict }}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -139,105 +341,81 @@
               </div>
             </div>
 
-            <div class="col-6 col-md-6 col-sm-12">
-              <div class="card blur blur-rounded shadow-lg mx-auto">
-                <div class="mt-4 mb-4 mx-3">
-                  <div id="show_reco" v-if="showBeta" class="container-fluid text-center">
-                    <h2 style="text-align: center">Sector Breakdown</h2>
-                    <p style="text-align: center">
-                      The weighted beta is: {{ weightedBeta }} and your portfolio has
-                      <span
-                        :class="{
-                          'green-text': volatileOrNot >= 1.0 && volatileOrNot <= 1.2,
-                          'red-text': volatileOrNot > 1.2,
-                          'yellow-text': volatileOrNot < 1.0
-                        }"
-                        >{{ volatileOrNot }}</span
-                      >
-                    </p>
-                    <div class="d-flex justify-content-center">
-                      <DoughnutChart
-                        style="text-align: center; max-width: 300px"
-                        :data="sectorPercentages"
-                        :labels="sectorGraph"
-                        :backgroundColors="randomBackgroundColors"
-                      ></DoughnutChart>
-                    </div>
-                  </div>
-                </div>
-                <div class="d-flex justify-content-center mt-2">
-                  <button class="btn" @click="showRecoTable">
-                    <a href="#analysis"></a>
-                    Generate Insights
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-12 col-sm-12">
-            <div class="card blur blur-rounded shadow-lg mx-auto mt-5">
-              <div v-if="showTable" id="analysis" class="container text-center mt-4">
-                <h2 class="pl-2">Analysis of Portfolio</h2>
-                <table class="mx-2 table">
-                  <thead>
-                    <tr class="col">
-                      <th>Ticker Symbol</th>
-                      <th>Overvalued / Undervalued</th>
-                      <th>Recommendation Verdict</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <tr v-for="(stock, index) in new_table_recommendations" :key="index">
-                      <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
-                      <td
-                        :class="{
-                          'green-text': stock.recommendation_verdict === 'HOLD',
-                          'red-text': stock.recommendation_verdict === 'SELL'
-                        }"
-                      >
-                        {{ stock.valuation }}
-                      </td>
-                      <td
-                        :class="{
-                          'green-text': stock.recommendation_verdict === 'HOLD',
-                          'red-text': stock.recommendation_verdict === 'SELL'
-                        }"
-                      >
-                        {{ stock.recommendation_verdict }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
             <div class="col-12 col-md-12 col-sm-12">
               <div class="card blur blur-rounded shadow-lg mx-auto mt-5">
                 <div v-if="showTable" class="container text-center mt-4 mb-3">
-                  <h2>Recommendations for a balanced Portfolio</h2>
+                  <p><em>Type of Stocks Recommended for balanced portfolio:</em></p>
+
+                  <h1 style="text-align: center" v-if="volatileOrNot === 'High'">
+                    <span
+                      @click="toggleBlur"
+                      @mouseover="showPrompt"
+                      @mouseleave="hidePrompt"
+                      v-if="isBlurred"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Click to Find Out!"
+                    >
+                      <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
+                      <span class="click-prompt fade_in">Click on it</span>
+                    </span>
+                    <span class="green-text" v-else>
+                      <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
+                    </span>
+                  </h1>
+
+                  <h1 style="text-align: center" v-else>
+                    <span
+                      @click="toggleBlur"
+                      @mouseover="showPrompt"
+                      @mouseleave="hidePrompt"
+                      v-if="isBlurred"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Click to Find Out!"
+                    >
+                      <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
+                      <span class="click-prompt">Click on it</span>
+                    </span>
+                    <span class="red-text" v-else>
+                      <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
+                    </span>
+                  </h1>
+
                   <div class="row justify-content-center">
                     <div
-                      class="col-lg-4 col-md-2 col-sm-1 mx-5 my-4"
+                      class="col-lg-4 col-md-6 col-sm-12 my-4"
                       v-for="(stock, index) in this.randomStocks"
                       :key="index"
                     >
-                      <div class="card blur blur-rounded shadow-lg">
-                        <div class="card-body">
-                          <h5 class="card-title">{{ stock.name }}</h5>
-                          <p class="card-text">
-                            {{ stock.description }}<br />
-                            {{ stock.discount_stat }}
-                          </p>
+                      <router-link
+                        :to="{ name: 'stockpage', params: { symbol: stock.name } }"
+                        style="text-decoration: none"
+                      >
+                        <div class="card blur blur-rounded shadow-lg">
+                          <div class="card-body">
+                            <h5 class="card-title">{{ stock.name }}</h5>
+                            <p class="card-text">
+                              {{ stock.description }}<br />
+                              {{ stock.discount_stat }}
+                            </p>
+                            <a href="#" class="btn btn-primary">Read More</a> &nbsp;
+                          </div>
                         </div>
-                      </div>
+                      </router-link>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
+            <div class="d-flex justify-content-between mt-5">
+              <button class="btn btn-sm mb-0 ms-1" @click="reset">Back</button>
+
+              <router-link to="/markets">
+                <button class="btn btn-sm mb-0 ms-1">Compare to Market</button>
+              </router-link>
+            </div>
             <div class="pb-10"></div>
           </div>
         </div>
@@ -292,6 +470,7 @@ import axios from 'axios'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 ChartJS.register(ArcElement, Tooltip, Legend)
 import DoughnutChart from '../components/DoughnutChart.vue'
+
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore, collection, getDoc, updateDoc, doc } from 'firebase/firestore'
 
@@ -313,12 +492,20 @@ export default {
       randomStocks: [],
       generateTable: false,
       tableValid: true,
+      volatilityLevel: 1.5, // Example: 1.5 for extreme, 1.0 for moderate, 0.5 for acceptable
+      extremeThreshold: 1.3,
+      moderateThreshold: 1.0,
+      isBlurred: true,
+      isHovered: false,
+      isClicked: false,
+      animate: true,
+      revealed: false,
+      percentage: 0,
 
       //  Reference factors
       error_msg: '',
       showBeta: false,
       tickerSymbol: '',
-      showModal: false,
 
       isLoggedIn: true,
       auth: null,
@@ -328,11 +515,12 @@ export default {
 
       //for autocomplete
       resultsAll: [],
-      showTable: false,
+      // showTable: false,
       searchedStocks: []
     }
   },
   mounted() {
+    this.router_link = this.$route.path
     this.auth = getAuth()
     this.db = getFirestore()
     this.userRef = collection(this.db, 'users')
@@ -357,7 +545,7 @@ export default {
   },
   methods: {
     async getAllStock() {
-      let urlAll = "https://twelve-data1.p.rapidapi.com/stocks?country=US"
+      let urlAll = 'https://twelve-data1.p.rapidapi.com/stocks?country=US'
       let optionsAll = {
         method: 'GET',
         params: {
@@ -365,31 +553,30 @@ export default {
           format: 'json'
         },
         headers: {
-          'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
+          'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
           'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
         }
       }
       try {
         const responsesAll = await Promise.all([fetch(urlAll, optionsAll)])
         this.resultsAll = await Promise.all(responsesAll.map((res) => res.json()))
-        console.log(this.resultsAll)
+        // console.log(this.resultsAll)
       } catch (error) {
         console.error(error)
       }
     },
 
     async updateTable() {
-      if (this.tickerSymbol === ""){
+      if (this.tickerSymbol === '') {
         this.showTable = false
-      }
-      else{
+      } else {
         this.showTable = true
         const filteredStocks = this.resultsAll[0].data.filter((stock) => {
-      return (
-        stock.symbol.toLowerCase().includes(this.tickerSymbol.toLowerCase())||
-        stock.name.toLowerCase().includes(this.tickerSymbol.toLowerCase())
-      )
-    })
+          return (
+            stock.symbol.toLowerCase().includes(this.tickerSymbol.toLowerCase()) ||
+            stock.name.toLowerCase().includes(this.tickerSymbol.toLowerCase())
+          )
+        })
         this.searchedStocks = filteredStocks.slice(0, 3)
       }
     },
@@ -423,9 +610,16 @@ export default {
     addTicker(symbol) {
       //from clicking, set symbol
       this.tickerSymbol = symbol
+      if (this.tickerSymbol === 'undefined') {
+        this.error_msg = 'please input a valid ticker symbol'
+        this.tickerSymbol = ''
+        return
+      }
 
       //  Assuming Stock is inside the finalArr
+      this.error_msg = ''
       for (let obj of this.finalArr) {
+        console.log(this.tickerSymbol)
         if (obj.name_of_stock.toUpperCase() === this.tickerSymbol.toUpperCase()) {
           this.tickerSymbol = ''
           this.error_msg = 'Ticker is already included'
@@ -435,14 +629,14 @@ export default {
       }
       //  Extracting API
       this.$refs.name.focus()
-      const url = 'https:mboum-finance.p.rapidapi.com/qu/quote/asset-profile'
+      const url = 'https://mboum-finance.p.rapidapi.com/qu/quote/asset-profile'
       axios
         .get(url, {
           params: {
             symbol: this.tickerSymbol
           },
           headers: {
-            'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+            'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
             'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
           }
         })
@@ -456,8 +650,9 @@ export default {
               this.error_msg = ''
             }
           }
-          console.log(response.data.body)
+          console.log(response.data)
           var sector = response.data.body.sector
+
           var beta = (0.8 + Math.random() * 0.5).toFixed(2)
 
           //  Check if a stock with the same sector already exists in finalArr
@@ -503,11 +698,17 @@ export default {
         })
         .catch((error) => {
           console.log(error.message)
+          this.error_msg = 'Please key in a valid ticker symbol!'
+          this.tickerSymbol = ''
         })
+    },
+    reset() {
+      this.afterAnalysisClicked = true
+      this.showBeta = !this.showBeta
     },
 
     finalBeta() {
-      if (this.finalArr.length < 1) {
+      if (this.finalArr.length < 4) {
         alert('Please input at least 4 stocks to have a more accurate test! ')
       } else {
         this.afterAnalysisClicked = false
@@ -520,14 +721,16 @@ export default {
                 symbol: obj.name_of_stock.toUpperCase()
               },
               headers: {
-                'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+                'X-RapidAPI-Key': 'fcf3fc0e1fmsh384b0856ec590ccp1f7d65jsn445ea978bc78',
                 'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
               }
             })
             .then((response) => {
               const randomNumber = (15 + Math.random() * 5).toFixed(2)
+              // const backup = ()
 
               const recommendation_status = response.data.body.recommendationKey
+              console.log(recommendation_status)
               if (recommendation_status == 'buy') {
                 this.new_table_recommendations.push({
                   name_of_stock: obj.name_of_stock,
@@ -550,6 +753,8 @@ export default {
     removeTicker(index) {
       const removedStock = this.finalArr[index]
       this.finalArr.splice(index, 1)
+
+      this.userStoreData(this.finalArr)
 
       //  Find and update the corresponding sector in finalArr
       const finalIndex = this.finalArr.findIndex(
@@ -575,10 +780,9 @@ export default {
     },
     showRecoTable() {
       this.showTable = !this.showTable
-      this.showModal = !this.showModal
       this.tableValid = false
 
-      if (this.randomStocks.length != 5) {
+      if (this.randomStocks.length != 4) {
         const min = 5
         const max = 15
         var discount_status = ''
@@ -591,6 +795,7 @@ export default {
           } else {
             discount_status = 'Small Discount!!'
           }
+
           this.randomStocks.push({
             name: stock,
             description: 'Undervalued: ' + randomFloat.toFixed(2) + '%',
@@ -598,7 +803,20 @@ export default {
           })
         }
       }
+    },
+    toggleBlur() {
+      this.isBlurred = !this.isBlurred
+      this.isClicked = true
     }
+  },
+  showPrompt() {
+    this.isHovered = true
+  },
+  hidePrompt() {
+    this.isHovered = false
+  },
+  revealSpoiler() {
+    this.revealed = !this.revealed
   },
 
   computed: {
@@ -646,11 +864,9 @@ export default {
     volatileOrNot() {
       var final_status = ''
       if (this.weightedBeta > 1.2) {
-        final_status = ' High Volatility'
-      } else if (this.weightedBeta <= 1.2 && this.weightedBeta > 1.0) {
-        final_status = ' Stable Volatility '
-      } else {
-        final_status = 'Low Volatility'
+        final_status = 'High'
+      } else if (this.weightedBeta <= 1.2) {
+        final_status = 'Low '
       }
       return final_status
     },
@@ -696,7 +912,20 @@ export default {
         }
       }
       return random_list
+    },
+    determineType() {
+      if (this.volatileOrNot === 'High') {
+        return 'Defensive'
+      } else {
+        return 'Growth'
+      }
     }
+  },
+  created() {
+    var intval = setInterval(() => {
+      if (this.percentage < 101) this.percentage += 0.1
+      else clearInterval(intval)
+    }, 10)
   }
 }
 </script>
@@ -716,10 +945,7 @@ export default {
   font-size: 16px;
   /* Adjust the font size as needed */
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s,
-    transform 0.3s;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
 }
 
 .minus-small-circle-button:hover {
@@ -782,4 +1008,51 @@ button:active {
 /* animation: fade-in 1s; */
 /* style the text */
 /* font-size: 5em; */
+
+.blurry-text {
+  color: transparent;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* Increased blur values */
+  cursor: pointer;
+}
+.fade-in {
+  transition: opacity 0.5s; /* Add a transition for opacity */
+  opacity: 0; /* Initially, the text is hidden */
+}
+
+.fade-in.active {
+  opacity: 1; /* When active class is added, text becomes visible */
+}
+
+.click-prompt {
+  display: none; /* Initially, the prompt is hidden */
+  font-size: 14px; /* Adjust the font size as needed */
+  color: #555; /* Text color of the prompt */
+  text-align: center; /* Center the text horizontally */
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+  padding: 5px 10px; /* Add padding to the prompt */
+  position: absolute; /* Positioning absolute for precise placement */
+  top: -30px; /* Adjust the distance from the text */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  border-radius: 5px; /* Rounded corners for the prompt */
+}
+.aspect-ratio-container {
+  position: relative;
+  padding-bottom: 100%; /* Adjust this value for your desired aspect ratio */
+  height: 0;
+  overflow: hidden;
+}
+.header-text {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 24px;
+  color: #007bff; /* Change text color to a nice blue */
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic; /* Italicize the text */
+}
+
+.highlight {
+  font-weight: bold;
+  color: #ff4500; /* Change color for emphasis to a deep orange */
+}
 </style>
