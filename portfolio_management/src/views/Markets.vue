@@ -9,24 +9,21 @@
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 ms-0 mx-1 my-1 text-xs" 
-                  id="snp500" @click="selectSymbol('^GSPC')">
+                  px-2 py-1 ms-0 mx-1 my-1 text-xs" id="snp500" @click="selectSymbol('^GSPC')">
                   S&P 500
                 </button>
-                
+
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs" 
-                  id="nasdaq100" @click="selectSymbol('^NDX')">
+                  px-2 py-1 mx-1 my-1 text-xs" id="nasdaq100" @click="selectSymbol('^NDX')">
                   Nasdaq 100
                 </button>
 
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs" 
-                  id="dow30" @click="selectSymbol('^DJI')">
+                  px-2 py-1 mx-1 my-1 text-xs" id="dow30" @click="selectSymbol('^DJI')">
                   Dow 30
                 </button>
               </div>
@@ -52,24 +49,21 @@
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 ms-0 mx-1 my-1 text-xs" 
-                  id="allButton" @click="fetchDataAndUpdateChart('All')">
+                  px-2 py-1 ms-0 mx-1 my-1 text-xs" id="allButton" @click="fetchDataAndUpdateChart('All')">
                   All time
                 </button>
 
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  id="1m" @click="fetchDataAndUpdateChart('Monthly')">
+                  px-2 py-1 mx-1 my-1 text-xs" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
                   1 Month
                 </button>
 
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
+                  px-2 py-1 mx-1 my-1 text-xs" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
                   1 Week
                 </button>
               </div>
@@ -78,15 +72,15 @@
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  id="candlestick" @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
+                  px-2 py-1 mx-1 my-1 text-xs" id="candlestick"
+                  @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
                   Candlestick
                 </button>
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  id="area" @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
+                  px-2 py-1 mx-1 my-1 text-xs" id="area"
+                  @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
                   Area
                 </button>
               </div>
@@ -198,13 +192,16 @@
                 <table class="table mb-0">
                   <thead>
                     <tr>
-                      <th class="align-middle text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3 pe-0 pe-lg-1">
+                      <th
+                        class="align-middle text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3 pe-0 pe-lg-1">
                         Sector
                       </th>
-                      <th class="text-uppercase text-secondary text-wrap text-xxs font-weight-bolder opacity-7 ps-0 ps-sm-3">
+                      <th
+                        class="text-uppercase text-secondary text-wrap text-xxs font-weight-bolder opacity-7 ps-0 ps-sm-3">
                         Monthly Change (%)
                       </th>
-                      <th class="text-uppercase text-secondary text-wrap text-xxs font-weight-bolder opacity-7 ps-2 ps-sm-3">
+                      <th
+                        class="text-uppercase text-secondary text-wrap text-xxs font-weight-bolder opacity-7 ps-2 ps-sm-3">
                         YTD Change (%)
                       </th>
                     </tr>
@@ -218,7 +215,8 @@
                           </div>
                         </div>
                       </td>
-                      <td class="align-middle text-sm text-success ps-2 ps-sm-5 ps-md-4 ps-xl-5" :class="{ 'text-danger': sector.monthChange < 0 }">
+                      <td class="align-middle text-sm text-success ps-2 ps-sm-5 ps-md-4 ps-xl-5"
+                        :class="{ 'text-danger': sector.monthChange < 0 }">
                         {{ sector.monthChange }}
                       </td>
                       <td class="align-middle text-sm ps-sm-4">
@@ -232,7 +230,6 @@
                 </table>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -375,7 +372,6 @@
                     <div v-for="(article, index) in newsData.slice(0, 2)" :key="index" class="col-md-6">
                       <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
                         style="max-width: 520px;">
-
                         <div class="row g-0">
                           <div class="col-md-6" style="height: 150px; overflow: hidden;">
                             <img :src="article.article_photo_url" class="img-fluid rounded-start card-img"
@@ -391,7 +387,6 @@
                             </div>
                           </div>
                         </div>
-
                       </div>
                     </div>
                   </div>
@@ -420,7 +415,6 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
               <button @click="toggleShowMore" id="showButton" class="btn btn-primary" style="margin: 10px">
@@ -431,10 +425,7 @@
         </div>
       </div>
     </div>
-
     <div class="pb-4"></div>
-
-
   </main>
 </template>
 
@@ -920,6 +911,7 @@ const parseXML = async () => {
 @media (min-width: 0px) {
   #candlestick-chart {
     overflow-x: auto;
+
     .responsive-h1 {
       font-size: 25px;
     }
@@ -930,6 +922,7 @@ const parseXML = async () => {
   #candlestick-chart {
     overflow-x: auto;
   }
+
   .responsive-h1 {
     font-size: 29px;
   }
@@ -939,6 +932,7 @@ const parseXML = async () => {
   #candlestick-chart {
     overflow-x: hidden;
   }
+
   .responsive-h1 {
     font-size: 42px;
   }
