@@ -427,18 +427,6 @@ const resizeChart = () => {
   }
 };
 
-
-// const resizeChart = () => {
-//   if (chart) {
-//     chart.updateOptions({
-//       chart: {
-//         height: document.querySelector('#candlestick-chart').clientHeight,
-//         width: document.querySelector('#candlestick-chart').clientWidth,
-//       },
-//     });
-//   }
-// };
-
 async function fetchData(interval, symbol_selected) {
   let historical_data = {
     method: 'GET',
