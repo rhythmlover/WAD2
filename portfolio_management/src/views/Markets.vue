@@ -6,13 +6,16 @@
           <div class="container-fluid" id="indices-buttons">
             <div class="row justify-content-start">
               <div class="col-lg-5 mt-4">
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="snp500" @click="selectSymbol('^GSPC')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="snp500"
+                  @click="selectSymbol('^GSPC')">
                   S&P 500
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="nasdaq100" @click="selectSymbol('^NDX')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="nasdaq100"
+                  @click="selectSymbol('^NDX')">
                   Nasdaq 100
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="dow30" @click="selectSymbol('^DJI')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="dow30"
+                  @click="selectSymbol('^DJI')">
                   Dow 30
                 </button>
               </div>
@@ -34,13 +37,16 @@
           <div class="container-fluid">
             <div class="row justify-content-between">
               <div class="col-lg-6 col-md-7 mb-3" id="interval-options">
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton" @click="fetchDataAndUpdateChart('All')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton"
+                  @click="fetchDataAndUpdateChart('All')">
                   All time
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1m"
+                  @click="fetchDataAndUpdateChart('Monthly')">
                   1 Month
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
+                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk"
+                  @click="fetchDataAndUpdateChart('Weekly')">
                   1 Week
                 </button>
               </div>
@@ -231,7 +237,7 @@
             <div class="col-md-6 col-sm-12">
               <div class="sentiment-label">
                 <h3 class="responsive-h3">Market Sentiment:</h3>
-                <span :class="[sentimentBool ? 'text-negative' :'text-positive' ]">{{ sentiment }}</span>
+                <span :class="[sentimentBool ? 'text-positive' : 'text-negative']">{{ sentiment }}</span>
               </div>
             </div>
 
@@ -329,58 +335,72 @@
       <h3 class="responsive-h3 d-flex justify-content-start ms-6 mt-4">
         Market News
       </h3>
-  <div class="card-body py-0">
-    <div class="row">
-      <div class="container">
-        <div class="row my-4">
-          <div class="mb-md-0 mb-4">
-            <div class="container-fluid justify-content-center">
-              <div class="row">
-                <div v-for="(article, index) in newsData.slice(0, 2)" :key="index" class="col-md-6">
-                  <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg" style="max-width: 520px;">
-                    <div class="row g-0">
-                      <div class="col-md-6" style="height: 150px; overflow: hidden;">
-                        <img :src="article.article_photo_url" class="img-fluid rounded-start card-img" style="object-fit: cover; width: 100%; height: 100%;">
-                      </div>
-                      <div class="col-md-6">
-                        <div class="card-body">
-                          <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.article_title }}</h5>
-                          <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
+      <div class="card-body py-0">
+        <div class="row">
+          <div class="container">
+            <div class="row my-4">
+              <div class="mb-md-0 mb-4">
+                <div class="container-fluid justify-content-center">
+                  <div class="row">
+                    <div v-for="(article, index) in newsData.slice(0, 2)" :key="index" class="col-md-6">
+                      <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
+                        style="max-width: 520px;">
+
+                        <div class="row g-0">
+                          <div class="col-md-6" style="height: 150px; overflow: hidden;">
+                            <img :src="article.article_photo_url" class="img-fluid rounded-start card-img"
+                              style="object-fit: cover; width: 100%; height: 100%;"
+                              onerror="this.src='https://www.marketplace.org/wp-content/uploads/2021/10/stockmarket.jpg?w=600'">
+                          </div>
+                          <div class="col-md-6">
+                            <div class="card-body">
+                              <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.article_title }}
+                              </h5>
+                              <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read
+                                Article</a>
+                            </div>
+                          </div>
                         </div>
+
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
-              <div class="row">
-                <div v-for="(article, index) in newsData.slice(2)" :key="index" class="col-md-6">
-                  <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg" style="max-width: 520px;">
-                    <div class="row g-0">
-                      <div class="col-md-6" style="height: 150px; overflow: hidden;">
-                        <img :src="article.article_photo_url" class="img-fluid rounded-start card-img" style="object-fit: cover; width: 100%; height: 100%;">
-                      </div>
-                      <div class="col-md-6">
-                        <div class="card-body">
-                          <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.article_title }}</h5>
-                          <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
+                <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
+
+                  <div class="row g-0">
+                    <div v-for="(article, index) in newsData.slice(2)" :key="index" class="col-md-6">
+                      <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
+                        style="max-width: 520px;">
+                        <div class="row g-0">
+                          <div class="col-md-6" style="height: 150px; overflow: hidden;">
+                            <img :src="article.article_photo_url" class="img-fluid rounded-start card-img"
+                              style="object-fit: cover; width: 100%; height: 100%;"
+                              onerror="this.src='https://www.marketplace.org/wp-content/uploads/2021/10/stockmarket.jpg?w=600'">
+                          </div>
+                          <div class="col-md-6">
+                            <div class="card-body">
+                              <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.article_title }}
+                              </h5>
+                              <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read
+                                Article</a>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+
                 </div>
               </div>
+              <button @click="toggleShowMore" id="showButton" class="btn btn-primary" style="margin: 10px">
+                {{ showButtonValue ? 'Show Less' : 'Show More' }}
+              </button>
             </div>
           </div>
-          <button @click="toggleShowMore" id="showButton" class="btn btn-primary" style="margin: 10px">
-            {{ showButtonValue ? 'Show Less' : 'Show More' }}
-          </button>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
 
   </main>
@@ -578,7 +598,7 @@ const renderChart = (chartData) => {
             }
           }
         ]
-      },      
+      },
       series: [
         {
           data: chartData
@@ -597,7 +617,7 @@ const renderChart = (chartData) => {
       }
     }
 
-    
+
     // Destroy the existing chart if it exists
     if (chart) {
       chart.destroy();
@@ -634,20 +654,20 @@ const renderChart = (chartData) => {
 const resizeChart = () => {
   const screenWidth = window.innerWidth;
   if (chart) {
-    if (screenWidth < 768){
+    if (screenWidth < 768) {
       chart.updateOptions({
-      chart: {
-        height: 250,
-        width: 400,
-      },
-    });
+        chart: {
+          height: 250,
+          width: 400,
+        },
+      });
     }
-    else{
+    else {
       chart.updateOptions({
-      chart: {
-        width: document.querySelector('#candlestick-chart').clientWidth,
-      },
-    });
+        chart: {
+          width: document.querySelector('#candlestick-chart').clientWidth,
+        },
+      });
     }
   }
 };
@@ -864,8 +884,5 @@ const parseXML = async () => {
 .news:hover .card-text {
   display: block;
   white-space: normal;
-  
-  }
- 
 
-  </style>
+}</style>
