@@ -6,22 +6,33 @@
           <div class="container-fluid" id="indices-buttons">
             <div class="row justify-content-start">
               <div class="col-lg-5 mt-4">
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="snp500"
-                  @click="selectSymbol('^GSPC')">
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 ms-0 mx-1 my-1 text-xs" 
+                  id="snp500" @click="selectSymbol('^GSPC')">
                   S&P 500
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="nasdaq100"
-                  @click="selectSymbol('^NDX')">
+                
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs" 
+                  id="nasdaq100" @click="selectSymbol('^NDX')">
                   Nasdaq 100
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" type="button" id="dow30"
-                  @click="selectSymbol('^DJI')">
+
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs" 
+                  id="dow30" @click="selectSymbol('^DJI')">
                   Dow 30
                 </button>
               </div>
             </div>
           </div>
-          <div class="card-header pb-0 pt-2">
+          <div class="card-header pb-0 pt-2 text-center responsive-h1">
             <h1 id="stockSymbol">{{ `Stock Symbol: ${tickerName} (${curr_interval})` }}</h1>
           </div>
           <div class="card-body py-3 px-0">
@@ -36,27 +47,46 @@
 
           <div class="container-fluid">
             <div class="row justify-content-between">
-              <div class="col-lg-6 col-md-7 mb-3" id="interval-options">
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton"
-                  @click="fetchDataAndUpdateChart('All')">
+              <div class="col-lg-6 col-md-6 mb-sm-3 mb-0" id="interval-options">
+
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 ms-0 mx-1 my-1 text-xs" 
+                  id="allButton" @click="fetchDataAndUpdateChart('All')">
                   All time
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1m"
-                  @click="fetchDataAndUpdateChart('Monthly')">
+
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  id="1m" @click="fetchDataAndUpdateChart('Monthly')">
                   1 Month
                 </button>
-                <button class="btn bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk"
-                  @click="fetchDataAndUpdateChart('Weekly')">
+
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
                   1 Week
                 </button>
               </div>
-              <div class="col-xl-2 col-lg-1 col-md-6 mb-3" style="min-width: 25vh;" id="chart-type">
-                <button class="btn bg-gradient-primary mx-1" id="candlestick" @click="
-                  chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
+
+              <div class="col-md-5 mb-3 ps-md-5 text-md-end" id="chart-type">
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  id="candlestick" @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
                   Candlestick
                 </button>
-                <button class="btn bg-gradient-primary mx-1" id="area" @click="
-                  chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
+                <button class="btn bg-gradient-primary
+                  px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
+                  px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
+                  px-2 py-1 mx-1 my-1 text-xs"
+                  id="area" @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
                   Area
                 </button>
               </div>
@@ -72,7 +102,7 @@
           <div class="card blur blur-rounded shadow-lg">
             <div class="card-header pb-0">
               <div class="row align-center">
-                <div class="col-lg-6 col-7">
+                <div class="col-12">
                   <h3>Day Gainers</h3>
                 </div>
                 <!-- <div class="col-lg-6 col-5 my-auto text-end">
@@ -96,34 +126,34 @@
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
+              <div class="table-responsive" style="overflow: hidden">
                 <table class="table mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3">
                         Company
                       </th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-0 ps-sm-2">
                         Price ($)
                       </th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-0 ps-sm-2">
                         Change (%)
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="quote in gainer" :key="quote.symbol">
-                      <td>
+                      <td class="ps-0">
                         <div class="d-flex px-3 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ quote.longName }}</h6>
+                            <h6 class="mb-0 text-wrap text-sm">{{ quote.longName }}</h6>
                           </div>
                         </div>
                       </td>
-                      <td class="align-middle text-sm">
+                      <td class="align-middle text-sm ps-0 ps-sm-2">
                         {{ quote.regularMarketPrice }}
                       </td>
-                      <td class="align-middle text-sm">
+                      <td class="align-middle text-sm ps-2 ps-sm-3">
                         <span class="text-s font-weight-bold text-success"
                           :class="{ 'text-danger': quote.regularMarketChangePercent < 0 }">
                           {{ Number(quote.regularMarketChangePercent).toFixed(2) }} </span>
@@ -140,7 +170,7 @@
           <div class="card blur blur-rounded shadow-lg">
             <div class="card-header pb-0">
               <div class="row align-center">
-                <div class="col-lg-6 col-7">
+                <div class="col-12">
                   <h3>Best Sectors</h3>
                 </div>
                 <!-- <div class="col-lg-6 col-5 my-auto text-end">
@@ -164,17 +194,17 @@
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
+              <div class="table-responsive" style="overflow: hidden;">
                 <table class="table mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      <th class="align-middle text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-3 pe-0 pe-lg-1">
                         Sector
                       </th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      <th class="text-uppercase text-secondary text-wrap text-xxs font-weight-bolder opacity-7 ps-0 ps-sm-3">
                         Monthly Change (%)
                       </th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                      <th class="text-uppercase text-secondary text-wrap text-xxs font-weight-bolder opacity-7 ps-2 ps-sm-3">
                         YTD Change (%)
                       </th>
                     </tr>
@@ -182,16 +212,16 @@
                   <tbody>
                     <tr v-for="(sector, index) in top5Sectors" :key="index">
                       <td>
-                        <div class="d-flex px-3 py-1">
+                        <div class="d-flex ps-2 pe-0 pe-sm-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ sector.description }}</h6>
+                            <h6 class="mb-0 text-sm text-wrap">{{ sector.description }}</h6>
                           </div>
                         </div>
                       </td>
-                      <td class="align-middle text-sm text-success" :class="{ 'text-danger': sector.monthChange < 0 }">
+                      <td class="align-middle text-sm text-success ps-2 ps-sm-5 ps-md-4 ps-xl-5" :class="{ 'text-danger': sector.monthChange < 0 }">
                         {{ sector.monthChange }}
                       </td>
-                      <td class="align-middle text-sm">
+                      <td class="align-middle text-sm ps-sm-4">
                         <span class="text-s font-weight-bold text-success"
                           :class="{ 'text-danger': sector.ytdChange < 0 }">
                           {{
@@ -410,6 +440,9 @@
 @media (min-width: 0px) {
   #candlestick-chart {
     overflow-x: auto;
+    .responsive-h1 {
+      font-size: 25px;
+    }
   }
 }
 
@@ -417,11 +450,29 @@
   #candlestick-chart {
     overflow-x: auto;
   }
+  .responsive-h1 {
+    font-size: 29px;
+  }
 }
 
 @media (min-width: 768px) {
   #candlestick-chart {
     overflow-x: hidden;
+  }
+  .responsive-h1 {
+    font-size: 42px;
+  }
+}
+
+@media (min-width: 992px) {
+  .responsive-h1 {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .responsive-h1 {
+    font-size: 50px;
   }
 }
 </style>
@@ -681,7 +732,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': '8a10594436msh268460701326c1ep1b3ccejsnd34c3997dbeb',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -694,7 +745,7 @@ async function fetchData(interval, symbol_selected) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': '8a10594436msh268460701326c1ep1b3ccejsnd34c3997dbeb',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   }
@@ -745,7 +796,7 @@ const getGainerData = async () => {
     url: 'https://yahoo-finance15.p.rapidapi.com/api/yahoo/co/collections/day_gainers',
     params: { start: '0' },
     headers: {
-      'X-RapidAPI-Key': '7e1df04ca4mshc42d90db4b929b5p114deejsn28c65bd112fb',
+      'X-RapidAPI-Key': '8a10594436msh268460701326c1ep1b3ccejsnd34c3997dbeb',
       'X-RapidAPI-Host': 'yahoo-finance15.p.rapidapi.com'
     }
   };
@@ -764,7 +815,7 @@ const getSectorData = async () => {
     method: 'GET',
     url: 'https://fidelity-investments.p.rapidapi.com/market/get-sectors',
     headers: {
-      'X-RapidAPI-Key': 'empty',
+      'X-RapidAPI-Key': '8a10594436msh268460701326c1ep1b3ccejsnd34c3997dbeb',
       'X-RapidAPI-Host': 'fidelity-investments.p.rapidapi.com'
     }
   };
