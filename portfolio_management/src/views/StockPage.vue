@@ -126,7 +126,6 @@
           <div class="card-body py-0">
             <div class="row">
               <div class="container form-group font-weight-bold mt-2">
-                <input class="form-control responsive-text my-3 col-lg-10 col-md-10 col-sm-10" type="text" id="name-box" v-model="nameInput" placeholder="Enter name" />
                 <textarea class="form-control responsive-text col-lg-10 col-md-10 col-sm-10" type="text" id="comment-box" v-model="commentInput" placeholder="Enter comment" />
               </div>
             </div>
@@ -143,60 +142,10 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
-
-      <!-- <div class="card m-3" v-for="comment in comments">
-        <div class="card-body">
-          <h5 class="card-title">{{ comment.name }}</h5>
-          <p class="card-text">{{ comment.comment }}</p>
-        </div>
-      </div> -->
-
-
-      <!-- news section-->
-      <!-- <div class="container">
-        <div class="container-fluid justify-content-center" id="news"> -->
-          <!-- only first 2 will show -->
-          <!-- <div class="row justify-content-center"> -->
-            <!-- <div v-for=" article  in  newsData.articles.slice(0, 2) " :key="article.title" class="col-xxl-6">
-              <div class="card m-2 news" style="width:500px">
-                <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
-                <div class="card-body d-flex flex-column" style="height: 200px;">
-                  <h5 class="card-title">{{ article.title }}</h5>
-                  <p v-if="article.description" class="card-text  text-truncate">{{ article.description }}...</p>
-                  <a :href="article.url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
-          <div class="row justify-cotent-center">
-            <div v-for=" article  in  newsData.articles.slice(2) " :key="article.title"
-              class="col-xxl-6 justify-content-center">
-              <div class="card m-2 news" style="width:500px">
-                <img height="300" :src="article.urlToImage" class="card-img-top" alt="...">
-                <div class="card-body d-flex flex-column" style="height: 200px;">
-                  <h5 class="card-title">{{ article.title }}</h5>
-                  <p v-if="article.description" class="card-text text-truncate">{{ article.description.slice(0, 100) }}...
-                  </p>
-                  <a :href="article.url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button @click="toggleShowMore" id="showButton" class="btn btn-primary" style="margin: 10px">
-        {{ showButtonValue ? 'Show Less' : 'Show More' }}
-      </button> -->
-
   </main>
 </template>
 
@@ -524,42 +473,6 @@ async function fetchData(interval, symbol) {
 const newsData = ref({ articles: [] });
 const showButtonValue = ref(false);
 const description = ref('');
-// const fetchNews = async (page, q) => {
-//   try {
-//     const apiKey = '8ed1d1256b4e4f41996101e7967ad3b5';
-//     const url = `https://newsapi.org/v2/everything?language=en&q=${q}&pageSize=20&page=${page}&apiKey=${apiKey}`;
-//     const response = await fetch(url);
-//     const data = await response.json();
-//     newsData.value = data;
-//     console.log(newsData)
-//     for (let i = 0; i < 3; i++) {
-//       description.value += newsData.value.articles[i].description + ' ';
-//     }
-//     console.log(description)
-//     resolve()
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// fetchNews(currentPage.value, currentQuery.value);
-
-// const search = () => {
-//   currentQuery.value = searchInput.value;
-//   fetchNews(1, currentQuery.value);
-// };
-
-// const prev = () => {
-//   if (currentPage.value > 1) {
-//     currentPage.value--;
-//     fetchNews(currentPage.value, currentQuery.value);
-//   }
-// };
-
-// const next = () => {
-//   currentPage.value++;
-//   fetchNews(currentPage.value, currentQuery.value);
-// };
 
 const toggleShowMore = () => {
   showButtonValue.value = !showButtonValue.value;
@@ -659,7 +572,6 @@ const addComment = () => {
     createdAt: serverTimestamp()
   })
     .then(() => {
-      username.value = ''
       commentInput.value = ''
     })
     .catch((error) => {
