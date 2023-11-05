@@ -567,6 +567,7 @@ export default {
     },
 
     async updateTable() {
+      this.error_msg = ''
       if (this.tickerSymbol === '') {
         this.showTable = false
       } else {
@@ -615,6 +616,7 @@ export default {
         this.tickerSymbol = ''
         return
       }
+      this.showTable = false
 
       //  Assuming Stock is inside the finalArr
       this.error_msg = ''
