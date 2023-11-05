@@ -151,6 +151,7 @@
               <div class="container form-group font-weight-bold mt-2">
                 <textarea class="form-control responsive-text col-lg-10 col-md-10 col-sm-10" type="text" id="comment-box"
                   v-model="commentInput" placeholder="Enter comment" />
+                 <div class="text-danger mt-3"> {{ comments_error }}</div>
               </div>
             </div>
 
@@ -563,6 +564,7 @@ var username = ref('');
 var commentInput = ref('');
 var uid = '';
 var auth = getAuth();
+var comments_error = ref('');
 
 const userDetailsInit = async () => {
   const userDocRef = collection(db, 'users')
@@ -590,18 +592,25 @@ const getComments = async () => {
 };
 
 const addComment = () => {
-  addDoc(commentsRef, {
-    name: username.value,
-    comment: commentInput.value,
-    createdAt: serverTimestamp()
-  })
-    .then(() => {
-      commentInput.value = ''
+  if (commentInput.value != '') {
+    addDoc(commentsRef, {
+      name: username.value,
+      comment: commentInput.value,
+      createdAt: serverTimestamp()
     })
-    .catch((error) => {
-      console.error('Error adding comment: ', error)
-    })
+      .then(() => {
+        commentInput.value = ''
+        comments_error.value = ''
+      })
+      .catch((error) => {
+        console.error('Error adding comment: ', error)
+      })
+  }
+  else{
+    comments_error.value = "Comment cannot be empty";
+  }
 };
+
 </script>
 
 <style>
