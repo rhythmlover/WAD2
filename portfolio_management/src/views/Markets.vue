@@ -204,7 +204,7 @@
 
 
     <!-- market Sentiment -->
-    <div class="sentiment-label">Market Sentiment:
+    <!-- <div class="sentiment-label">Market Sentiment:
       <span :class="[sentimentBool ? 'text-positive' : 'text-negative']">{{ sentiment }}</span>
     </div>
     <div id="sentimentLine" class="table justify-content-center">
@@ -221,45 +221,148 @@
 
         </tr>
       </table>
+    </div> -->
+
+    <div class="card blur blur-rounded shadow rounded-5 mt-4">
+      <!-- market Sentiment -->
+      <div class="card-body p-3">
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="sentiment-label">
+                <h3 class="responsive-h3">Market Sentiment: </h3>
+                <span :class="[sentimentBool ? 'text-positive' : 'text-negative']">{{ sentiment }}</span>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12 col-12">
+              <div id="sentimentLine" class="table-responsive">
+                <table class="table my-2">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary font-weight-bolder opacity-7 p-0 p-sm-2">Positive</th>
+                      <th class="text-uppercase text-secondary font-weight-bolder opacity-7 ps-sm-5 ps-2 p-sm-2 p-0">
+                        Negative</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td class="text-center">{{ positive }}</td>
+                      <td class="text-center ps-sm-5 ps-2">{{ negative }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
     <!-- News section -->
 
-    <div class="container">
-      <div class="row my-4">
-        <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+    <!-- test -->
+    <!-- <div class="card blur blur-rounded shadow rounded-5 mt-4">
+      <div class="card-body py-0">
+        <div class="row">
+          <div class="container">
+            <div class="row my-4">
+              <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
 
-          <div v-for="(article, index) in newsData.slice(0, 2)" :key="index">
-            <div class="card m-2 news blur blur-rounded shadow-lg" style="width: 800px; height: 150px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img :src="article.article_photo_url" class="img-fluid rounded-start"
-                    style="object-fit: cover;max-width: 266px; max-height: 150px;">
+                <div class="container-fluid justify-content-center">
+                  <div v-for="(article, index) in newsData.slice(0, 2)" :key="index">
+                    <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg" style="max-width: 800px;">
+                      <div class="row g-0">
+                        <div class="col-md-4" style="height: 150px; overflow: hidden;">
+                          <img :src="article.article_photo_url" class="img-fluid rounded-start"
+                            style="object-fit: cover; width: 100%; height: 100%;">
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <h5 class="card-title text-truncate" style="max-width: 100%;">{{ article.article_title }}</h5>
+                            <p class="card-text" style="max-width: 100%;">{{ article.article_summary }}</p>
+                            <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read
+                              Article</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ article.article_title }}</h5>
-                    <p class="card-text">{{ article.article_summary }}</p>
-                    <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
+                <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
+                  <div class="row justify-content-center">
+                    <div v-for="(article, index) in newsData.slice(2)" :key="index">
+                      <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
+                        style="max-width: 800px;">
+                        <div class="row g-0">
+                          <div class="col-md-4" style="height: 150px; overflow: hidden;">
+                            <img :src="article.article_photo_url" class="img-fluid rounded-start"
+                              style="object-fit: cover; width: 100%; height: 100%;">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title text-truncate" style="max-width: 100%;">{{ article.article_title }}
+                              </h5>
+                              <p class="card-text" style="max-width: 100%;">{{ article.article_summary }}</p>
+                              <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read
+                                Article</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button @click="toggleShowMore" id="showButton" class="btn btn-primary" style="margin: 10px">
+                {{ showButtonValue ? 'Show Less' : 'Show More' }}
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="card blur blur-rounded shadow rounded-5 mt-4">
+  <div class="card-body py-0">
+    <div class="row">
+      <div class="container">
+        <div class="row my-4">
+          <div class="mb-md-0 mb-4">
+            <div class="container-fluid justify-content-center">
+              <div class="row">
+                <div v-for="(article, index) in newsData.slice(0, 2)" :key="index" class="col-md-6">
+                  <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg" style="max-width: 520px;">
+                    <div class="row g-0">
+                      <div class="col-md-6" style="height: 150px; overflow: hidden;">
+                        <img :src="article.article_photo_url" class="img-fluid rounded-start card-img" style="object-fit: cover; width: 100%; height: 100%;">
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card-body">
+                          <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.article_title }}</h5>
+                          <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
-            <div class="row justify-cotent-center">
-              <div v-for="(article, index) in newsData.slice(2)" :key="index">
-                <div class="card m-2 news blur blur-rounded shadow-lg" style="width: 800px; height: 150px;">
-                  <div class="row g-0">
-                    <div class="col-md-4">
-                      <img :src="article.article_photo_url" class="img-fluid rounded-start"
-                        style="object-fit: cover;max-width: 266px; max-height: 150px;">
-                    </div>
-                    <div class="col-md-8">
-                      <div class="card-body">
-                        <h5 class="card-title">{{ article.article_title }}</h5>
-                        <p class="card-text">{{ article.article_summary }}</p>
-                        <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
+            <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
+              <div class="row">
+                <div v-for="(article, index) in newsData.slice(2)" :key="index" class="col-md-6">
+                  <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg" style="max-width: 520px;">
+                    <div class="row g-0">
+                      <div class="col-md-6" style="height: 150px; overflow: hidden;">
+                        <img :src="article.article_photo_url" class="img-fluid rounded-start card-img" style="object-fit: cover; width: 100%; height: 100%;">
+                      </div>
+                      <div class="col-md-6">
+                        <div class="card-body">
+                          <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.article_title }}</h5>
+                          <a :href="article.article_url" target="_blank" class="btn btn-primary mt-auto">Read Article</a>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -267,17 +370,14 @@
               </div>
             </div>
           </div>
-
           <button @click="toggleShowMore" id="showButton" class="btn btn-primary" style="margin: 10px">
             {{ showButtonValue ? 'Show Less' : 'Show More' }}
           </button>
-
         </div>
       </div>
     </div>
-
-
-
+  </div>
+</div>
 
 
   </main>
@@ -342,7 +442,7 @@ onMounted(async () => {
           language: 'en'
         },
         headers: {
-          'X-RapidAPI-Key': '7e1df04ca4mshc42d90db4b929b5p114deejsn28c65bd112fb',
+          'X-RapidAPI-Key': '1bf9eeb3bdmsh7519276699b1ba7p11f38fjsn6938ab39f800',
           'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com'
         }
       };
@@ -362,7 +462,7 @@ onMounted(async () => {
       }
     }
     getMarketNews()
-})
+  })
 
   fetchNewsPromise.then(() => {
     console.log(typeof (titles.value))
@@ -761,5 +861,8 @@ const parseXML = async () => {
 .news:hover .card-text {
   display: block;
   white-space: normal;
-}
-</style>
+  
+  }
+ 
+
+  </style>
