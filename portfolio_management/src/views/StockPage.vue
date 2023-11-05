@@ -544,12 +544,11 @@ const toggleShowMore = () => {
 
 // Market Sentiment Section
 
-const sentiment = ref('');
+const sentiment = ref('Positive');
+const sentimentBool = ref(true)
 const positive = ref('0.67');
 const mixed = ref('0.20');
 const negative = ref('0.13');
-const sentimentBool = ref(true)
-
 
 
 async function marketSentiment(newsdata) {

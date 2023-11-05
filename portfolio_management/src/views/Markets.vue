@@ -432,50 +432,13 @@
       </div>
     </div>
 
+    <div class="pb-4"></div>
+
 
   </main>
 </template>
 
-<style>
-@media (min-width: 0px) {
-  #candlestick-chart {
-    overflow-x: auto;
-    .responsive-h1 {
-      font-size: 25px;
-    }
-  }
-}
 
-@media (min-width: 576px) {
-  #candlestick-chart {
-    overflow-x: auto;
-  }
-  .responsive-h1 {
-    font-size: 29px;
-  }
-}
-
-@media (min-width: 768px) {
-  #candlestick-chart {
-    overflow-x: hidden;
-  }
-  .responsive-h1 {
-    font-size: 42px;
-  }
-}
-
-@media (min-width: 992px) {
-  .responsive-h1 {
-    font-size: 50px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .responsive-h1 {
-    font-size: 50px;
-  }
-}
-</style>
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -878,6 +841,7 @@ async function marketSentiment(newsdata) {
     }
     else {
       sentiment.value = "Negative"
+      sentimentBool.value = false
     }
 
   } catch (error) {
@@ -924,6 +888,14 @@ const parseXML = async () => {
 </script>
 
 <style>
+@import '../assets/css/soft-ui-dashboard.css';
+
+.sentiment-label {
+  padding: 15px 0px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
 .news {
   transition: all 0.3s;
 }
@@ -935,5 +907,52 @@ const parseXML = async () => {
 .news:hover .card-text {
   display: block;
   white-space: normal;
+}
 
-}</style>
+.text-positive {
+  color: green;
+}
+
+.text-negative {
+  color: red;
+}
+
+@media (min-width: 0px) {
+  #candlestick-chart {
+    overflow-x: auto;
+    .responsive-h1 {
+      font-size: 25px;
+    }
+  }
+}
+
+@media (min-width: 576px) {
+  #candlestick-chart {
+    overflow-x: auto;
+  }
+  .responsive-h1 {
+    font-size: 29px;
+  }
+}
+
+@media (min-width: 768px) {
+  #candlestick-chart {
+    overflow-x: hidden;
+  }
+  .responsive-h1 {
+    font-size: 42px;
+  }
+}
+
+@media (min-width: 992px) {
+  .responsive-h1 {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .responsive-h1 {
+    font-size: 50px;
+  }
+}
+</style>
