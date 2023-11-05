@@ -11,35 +11,24 @@
 
   <div v-if="isLoggedIn" class="mt-7">
     <main>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6 col-md-8 col-sm-10 col-12 mx-auto">
-            <div class="header-text">
-              "Diversification is a protection against ignorance. It makes very little sense for
-              those who know what they're doing." - Warren Buffet
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="container-fluid px-md-5 mt-3">
-        <div class="card rounded-5 card-header shadow-lg p-0 pt-2" v-if="afterAnalysisClicked">
-          <div class="row justify-content-center">
-            <div class="col-lg-10 col-md-10 col-sm-12">
-              <div class="container form-group font-weight-bold mt-2">
-                Enter the stocks in your portfolio to see how healthy your portfolio is! &nbsp;
-                <input
-                  class="form-control"
-                  type="text"
-                  v-model="tickerSymbol"
-                  id="symbol"
-                  ref="name"
-                  @keyup="updateTable"
-                  placeholder="Ticker Symbol"
-                />
-
-                <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
-                  <tbody>
-                    <!-- <tr>
+      <div class="container-fluid mt-3">
+        <div class="card rounded-5" v-if="afterAnalysisClicked">
+          <div class="card-header shadow-lg rounded-5 pb-0 pt-2">
+            <div>
+              <div class="row">
+                <div class="container form-group font-weight-bold mt-2">
+                  Ticker Symbol: &nbsp;
+                  <input
+                    class="form-control col-lg-10 col-md-10 col-sm-10"
+                    type="text"
+                    v-model="tickerSymbol"
+                    id="symbol"
+                    ref="name"
+                    @keyup="updateTable"
+                  />
+                  <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
+                    <tbody>
+                      <!-- <tr>
                         <th ref="search" colspan="4">
                           <div class="row mx-auto">
                             <div
