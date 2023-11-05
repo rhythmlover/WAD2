@@ -204,7 +204,7 @@ const optionsAll = {
   }
 }
 
-const urlAll = 'https://twelve-data1.p.rapidapi.com/stocks?country=US&exchange=NASDAQ'
+const urlAll = 'https://twelve-data1.p.rapidapi.com/stocks?country=US'
 
 const urlReco = 'https://mboum-finance.p.rapidapi.com/qu/quote/financial-data'
 
