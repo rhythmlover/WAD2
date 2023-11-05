@@ -5,7 +5,8 @@
         <div class="card z-index-2 blur blur-rounded shadow-lg rounded-5 mt-7">
           <div class="card-header pb-0 pt-2">
             <!-- Display the selected stock symbol -->
-            <h1 class="text-center responsive-h1" id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} ${selectedName} (${curr_interval})` }}</h1>
+            <h1 class="text-center responsive-h1" id="stockSymbol">{{ `Stock Symbol: ${selectedSymbol} ${selectedName}
+                          (${curr_interval})` }}</h1>
           </div>
 
 
@@ -22,21 +23,25 @@
           <div class="container-fluid">
             <div class="row justify-content-between">
               <div class="col-lg-6 col-md-7 mb-3" id="interval-options">
-              <!-- <div class="col-4 col-lg-6 text-center" id="intervalOptions"> -->
-                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton" @click="fetchDataAndUpdateChart('All')">All Time</button>
-                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1m" @click="fetchDataAndUpdateChart('Monthly')">Monthly</button>
-                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">Weekly</button>
+                <!-- <div class="col-4 col-lg-6 text-center" id="intervalOptions"> -->
+                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="allButton"
+                  @click="fetchDataAndUpdateChart('All')">All Time</button>
+                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1m"
+                  @click="fetchDataAndUpdateChart('Monthly')">Monthly</button>
+                <button class="btn btn-md bg-gradient-primary mx-1 d-sm-inline d-block" id="1wk"
+                  @click="fetchDataAndUpdateChart('Weekly')">Weekly</button>
               </div>
 
               <div class="col-xl-2 col-lg-1 col-md-6 mb-3" style="min-width: 25vh;" id="chart-type">
-              <!-- <div class="col-3 col-lg-4 text-center" id="chart-type"> -->
+                <!-- <div class="col-3 col-lg-4 text-center" id="chart-type"> -->
                 <button class="btn bg-gradient-primary mx-1" id="candlestick"
                   @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">Candlestick</button>
-                <button class="btn bg-gradient-primary mx-1" id="area" @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">Area</button>
+                <button class="btn bg-gradient-primary mx-1" id="area"
+                  @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">Area</button>
               </div>
             </div>
           </div>
-        </div> 
+        </div>
 
         <div class="card blur blur-rounded shadow rounded-5 mt-4">
           <!-- market Sentiment -->
@@ -46,7 +51,7 @@
                 <div class="col-md-6 col-sm-12">
                   <div class="sentiment-label">
                     <h3 class="responsive-h3">Market Sentiment: </h3>
-                    <span :class="[sentimentBool ? 'text-negative' : 'text-positive']">{{ sentiment }}</span>
+                    <span :class="[sentimentBool ? 'text-positive' : 'text-negative']">{{ sentiment }}</span>
                   </div>
                 </div>
 
@@ -56,7 +61,8 @@
                       <thead>
                         <tr>
                           <th class="text-uppercase text-secondary font-weight-bolder opacity-7 p-0 p-sm-2">Positive</th>
-                          <th class="text-uppercase text-secondary font-weight-bolder opacity-7 ps-sm-5 ps-2 p-sm-2 p-0">Negative</th>
+                          <th class="text-uppercase text-secondary font-weight-bolder opacity-7 ps-sm-5 ps-2 p-sm-2 p-0">
+                            Negative</th>
                         </tr>
                       </thead>
 
@@ -70,8 +76,8 @@
                   </div>
                 </div>
               </div>
-            </div>            
-          </div>  
+            </div>
+          </div>
         </div>
 
         <div class="card blur blur-rounded shadow rounded-5 mt-4">
@@ -80,30 +86,47 @@
               <div class="container-fluid justify-content-center" id="news">
                 <!-- only first 2 will show -->
                 <div class="row justify-content-center">
-                  <div v-for="article in newsData.articles.slice(0, 2)" :key="article.title" class="col-md-6 justify-content-center mt-4 p-0">
-                    <div class="card w-auto border m-sm-2 news" style="width:500px">
-                      <img height="550" :src="article.urlToImage" class="card-img-top img-fluid" alt="...">
-                      <div class="card-body d-flex flex-column p-md-2 p-2" style="height: 180px;">
-                        <h5 class="card-title responsive-h5">{{ article.title }}</h5>
-                        <p v-if="article.description" class="card-text text-truncate responsive-text">{{ article.description }}...</p>
-                        <a :href="article.url" target="_blank" class="btn btn-primary mb-0">Read Article</a>
+                  <div v-for="article in newsData.articles.slice(0, 2)" :key="article.title" class="col-md-6">
+                    <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg" style="width:520px">
+
+                      <div class="row g-0">
+                        <div class="col-md-6" style="height: 150px; overflow: hidden;">
+                          <img height="550" :src="article.urlToImage" class="img-fluid rounded-start card-img"
+                            style="object-fit: cover; width: 100%; height: 100%;"
+                            onerror="this.src='https://www.marketplace.org/wp-content/uploads/2021/10/stockmarket.jpg?w=600'">
+                        </div>
+                        <div class="col-md-6">
+                          <div class="card-body">
+                            <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.title }}</h5>
+                            <a :href="article.url" target="_blank" class="btn btn-primary mb-0">Read Article</a>
+                          </div>
+                        </div>
                       </div>
+
                     </div>
                   </div>
                 </div>
               </div>
 
               <div id="showmore" class="container-fluid justify-content-center" v-show="showButtonValue">
-                <div class="row justify-cotent-center">
-                  <div v-for=" article  in  newsData.articles.slice(2) " :key="article.title" class="col-md-6 justify-content-center mt-4 p-0">
-                    <div class="card w-auto border m-sm-2 news" style="width:500px">
-                      <img height="550" :src="article.urlToImage" class="card-img-top img-fluid" alt="...">
-                      <div class="card-body d-flex flex-column p-md-2 p-2" style="height: 200px;">
-                        <h5 class="card-title responsive-h5">{{ article.title }}</h5>
-                        <p v-if="article.description" class="card-text text-truncate responsive-text">{{ article.description.slice(0, 100) }}...
-                        </p>
-                        <a :href="article.url" target="_blank" class="btn btn-primary">Read Article</a>
+                <div class="row justify-content-center">
+                  <div v-for="article in newsData.articles.slice(2)" :key="article.title" class="col-md-6">
+                    <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg" style="width:520px">
+
+                      <div class="row g-0">
+                        <div class="col-md-6" style="height: 150px; overflow: hidden;">
+                          <img height="550" :src="article.urlToImage" class="img-fluid rounded-start card-img"
+                            style="object-fit: cover; width: 100%; height: 100%;"
+                            onerror="this.src='https://www.marketplace.org/wp-content/uploads/2021/10/stockmarket.jpg?w=600'">
+                        </div>
+                        <div class="col-md-6">
+                          <div class="card-body">
+                            <h5 class="card-text text-truncate" style="max-width: 100%;">{{ article.title }}</h5>
+                            <a :href="article.url" target="_blank" class="btn btn-primary mb-0">Read Article</a>
+                          </div>
+                        </div>
                       </div>
+
                     </div>
                   </div>
                 </div>
@@ -126,7 +149,8 @@
           <div class="card-body py-0">
             <div class="row">
               <div class="container form-group font-weight-bold mt-2">
-                <textarea class="form-control responsive-text col-lg-10 col-md-10 col-sm-10" type="text" id="comment-box" v-model="commentInput" placeholder="Enter comment" />
+                <textarea class="form-control responsive-text col-lg-10 col-md-10 col-sm-10" type="text" id="comment-box"
+                  v-model="commentInput" placeholder="Enter comment" />
               </div>
             </div>
 
@@ -383,20 +407,20 @@ const resizeChart = () => {
   const screenWidth = window.innerWidth;
 
   if (chart) {
-    if (screenWidth < 768){
+    if (screenWidth < 768) {
       chart.updateOptions({
-      chart: {
-        height: 250,
-        width: 400,
-      },
-    });
+        chart: {
+          height: 250,
+          width: 400,
+        },
+      });
     }
-    else{
+    else {
       chart.updateOptions({
-      chart: {
-        width: document.querySelector('#chart').clientWidth,
-      },
-    });
+        chart: {
+          width: document.querySelector('#chart').clientWidth,
+        },
+      });
     }
   }
 };
@@ -481,7 +505,7 @@ const toggleShowMore = () => {
 
 // Market Sentiment Section
 
-const sentiment = ref('Positive');
+const sentiment = ref('');
 const positive = ref('0.67');
 const mixed = ref('0.20');
 const negative = ref('0.13');
@@ -630,7 +654,7 @@ const addComment = () => {
     font-size: 0.9rem;
     font-weight: bold;
   }
-  
+
   #chart {
     overflow-x: auto;
   }
@@ -640,7 +664,7 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.6rem;
   }
-  
+
   .responsive-h1 {
     font-size: 29px;
   }
