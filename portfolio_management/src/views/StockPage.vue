@@ -46,7 +46,7 @@
                 <div class="col-md-6 col-sm-12">
                   <div class="sentiment-label">
                     <h3 class="responsive-h3">Market Sentiment: </h3>
-                    <span :class="[sentimentBool ? 'text-positive' : 'text-negative']">{{ sentiment }}</span>
+                    <span :class="[sentimentBool ? 'text-negative' : 'text-positive']">{{ sentiment }}</span>
                   </div>
                 </div>
 
