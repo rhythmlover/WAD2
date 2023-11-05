@@ -230,8 +230,8 @@
           <div class="row">
             <div class="col-md-6 col-sm-12">
               <div class="sentiment-label">
-                <h3 class="responsive-h3">Market Sentiment: </h3>
-                <span :class="[sentimentBool ? 'text-positive' : 'text-negative']">{{ sentiment }}</span>
+                <h3 class="responsive-h3">Market Sentiment:</h3>
+                <span :class="[sentimentBool ? 'text-negative' :'text-positive' ]">{{ sentiment }}</span>
               </div>
             </div>
 
@@ -326,6 +326,9 @@
     </div> -->
 
     <div class="card blur blur-rounded shadow rounded-5 mt-4">
+      <h3 class="responsive-h3 d-flex justify-content-start ms-6 mt-4">
+        Market News
+      </h3>
   <div class="card-body py-0">
     <div class="row">
       <div class="container">
