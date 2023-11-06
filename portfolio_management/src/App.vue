@@ -7,12 +7,12 @@
     <div class="row">
       <div class="col-12">
         <nav
-          class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-10">
+          class="navbar navbar-expand-lg blur blur-rounded top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-lg-10 mx-md-8 mx-sm-7 mx-6">
           <div class="container-fluid">
-            <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3">
+            <a class="navbar-brand font-weight-bolder ms-lg-0 ms-sm-3 ms-1 text-truncate">
               <span>Portfolio Management</span>
             </a>
-            <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse"
+            <button class="navbar-toggler shadow-none ms-0 hide-at-small-screen" type="button" data-bs-toggle="collapse"
               data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
               aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
@@ -21,7 +21,7 @@
                 <span class="navbar-toggler-bar bar3"></span>
               </span>
             </button>
-            <div class="collapse navbar-collapse" id="navigation">
+            <div class="collapse navbar-collapse hide-at-small-screen" id="navigation">
               <ul class="navbar-nav mx-lg-auto ms-xl-auto">
                 <li class="nav-item">
                   <a class="nav-link me-2">
@@ -116,7 +116,7 @@ li a {
   display: block;
 }
 
-@media (max-width: 490px) {
+@media (max-width: 280px) {
   .hide-at-small-screen {
     display: none;
   }

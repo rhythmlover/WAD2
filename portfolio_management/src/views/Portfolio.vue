@@ -14,29 +14,22 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-6 col-md-8 col-sm-10 col-12 mx-auto">
-            <div class="header-text">
+            <div class="header-text mt-lg-4 mt-sm-3 mt-5">
               "Diversification is a protection against ignorance. It makes very little sense for
               those who know what they're doing." - Warren Buffet
             </div>
           </div>
         </div>
       </div>
-
-      <div class="container-fluid px-md-5 mt-3">
+      
+      <div class="container-fluid px-md-5 px-0 mt-3 pb-8">
         <div class="card rounded-5 card-header shadow-lg p-0 pt-2" v-if="afterAnalysisClicked">
           <div class="row justify-content-center">
             <div class="col-lg-10 col-md-10 col-sm-12">
               <div class="container form-group font-weight-bold mt-2">
                 Enter the stocks in your portfolio to see how healthy your portfolio is! &nbsp;
-                <input
-                  class="form-control"
-                  type="text"
-                  v-model="tickerSymbol"
-                  id="symbol"
-                  ref="name"
-                  @keyup="updateTable"
-                  placeholder="Ticker Symbol"
-                />
+                <input class="form-control" type="text" v-model="tickerSymbol" id="symbol" ref="name" @keyup="updateTable"
+                  placeholder="Ticker Symbol" />
 
                 <table ref="searchList" class="table align-items-center mb-0" v-show="showTable">
                   <tbody>
@@ -78,12 +71,12 @@
               </div>
             </div>
             <div class="container justify-content-start text-center my-3">
-              <button
-                class="btn btn-sm mb-0 ms-1"
-                name="add"
-                v-if="!showBeta"
-                @click="addTicker(this.tickerSymbol)"
-              >
+              <button class="btn bg-gradient-primary
+                  px-xl-6
+                  py-lg-3 mx-lg-2 mb-lg-3
+                  px-md-5 py-md-2 mx-md-1 my-md-1 
+                  px-5 py-2 ms-1 mb-0 text-xs"
+                  name="add" v-if="!showBeta" @click="addTicker(this.tickerSymbol)">
                 ADD
               </button>
             </div>
@@ -98,10 +91,7 @@
                   <h2 style="text-align: center">Breakdown of Portfolio:</h2>
                 </div>
               </div>
-              <div
-                class="table-responsive"
-                style="max-height: 300px; overflow-y: auto; overflow-x: auto"
-              >
+              <div class="table-responsive" style="max-height: 300px; overflow-y: auto; overflow-x: auto">
                 <table class="table">
                   <thead class="text-center">
                     <tr>
@@ -113,22 +103,19 @@
                   </thead>
 
                   <tbody class="text-center">
-                    <transition-group name="list">
-                      <tr v-for="(stock, index) in finalArr" :key="index">
-                        <td>{{ stock.name_of_stock.toUpperCase() }}</td>
-                        <td>{{ stock.sector_loc }}</td>
-                        <td>{{ stock.beta_value }}</td>
-                        <td>
-                          <button
-                            type="button"
-                            class="btn btn-sm mb-0 ms-1"
-                            @click="removeTicker(index), show != show"
-                          >
-                            Remove Stock
-                          </button>
-                        </td>
-                      </tr>
-                    </transition-group>
+                    <tr v-for="(stock, index) in finalArr" :key="index">
+                      <td>{{ stock.name_of_stock.toUpperCase() }}</td>
+                      <td>{{ stock.sector_loc }}</td>
+                      <td>{{ stock.beta_value }}</td>
+                      <td>
+                        <button class="btn bg-gradient-primary
+                          px-lg-4 mx-lg-2
+                          px-md-3 py-md-2 mx-md-1 my-md-1 
+                          px-2 py-2 ms-1 mb-0 text-xs" @click="removeTicker(index)">
+                          Remove Stock
+                        </button>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -137,19 +124,56 @@
         </div>
 
         <div class="row justify-content-center">
-          <button
-            class="btn btn-sm col-lg-12 col-12 col-sm-12 col-md-12 mt-5"
-            v-if="!showBeta"
-            name="confirm"
-            @click="finalBeta(), showRecoTable()"
-          >
-            <a href="#result"></a>
-            GET ANALYSIS REPORT
-          </button>
+          <div class="col-sm-5 col-8 text-center">
+            <button
+            class="btn bg-gradient-primary
+                    px-lg-4 py-lg-3 mt-lg-5
+                    px-md-3 py-md-2  
+                    px-4 py-3 mt-3 text-xs"
+              data-toggle="modal"
+              data-target="#exampleModal"
+              v-if="!showBeta"
+              name="confirm"
+              @click="finalBeta(), showRecoTable()">
+              <a href="#result"></a>
+              GET ANALYSIS REPORT
+            </button>
+          </div>
         </div>
-        <div class="pb-10"></div>
+        <!-- <div class="pb-10"></div> -->
 
         <div class="container-fluid" v-if="!afterAnalysisClicked">
+          <!-- <div class="col-12 col-md-12 col-sm-12">
+            <div class="card blur blur-rounded shadow-lg mx-2 my-4">
+              <div class="row justify-content-center">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                  <h3 style="text-align: center">Breakdown of Portfolio:</h3>
+                </div>
+              </div>
+              <div class="table-responsive" style="max-height: 300px; overflow-y: auto overflow-x: auto;">
+                <table class="table">
+                  <thead class="text-center">
+                    <tr>
+                      <th class="col-4 col-md-4 col-lg-4">Ticker Symbol</th>
+                      <th class="col-4 col-md-4 col-lg-4">Sector</th>
+                      <th class="col-4 col-md-4 col-lg-4">Beta</th>
+                    </tr>
+                  </thead>
+
+                  <tbody class="text-center">
+                    <tr v-for="(stock, index) in finalArr" :key="index">
+                      <td class="col-4 col-md-4 col-lg-3.5">
+                        {{ stock.name_of_stock.toUpperCase() }}
+                      </td>
+                      <td class="col-4 col-md-4 col-lg-3.5">{{ stock.sector_loc }}</td>
+                      <td class="col-4 col-md-4 col-lg-3.5">{{ stock.beta_value }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div> -->
+
           <div class="col-12 col-md-12 col-sm-12">
             <div class="card blur blur-rounded shadow-lg mx-2 my-4">
               <div class="mt-4 mb-4 container">
@@ -157,76 +181,52 @@
                 <div class="row">
                   <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="aspect-ratio-container">
-                      <DoughnutChart
-                        style="text-align: center; width: 100%; height: 100%"
-                        :data="sectorPercentages"
-                        :labels="sectorGraph"
-                        :backgroundColors="randomBackgroundColors"
-                        class="img-fluid"
-                      >
+                      <DoughnutChart style="text-align: center; width: 100%; height: 100%" :data="sectorPercentages"
+                        :labels="sectorGraph" :backgroundColors="randomBackgroundColors" class="img-fluid">
                       </DoughnutChart>
                     </div>
-
                     <h3 class="mt-5" style="text-align: center" v-if="sectorGraph.length > 3">
-                      Portfolio Diversification : <span class="green-text">Wide</span>
+                      Portfolio Diversification : <span class="responsive-h1 green-text">Wide</span>
                     </h3>
                     <h3 class="mt-5" style="text-align: center" v-if="sectorGraph.length <= 3">
-                      Portfolio Diversification : <span class="red-text">Narrow</span>
+                      Portfolio Diversification : <span class="responsive-h1 red-text">Narrow</span>
                     </h3>
                   </div>
 
                   <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                     <!-- Offset for center alignment in medium screens -->
-                    <h3 style="text-align: center"><em>Volatility:</em></h3>
+                    <h3 class="mt-5" style="text-align: center"><em>Volatility:</em></h3>
                     <p style="text-align: center">
-                      <em
-                        :class="{
-                          'green-text': weightedBeta <= 1.2,
-                          'red-text': weightedBeta > 1.2
-                        }"
-                        style="font-size: 100px; font-family: 'Roboto', sans-serif"
-                      >
+                      <em :class="{
+                        'green-text': weightedBeta <= 1.2,
+                        'red-text': weightedBeta > 1.2
+                      }" class="responsive-h1" style="font-weight: bold;">
                         {{ volatileOrNot }}
                       </em>
                     </p>
                     <h3 style="text-align: center"><em>Weighted Beta</em></h3>
 
                     <p style="text-align: center">
-                      <em
-                        :class="{
-                          'green-text': weightedBeta <= 1.2,
-                          'red-text': weightedBeta > 1.2
-                        }"
-                        style="font-size: 100px; font-family: 'Roboto', sans-serif"
-                      >
+                      <em :class="{
+                        'green-text': weightedBeta <= 1.2,
+                        'red-text': weightedBeta > 1.2
+                      }" class="responsive-h1" style="font-weight: bold;">
                         {{ weightedBeta }}
                       </em>
                     </p>
                     <div>
                       <p>Experts' Recommendation of Beta Level</p>
                       <div class="progress">
-                        <div
-                          class="progress-bar progress-bar-striped bg-success"
-                          role="progressbar"
-                          style="width: 50%"
-                          aria-valuenow="100"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
+                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 50%"
+                          aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                       <div v-if="weightedBeta > 1.2">
                         <p style="margin-top: 20px">
                           Your Portfolio: <span class="red-text">Risky</span>
                         </p>
                         <div class="progress">
-                          <div
-                            class="progress-bar progress-bar-striped bg-danger"
-                            role="progressbar"
-                            style="width: 70%"
-                            aria-valuenow="100"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          ></div>
+                          <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 70%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                       </div>
 
@@ -236,14 +236,8 @@
                         </p>
 
                         <div class="progress">
-                          <div
-                            class="progress-bar progress-bar-striped bg-warning"
-                            role="progressbar"
-                            style="width: 45%"
-                            aria-valuenow="100"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                          ></div>
+                          <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: 45%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                       </div>
                     </div>
@@ -268,44 +262,35 @@
               <div class="card blur blur-rounded shadow-lg mx-2 my-4">
                 <div class="row justify-content-center">
                   <div class="col-10 col-sm-10 col-md-12 col-lg-12">
-                    <h3 style="text-align: center">Analysis of Portfolio:</h3>
+                    <h3 class="pt-4" style="text-align: center">Analysis of Portfolio:</h3>
                   </div>
                 </div>
-                <div
-                  class="table-responsive"
-                  style="max-height: 300px; overflow-y: auto; overflow-x: auto"
-                >
+                <div class="table-responsive" style="max-height: 300px; overflow-y: auto; overflow-x: auto">
                   <table class="table">
                     <thead class="text-center">
                       <tr>
                         <th class="col-3 col-md-4 col-lg-4">Ticker Symbol</th>
-                        <th class="col-3 col-md-4 col-lg-4">Overvalued/Undervalued</th>
-                        <th class="col-3 col-md-4 col-lg-4">Recommendation Verdict</th>
+                        <th class="col-3 col-md-4 col-lg-4 text-wrap">Overvalued/Undervalued</th>
+                        <th class="col-3 col-md-4 col-lg-4 text-wrap">Recommendation Verdict</th>
                       </tr>
                     </thead>
 
                     <tbody class="text-center">
-                      <transition-group name="list">
-                        <tr v-for="(stock, index) in new_table_recommendations" :key="index">
-                          <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
-                          <td
-                            :class="{
-                              'green-text': stock.recommendation_verdict === 'HOLD',
-                              'red-text': stock.recommendation_verdict === 'SELL'
-                            }"
-                          >
-                            {{ stock.valuation }}
-                          </td>
-                          <td
-                            :class="{
-                              'green-text': stock.recommendation_verdict === 'HOLD',
-                              'red-text': stock.recommendation_verdict === 'SELL'
-                            }"
-                          >
-                            {{ stock.recommendation_verdict }}
-                          </td>
-                        </tr>
-                      </transition-group>
+                      <tr v-for="(stock, index) in new_table_recommendations" :key="index">
+                        <td class="col-md-3">{{ stock.name_of_stock.toUpperCase() }}</td>
+                        <td :class="{
+                          'green-text': stock.recommendation_verdict === 'HOLD',
+                          'red-text': stock.recommendation_verdict === 'SELL'
+                        }">
+                          {{ stock.valuation }}
+                        </td>
+                        <td :class="{
+                          'green-text': stock.recommendation_verdict === 'HOLD',
+                          'red-text': stock.recommendation_verdict === 'SELL'
+                        }">
+                          {{ stock.recommendation_verdict }}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -318,37 +303,23 @@
                   <h3><em>Type of Stocks Recommended for balanced portfolio:</em></h3>
 
                   <h1 style="text-align: center" v-if="volatileOrNot === 'High'">
-                    <span
-                      @click="toggleBlur"
-                      @mouseover="showPrompt"
-                      @mouseleave="hidePrompt"
-                      v-if="isBlurred"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Click to Find Out!"
-                    >
+                    <span @click="toggleBlur" @mouseover="showPrompt" @mouseleave="hidePrompt" v-if="isBlurred"
+                      data-toggle="tooltip" data-placement="top" title="Click to Find Out!">
                       <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
-                      <button class="click-prompt fade_in">Click on it</button>
+                      <span class="click-prompt fade_in">Click on it</span>
                     </span>
-                    <span class="green-text" v-else>
+                    <span class="red-text" v-else>
                       <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
                     </span>
                   </h1>
 
                   <h1 style="text-align: center" v-else>
-                    <span
-                      @click="toggleBlur"
-                      @mouseover="showPrompt"
-                      @mouseleave="hidePrompt"
-                      v-if="isBlurred"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Click to Find Out!"
-                    >
+                    <span @click="toggleBlur" @mouseover="showPrompt" @mouseleave="hidePrompt" v-if="isBlurred"
+                      data-toggle="tooltip" data-placement="top" title="Click to Find Out!">
                       <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
                       <span class="click-prompt">Click on it</span>
                     </span>
-                    <span class="red-text" v-else>
+                    <span class="green-text" v-else>
                       <em :class="{ 'blurry-text': isBlurred }">{{ determineType }}</em>
                     </span>
                   </h1>
@@ -378,17 +349,21 @@
                                 Add!</button>
                               &nbsp;  -->
                               <!-- <button
-            class="btn btn-sm mb-0 ms-1"
-            data-toggle="modal"
-    
-            name="confirm"
-            @click.prevent="addingFromCard(index),finalBeta(), showRecoTable()"
-          >
-            <a href="#result"></a>
-            Add to Portfolio
-          </button> -->
+                                class="btn btn-sm mb-0 ms-1"
+                                data-toggle="modal"
+                        
+                                name="confirm"
+                                @click.prevent="addingFromCard(index),finalBeta(), showRecoTable()"
+                              >
+                                <a href="#result"></a>
+                                Add to Portfolio
+                              </button> -->
 
-                                <button href="#" class="btn btn-sm mb-0 ms-1">Read More</button>
+                                <button href="#" class="btn bg-gradient-primary
+                                  px-lg-4 px-md-3 py-md-2 ms-1 px-sm-3
+                                  px-3 py-2 ms-1 mt-3 mb-0 text-xs">
+                                  Read More
+                                </button>
                                 &nbsp;
                               </p>
                             </div>
@@ -402,13 +377,22 @@
             </div>
 
             <div class="d-flex justify-content-between mt-5">
-              <button class="btn btn-sm mb-0 ms-1" @click="reset">Back</button>
+              <button href="#" 
+                class="btn bg-gradient-primary
+                px-lg-4 px-md-3 py-md-2 ms-1 px-sm-3
+                px-4 py-2 ms-1 mb-0 text-xs" @click="reset">
+                Back
+              </button>
 
               <router-link to="/markets">
-                <button class="btn btn-sm mb-0 ms-1">Compare to Market</button>
+                <button class="btn bg-gradient-primary
+                  px-lg-4 px-md-3 py-md-2 ms-1 px-sm-3
+                  px-4 py-2 ms-1 mb-0 text-xs">
+                  Compare to Market
+                </button>
               </router-link>
             </div>
-            <div class="pb-10"></div>
+            <!-- <div class="pb-10"></div> -->
           </div>
         </div>
       </div>
@@ -417,6 +401,8 @@
 </template>
 
 <style>
+@import '../assets/css/soft-ui-dashboard.css';
+
 * {
   margin: 0;
   line-height: 1.5;
@@ -463,13 +449,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 ChartJS.register(ArcElement, Tooltip, Legend)
 import DoughnutChart from '../components/DoughnutChart.vue'
 
+
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore, collection, getDoc, updateDoc, doc } from 'firebase/firestore'
 
 export default {
   name: 'App',
   components: {
-    DoughnutChart
+    DoughnutChart,
   },
   data() {
     return {
@@ -493,7 +480,7 @@ export default {
       animate: true,
       revealed: false,
       percentage: 0,
-      show: true,
+   
 
       //  Reference factors
       error_msg: '',
@@ -699,18 +686,13 @@ export default {
     },
     reset() {
       this.afterAnalysisClicked = true
-      this.showBeta = false
+      this.showBeta = !this.showBeta
       this.showTable = false
       this.isBlurred = false
     },
 
     addingFromCard(index) {
       this.tickerSymbol = this.randomStocks[index].name
-      for(let obj of this.finalArr){
-        if(this.tickerSymbol === obj.name_of_stock.toUpperCase()){
-          return
-        }
-      }
       const url = 'https://mboum-finance.p.rapidapi.com/qu/quote/asset-profile'
       axios
         .get(url, {
@@ -782,8 +764,9 @@ export default {
           this.error_msg = 'Please key in a valid ticker symbol!'
           this.tickerSymbol = ''
         })
-
-
+        this.new_table_recommendations = []
+        this.finalBeta();
+        this.showRecoTable();
     },
     finalBeta() {
       if (this.finalArr.length < 4) {
@@ -1143,7 +1126,7 @@ button:active {
 .header-text {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 24px;
-  color: #007bff;
+  color: black;
   /* Change text color to a nice blue */
   text-align: center;
   margin-top: 20px;
@@ -1151,21 +1134,40 @@ button:active {
   /* Italicize the text */
 }
 
-.list-move, /* apply transition to moving elements */
-.list-enter-active,
-.list-leave-active {
-  transition: all 1s ease;
+.highlight {
+  font-weight: bold;
+  color: #ff4500;
+  /* Change color for emphasis to a deep orange */
 }
 
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
+@media (min-width: 0px) {
+  .responsive-h1 {
+    font-size: 40px;
+  }
 }
 
-/* ensure leaving items are taken out of layout flow so that moving
-   animations can be calculated correctly. */
-.list-leave-active {
-  position: absolute;
+@media (min-width: 576px) {
+  .responsive-h1 {
+    font-size: 50px;
+  }
 }
+
+@media (min-width: 768px) {
+  .responsive-h1 {
+    font-size: 60px;
+  }
+}
+
+@media (min-width: 992px) {
+  .responsive-h1 {
+    font-size: 70px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .responsive-h1 {
+    font-size: 80px;
+  }
+}
+
 </style>
