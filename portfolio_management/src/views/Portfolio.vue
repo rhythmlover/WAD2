@@ -21,6 +21,7 @@
           </div>
         </div>
       </div>
+      
       <div class="container-fluid px-md-5 mt-3">
         <div class="card rounded-5 card-header shadow-lg p-0 pt-2" v-if="afterAnalysisClicked">
           <div class="row justify-content-center">
@@ -115,8 +116,14 @@
         </div>
 
         <div class="row justify-content-center">
-          <button class="btn btn-sm col-lg-12 col-12 col-sm-12 col-md-12 mt-5" data-toggle="modal"
-            data-target="#exampleModal" v-if="!showBeta" name="confirm" @click="finalBeta">
+          <button
+            class="btn btn-sm col-lg-12 col-12 col-sm-12 col-md-12 mt-5"
+            data-toggle="modal"
+            data-target="#exampleModal"
+            v-if="!showBeta"
+            name="confirm"
+            @click="finalBeta(), showRecoTable()"
+          >
             <a href="#result"></a>
             GET ANALYSIS REPORT
           </button>
@@ -124,7 +131,7 @@
         <div class="pb-10"></div>
 
         <div class="container-fluid" v-if="!afterAnalysisClicked">
-          <div class="col-12 col-md-12 col-sm-12">
+          <!-- <div class="col-12 col-md-12 col-sm-12">
             <div class="card blur blur-rounded shadow-lg mx-2 my-4">
               <div class="row justify-content-center">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -153,12 +160,12 @@
                 </table>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="col-12 col-md-12 col-sm-12">
             <div class="card blur blur-rounded shadow-lg mx-2 my-4">
               <div class="mt-4 mb-4 container">
-                <h3 style="text-align: center">Sector Breakdown</h3>
+                <h3 id="addFromCard" style="text-align: center">Sector Breakdown</h3>
                 <div class="row">
                   <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="aspect-ratio-container">
@@ -224,7 +231,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row justify-content-center">
+                <!-- <div class="row justify-content-center">
                   <div class="col-12 mt-5">
                     <div class="d-flex justify-content-center">
                       <button class="btn" @click="showRecoTable">
@@ -233,13 +240,13 @@
                       </button>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
 
           <div class="row">
-            <div v-if="showTable" class="col-12 col-md-12 col-sm-12">
+            <div class="col-12 col-md-12 col-sm-12">
               <div class="card blur blur-rounded shadow-lg mx-2 my-4">
                 <div class="row justify-content-center">
                   <div class="col-10 col-sm-10 col-md-12 col-lg-12">
@@ -280,8 +287,8 @@
 
             <div class="col-12 col-md-12 col-sm-12">
               <div class="card blur blur-rounded shadow-lg mx-auto mt-5">
-                <div v-if="showTable" class="container text-center mt-4 mb-3">
-                  <p><em>Type of Stocks Recommended for balanced portfolio:</em></p>
+                <div class="container text-center mt-4 mb-3">
+                  <h3><em>Type of Stocks Recommended for balanced portfolio:</em></h3>
 
                   <h1 style="text-align: center" v-if="volatileOrNot === 'High'">
                     <span @click="toggleBlur" @mouseover="showPrompt" @mouseleave="hidePrompt" v-if="isBlurred"
@@ -316,8 +323,16 @@
                             <p class="card-text">
                               {{ stock.description }}<br />
                               {{ stock.discount_stat }}
+                              <br />
+                              <!-- <button href="#addFromCard"
+                                class="btn btn-sm mb-0 ms-1"
+                                @click.prevent="addingFromCard(index)"
+                              >
+                                Add!</button>
+                              &nbsp;  -->
+                              
+                              <button href="#" class="btn btn-sm mb-0 ms-1">Read More</button> &nbsp;
                             </p>
-                            <a href="#" class="btn btn-primary">Read More</a> &nbsp;
                           </div>
                         </div>
                       </router-link>
@@ -389,13 +404,14 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 ChartJS.register(ArcElement, Tooltip, Legend)
 import DoughnutChart from '../components/DoughnutChart.vue'
 
+
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getFirestore, collection, getDoc, updateDoc, doc } from 'firebase/firestore'
 
 export default {
   name: 'App',
   components: {
-    DoughnutChart
+    DoughnutChart,
   },
   data() {
     return {
@@ -419,6 +435,7 @@ export default {
       animate: true,
       revealed: false,
       percentage: 0,
+   
 
       //  Reference factors
       error_msg: '',
@@ -526,11 +543,12 @@ export default {
         console.log('No such document!')
       }
     },
+
     addTicker(symbol) {
       //from clicking, set symbol
-      this.tickerSymbol = symbol
+      this.tickerSymbol = symbol.trim()
       if (this.tickerSymbol === 'undefined') {
-        this.error_msg = 'please input a valid ticker symbol'
+        this.error_msg = 'Please input a valid ticker symbol'
         this.tickerSymbol = ''
         return
       }
@@ -570,7 +588,6 @@ export default {
               this.error_msg = ''
             }
           }
-          console.log(response.data)
           var sector = response.data.body.sector
 
           var beta = (0.8 + Math.random() * 0.5).toFixed(2)
@@ -625,12 +642,92 @@ export default {
     reset() {
       this.afterAnalysisClicked = true
       this.showBeta = !this.showBeta
+      this.showTable = false
+      this.isBlurred = false
     },
 
+    addingFromCard(index) {
+      this.tickerSymbol = this.randomStocks[index].name
+      const url = 'https://mboum-finance.p.rapidapi.com/qu/quote/asset-profile'
+      axios
+        .get(url, {
+          params: {
+            symbol: this.tickerSymbol
+          },
+          headers: {
+            'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
+            'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
+          }
+        })
+        .then((response) => {
+          if (response.data.error) {
+            this.error_msg = response.data.error
+            this.tickerSymbol = ''
+            return
+          } else {
+            if (this.error_msg.length) {
+              this.error_msg = ''
+            }
+          }
+          var sector = response.data.body.sector
+
+          var beta = (0.8 + Math.random() * 0.5).toFixed(2)
+
+          //  Check if a stock with the same sector already exists in finalArr
+          const existingStock = this.finalArr.find((stock) => stock.sector_loc === sector)
+
+          if (existingStock) {
+            //  If a stock in the same sector exists, increment its sector_count
+            existingStock.sector_count++
+            this.finalArr.push({
+              name_of_stock: this.tickerSymbol,
+              sector_loc: sector,
+              beta_value: beta,
+              sector_count: existingStock.sector_count
+            })
+            //  Check if the sector exists in graph_arr
+            const existingGraph = this.graph_arr.find((graph) => graph.sector_loc === sector)
+            if (existingGraph) {
+              //  If the sector exists in graph_arr, update its sector_count
+              existingGraph.sector_count = existingStock.sector_count
+            } else {
+              //  If the sector doesn't exist in graph_arr, add it
+              this.graph_arr.push({
+                sector_loc: sector,
+                sector_count: existingStock.sector_count
+              })
+            }
+          } else {
+            //  If not, create a new stock entry with a sector_count of 1 and add it to finalArr
+            this.finalArr.push({
+              name_of_stock: this.tickerSymbol,
+              sector_loc: sector,
+              beta_value: beta,
+              sector_count: 1
+            })
+            //  Add the sector to graph_arr with a sector_count of 1
+            this.graph_arr.push({
+              sector_loc: sector,
+              sector_count: 1
+            })
+          }
+          this.userStoreData(this.finalArr)
+          this.tickerSymbol = ''
+        })
+        .catch((error) => {
+          console.log(error.message)
+          this.error_msg = 'Please key in a valid ticker symbol!'
+          this.tickerSymbol = ''
+        })
+        this.new_table_recommendations = []
+        this.finalBeta();
+        this.showRecoTable();
+    },
     finalBeta() {
       if (this.finalArr.length < 4) {
         alert('Please input at least 4 stocks to have a more accurate test! ')
       } else {
+        this.new_table_recommendations = []
         this.afterAnalysisClicked = false
         this.showBeta = !this.showBeta
         for (let obj of this.finalArr) {
@@ -641,7 +738,7 @@ export default {
                 symbol: obj.name_of_stock.toUpperCase()
               },
               headers: {
-                'X-RapidAPI-Key': 'fcf3fc0e1fmsh384b0856ec590ccp1f7d65jsn445ea978bc78',
+                'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
                 'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com'
               }
             })
@@ -699,7 +796,7 @@ export default {
       }
     },
     showRecoTable() {
-      this.showTable = !this.showTable
+      this.showTable = true
       this.tableValid = false
 
       if (this.randomStocks.length != 4) {
@@ -725,7 +822,7 @@ export default {
       }
     },
     toggleBlur() {
-      this.isBlurred = !this.isBlurred
+      this.isBlurred = false
       this.isClicked = true
     }
   },
