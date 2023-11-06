@@ -12,7 +12,7 @@
             <a class="navbar-brand font-weight-bolder ms-lg-0 ms-sm-3 ms-1 text-truncate">
               <span>Portfolio Management</span>
             </a>
-            <button class="navbar-toggler shadow-none ms-2 hide-at-small-screen" type="button" data-bs-toggle="collapse"
+            <button class="navbar-toggler shadow-none ms-0 hide-at-small-screen" type="button" data-bs-toggle="collapse"
               data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false"
               aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
@@ -21,7 +21,7 @@
                 <span class="navbar-toggler-bar bar3"></span>
               </span>
             </button>
-            <div class="collapse navbar-collapse" id="navigation">
+            <div class="collapse navbar-collapse hide-at-small-screen" id="navigation">
               <ul class="navbar-nav mx-lg-auto ms-xl-auto">
                 <li class="nav-item">
                   <a class="nav-link me-2">
