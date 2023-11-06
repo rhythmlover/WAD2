@@ -375,7 +375,7 @@
                   <div class="row">
                     <div v-for="(article, index) in newsData.slice(0, 2)" :key="index" class="col-md-6">
                       <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
-                        style="max-width: 520px;">
+                        style="width: 520px;">
                         <div class="row g-0">
                           <div class="col-md-6" style="height: 150px; overflow: hidden;">
                             <img :src="article.article_photo_url" class="img-fluid rounded-start card-img"
@@ -400,7 +400,7 @@
                   <div class="row g-0">
                     <div v-for="(article, index) in newsData.slice(2)" :key="index" class="col-md-6">
                       <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
-                        style="max-width: 520px;">
+                        style="width: 520px;">
                         <div class="row g-0">
                           <div class="col-md-6" style="height: 150px; overflow: hidden;">
                             <img :src="article.article_photo_url" class="img-fluid rounded-start card-img"
