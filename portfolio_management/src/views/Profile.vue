@@ -5,7 +5,7 @@
                 style="background-image: url('src/assets/img/curved-images/curved0.jpg'); background-position-y: 50%;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
             </div>
-            <div class="card card-body blur shadow-blur mx-4 mt-n6 overflow-hidden">
+            <div class="card card-body blur shadow-blur mx-sm-4 mt-n6 overflow-hidden">
                 <div class="row gx-4">
                     <div class="col-auto">
                         <div class="avatar avatar-xl position-relative">
@@ -29,7 +29,7 @@
         <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-12 col-xl-6 col-lg-6 d-flex justify-content-lg-end justify-content-center mb-3">
-                    <div class="card shadow-lg h-100 w-50">
+                    <div class="card shadow-lg h-100 w-100 w-sm-75 w-md-75">
                         <div class="card-header pb-0 p-3">
                             <h6 class="mb-0">Change Username</h6>
                         </div>
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-xl-6 col-lg-6 d-flex justify-content-lg-start justify-content-center mb-3">
-                    <div class="card shadow-lg h-100 w-50">
+                    <div class="card shadow-lg h-100 w-100 w-sm-75 w-md-75">
                         <div class="card-header pb-0 p-3">
                             <h6 class="mb-0">Clear Portfolio Data</h6>
                         </div>
