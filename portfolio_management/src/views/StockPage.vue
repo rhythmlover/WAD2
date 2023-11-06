@@ -14,9 +14,9 @@
             <div class="container-fluid">
               <div class="row justify-content-center">
                 <div class="col-12 mx-0" style="overflow-y:hidden; max-width: 100%;" id="chart">
-                  <!-- Display the loading GIF when isLoading is true -->
+                  <!-- Loading GIF -->
                   <div v-if="isLoading" style="text-align: center; padding: 20px;">
-                    <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" alt="Loading..." style="width: 100px; height: 100px;" />
+                    <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" style="width: 100px; height: 100px;" />
                   </div>
                   <!-- The candlestick chart will be rendered here -->
                 </div>

@@ -36,6 +36,10 @@
             <div class="container-fluid">
               <div class="row justify-content-center">
                 <div class="col-12 mx-0" style="overflow-y:hidden; max-width: 100%;" id="candlestick-chart">
+                  <!-- Loading GIF -->
+                  <div v-if="isLoading" style="text-align: center; padding: 20px;">
+                    <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" alt="Loading..." style="width: 100px; height: 100px;" />
+                  </div>
                   <!-- The candlestick chart will be rendered here -->
                 </div>
               </div>
@@ -441,6 +445,8 @@ var chartType = 'candlestick'
 var tickerName = ref('')
 var tickerSymbol = ref('')
 var curr_interval = ref('')
+const isLoading = ref(true);
+
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
@@ -505,6 +511,7 @@ const selectSymbol = (symbol) => {
 }
 
 const fetchDataAndUpdateChart = async (interval) => {
+  isLoading.value = true;
   curr_interval.value = interval
   const dataCacheKey = `${tickerSymbol.value}-${interval}`
 
@@ -526,6 +533,9 @@ const fetchDataAndUpdateChart = async (interval) => {
       renderChart(chartData)
     } catch (error) {
       console.error(error)
+    }
+    finally{
+      isLoading.value = false;
     }
   }
 }
