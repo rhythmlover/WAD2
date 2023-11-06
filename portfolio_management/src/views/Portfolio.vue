@@ -14,7 +14,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-6 col-md-8 col-sm-10 col-12 mx-auto">
-            <div class="header-text mt-lg-4 mt-sm-3 mt-5">
+            <div class="header-text mt-lg-1 mt-sm-2 mt-5">
               "Diversification is a protection against ignorance. It makes very little sense for
               those who know what they're doing." - Warren Buffet
             </div>
@@ -26,7 +26,7 @@
         <div class="card rounded-5 card-header shadow-lg p-0 pt-2" v-if="afterAnalysisClicked">
           <div class="row justify-content-center">
             <div class="col-lg-10 col-md-10 col-sm-12">
-              <div class="container form-group font-weight-bold mt-2">
+              <div class="container form-group font-weight-bold mt-4">
                 Enter the stocks in your portfolio to see how healthy your portfolio is! &nbsp;
                 <input class="form-control" type="text" v-model="tickerSymbol" id="symbol" ref="name" @keyup="updateTable"
                   placeholder="Ticker Symbol" />
@@ -127,8 +127,8 @@
           <div class="col-sm-5 col-8 text-center">
             <button
             class="btn bg-gradient-primary
-                    px-lg-4 py-lg-3 mt-lg-5
-                    px-md-3 py-md-2  
+                    px-lg-4 py-lg-3 mt-4
+                    px-md-3 py-md-2
                     px-4 py-3 mt-3 text-xs"
               data-toggle="modal"
               data-target="#exampleModal"
@@ -1126,7 +1126,7 @@ button:active {
 .header-text {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 24px;
-  color: black;
+  color: rgb(128, 48, 175);
   /* Change text color to a nice blue */
   text-align: center;
   margin-top: 20px;

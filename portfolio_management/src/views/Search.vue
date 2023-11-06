@@ -9,7 +9,7 @@
       background-size: cover;
       border-radius: 30px;
     ">
-      <div class="container-fluid mt-7">
+      <div class="container-fluid mt-sm-7 mt-8">
         <div class="row justify-content-center">
           <div class="col-lg-10 col-md-12 mt-4">
             <div class="input-group rounded">
@@ -37,16 +37,16 @@
                     <tr>
                       <th ref="active" colspan="4">
                         <div class="row mx-8px">
-                          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+                          <div class="col-3 text-uppercase responsive-h1 text-dark font-weight-bolder opacity-7">
                       <th>Symbol</th>
               </div>
-              <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+              <div class="col-3 text-uppercase responsive-h1 text-dark font-weight-bolder opacity-7">
                 <th>Name</th>
               </div>
-              <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+              <div class="col-3 text-uppercase responsive-h1 text-dark font-weight-bolder opacity-7">
                 <th>Price</th>
               </div>
-              <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+              <div class="col-3 text-uppercase responsive-h1 text-truncate text-dark justify-content-start justify-content-md-center d-flex font-weight-bolder opacity-7">
                 <th>Recommendation</th>
               </div>
             </div>
@@ -60,22 +60,22 @@
                   params: { symbol: stock.symbol }
                 }" style="text-decoration: none">
                   <div class="row mx-auto table-row-link">
-                    <div class="col-3 mb-0">
+                    <div class="col-3 mb-0 responsive-text">
                       <tr>
                         <td>{{ stock.symbol }}</td>
                       </tr>
                     </div>
-                    <div class="col-3 mb-0">
+                    <div class="col-3 mb-0 text-truncate responsive-text">
                       <tr>
                         <td>{{ stock.displayName }}</td>
                       </tr>
                     </div>
-                    <div class="col-3 mb-0">
+                    <div class="col-3 mb-0 responsive-text">
                       <tr>
                         <td>{{ stock.price }}</td>
                       </tr>
                     </div>
-                    <div class="col-3 mb-0">
+                    <div class="col-3 mb-0 responsive-text justify-content-start justify-content-md-center d-flex">
                       <tr>
                         <td>{{ stock.recommendation }}</td>
                       </tr>
@@ -97,16 +97,16 @@
                 <tr>
                   <th ref="search" colspan="4">
                     <div class="row mx-auto">
-                      <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+                      <div class="col-3 text-uppercase responsive-h1 text-dark text-lg font-weight-bolder opacity-7">
                   <th>Symbol</th>
           </div>
-          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+          <div class="col-3 text-uppercase responsive-h1 text-dark text-lg font-weight-bolder opacity-7">
             <th>Name</th>
           </div>
-          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+          <div class="col-3 text-uppercase responsive-h1 text-dark text-lg font-weight-bolder opacity-7">
             <th>Price</th>
           </div>
-          <div class="col-3 text-uppercase text-dark text-lg font-weight-bolder opacity-7">
+          <div class="col-3 text-uppercase responsive-h1 text-truncate text-dark text-lg font-weight-bolder opacity-7">
             <th>Recommendation</th>
           </div>
         </div>
@@ -118,22 +118,22 @@
             params: { symbol: stock.symbol }
           }" style="text-decoration: none">
             <div class="row table-row-link mx-auto">
-              <div class="col-3 mb-0 text-center wrap-text">
+              <div class="col-3 mb-0 justify-content-center wrap-text responsive-text">
                 <tr>
                   <td>{{ stock.symbol }}</td>
                 </tr>
               </div>
-              <div class="col-3 mb-0 text-center wrap-text">
+              <div class="col-3 mb-0 text-center wrap-text text-truncate responsive-text">
                 <tr>
                   <td>{{ stock.name }}</td>
                 </tr>
               </div>
-              <div class="col-3 mb-0 text-center wrap-text">
+              <div class="col-3 mb-0 text-center wrap-text responsive-text">
                 <tr>
                   <td>{{ stock.price }}</td>
                 </tr>
               </div>
-              <div class="col-3 mb-0 text-center wrap-text">
+              <div class="col-3 mb-0 justify-content-center wrap-text responsive-text d-flex">
                 <tr>
                   <td>{{ stock.recommendation }}</td>
                 </tr>
@@ -164,6 +164,36 @@
 
 .text-center{
   text-align: center  ;
+}
+
+@media (min-width: 0px) {
+  .responsive-text {
+    font-size: 0.8rem;
+  }
+  .responsive-h1 {
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-text {
+    font-size: 1rem;
+  }
+  .responsive-h1 {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 992px) {
+  .responsive-text {
+    font-size: 1.4rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .responsive-h1 {
+    font-size: 23px;
+  }
 }
 </style>
 
