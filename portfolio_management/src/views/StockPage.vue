@@ -309,6 +309,7 @@ const fetchDataAndUpdateChart = async (interval) => {
 
   if (dataCache[dataCacheKey] && typeof dataCache[dataCacheKey] === 'object') {
     const { tickerNameValue, chartData } = dataCache[dataCacheKey];
+    isLoading.value = false;
     renderChart(chartData);
     tickerName.value = tickerNameValue;
   } else {
