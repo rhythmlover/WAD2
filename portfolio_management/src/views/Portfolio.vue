@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="container-fluid px-md-5 px-0 mt-3 pb-8">
         <div class="card rounded-5 card-header shadow-lg p-0 pt-2" v-if="afterAnalysisClicked">
           <div class="row justify-content-center">
@@ -75,8 +75,7 @@
                   px-xl-6
                   py-lg-3 mx-lg-2 mb-lg-3
                   px-md-5 py-md-2 mx-md-1 my-md-1 
-                  px-5 py-2 ms-1 mb-0 text-xs"
-                  name="add" v-if="!showBeta" @click="addTicker(this.tickerSymbol)">
+                  px-5 py-2 ms-1 mb-0 text-xs" name="add" v-if="!showBeta" @click="addTicker(this.tickerSymbol)">
                 ADD
               </button>
             </div>
@@ -125,16 +124,11 @@
 
         <div class="row justify-content-center">
           <div class="col-sm-5 col-8 text-center">
-            <button
-            class="btn bg-gradient-primary
+            <button class="btn bg-gradient-primary
                     px-lg-4 py-lg-3 mt-4
                     px-md-3 py-md-2
-                    px-4 py-3 mt-3 text-xs"
-              data-toggle="modal"
-              data-target="#exampleModal"
-              v-if="!showBeta"
-              name="confirm"
-              @click="finalBeta(), showRecoTable()">
+                    px-4 py-3 mt-3 text-xs" data-toggle="modal" data-target="#exampleModal" v-if="!showBeta"
+              name="confirm" @click="finalBeta(), showRecoTable()">
               <a href="#result"></a>
               GET ANALYSIS REPORT
             </button>
@@ -178,24 +172,18 @@
             <div class="card blur blur-rounded shadow-lg mx-2 my-4">
               <div class="mt-4 mb-4 container">
                 <h3 id="addFromCard" style="text-align: center">Sector Breakdown</h3>
-                <div class="row">
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                    <div class="aspect-ratio-container">
+                <div class="row justify-content-center">
+                  <div class="col-12 col-sm-12 col-md-12 col-lg-6 align-items-center d-flex aspect-ratio-container">
+                    <!-- <div class=""> -->
                       <DoughnutChart style="text-align: center; width: 100%; height: 100%" :data="sectorPercentages"
                         :labels="sectorGraph" :backgroundColors="randomBackgroundColors" class="img-fluid">
                       </DoughnutChart>
-                    </div>
-                    <h3 class="mt-5" style="text-align: center" v-if="sectorGraph.length > 3">
-                      Portfolio Diversification : <span class="responsive-h1 green-text">Wide</span>
-                    </h3>
-                    <h3 class="mt-5" style="text-align: center" v-if="sectorGraph.length <= 3">
-                      Portfolio Diversification : <span class="responsive-h1 red-text">Narrow</span>
-                    </h3>
+                    <!-- </div> -->
                   </div>
 
                   <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                     <!-- Offset for center alignment in medium screens -->
-                    <h3 class="mt-5" style="text-align: center"><em>Volatility:</em></h3>
+                    <h3 class="mt-md-5 mt-1" style="text-align: center"><em>Volatility:</em></h3>
                     <p style="text-align: center">
                       <em :class="{
                         'green-text': weightedBeta <= 1.2,
@@ -242,6 +230,14 @@
                       </div>
                     </div>
                   </div>
+                </div>
+                <div class="row" style="margin-top: 20px;">
+                  <h3 style="text-align: center" v-if="sectorGraph.length > 3">
+                    Portfolio Diversification : <span class="responsive-h1 green-text"><br/>Wide</span>
+                  </h3>
+                  <h3 style="text-align: center" v-if="sectorGraph.length <= 3">
+                    Portfolio Diversification : <span class="responsive-h1 red-text"><br/>Narrow</span>
+                  </h3>
                 </div>
                 <!-- <div class="row justify-content-center">
                   <div class="col-12 mt-5">
@@ -326,15 +322,10 @@
 
                   <div class="row justify-content-center">
                     <transition-group name="list">
-                      <div
-                        class="col-lg-4 col-md-6 col-sm-12 my-4"
-                        v-for="(stock, index) in this.randomStocks"
-                        :key="index"
-                      >
-                        <router-link
-                          :to="{ name: 'stockpage', params: { symbol: stock.name } }"
-                          style="text-decoration: none"
-                        >
+                      <div class="col-lg-4 col-md-6 col-sm-12 my-4" v-for="(stock, index) in this.randomStocks"
+                        :key="index">
+                        <router-link :to="{ name: 'stockpage', params: { symbol: stock.name } }"
+                          style="text-decoration: none">
                           <div class="card blur blur-rounded shadow-lg">
                             <div class="card-body">
                               <h5 class="card-title">{{ stock.name }}</h5>
@@ -348,7 +339,7 @@
                               >
                                 Add!</button>
                               &nbsp;  -->
-                              <!-- <button
+                                <!-- <button
                                 class="btn btn-sm mb-0 ms-1"
                                 data-toggle="modal"
                         
@@ -377,8 +368,7 @@
             </div>
 
             <div class="d-flex justify-content-between mt-5">
-              <button href="#" 
-                class="btn bg-gradient-primary
+              <button href="#" class="btn bg-gradient-primary
                 px-lg-4 px-md-3 py-md-2 ms-1 px-sm-3
                 px-4 py-2 ms-1 mb-0 text-xs" @click="reset">
                 Back
@@ -480,7 +470,7 @@ export default {
       animate: true,
       revealed: false,
       percentage: 0,
-   
+
 
       //  Reference factors
       error_msg: '',
@@ -533,7 +523,7 @@ export default {
           format: 'json'
         },
         headers: {
-          'X-RapidAPI-Key': 'f033b0dff5mshf586d930d4a646ap1ef84ejsn5be27eba3a61',
+          'X-RapidAPI-Key': 'e29108bd6bmsh9a396f313137103p1e921ajsn2ba4b9f2fdcb',
           'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com'
         }
       }
@@ -558,7 +548,7 @@ export default {
             stock.name.toLowerCase().includes(this.tickerSymbol.toLowerCase())
           )
         })
-        this.searchedStocks = filteredStocks.slice(0, 3)
+        this.searchedStocks = filteredStocks.slice(0, 5)
       }
     },
 
@@ -764,9 +754,9 @@ export default {
           this.error_msg = 'Please key in a valid ticker symbol!'
           this.tickerSymbol = ''
         })
-        this.new_table_recommendations = []
-        this.finalBeta();
-        this.showRecoTable();
+      this.new_table_recommendations = []
+      this.finalBeta();
+      this.showRecoTable();
     },
     finalBeta() {
       if (this.finalArr.length < 4) {
@@ -1117,7 +1107,7 @@ button:active {
 
 .aspect-ratio-container {
   position: relative;
-  padding-bottom: 100%;
+  padding-bottom: 50%;
   /* Adjust this value for your desired aspect ratio */
   height: 0;
   overflow: hidden;
@@ -1144,6 +1134,13 @@ button:active {
   .responsive-h1 {
     font-size: 40px;
   }
+  .aspect-ratio-container {
+    position: relative;
+    padding-bottom: 100%;
+    /* Adjust this value for your desired aspect ratio */
+    height: 0;
+    overflow: hidden;
+  }
 }
 
 @media (min-width: 576px) {
@@ -1162,6 +1159,13 @@ button:active {
   .responsive-h1 {
     font-size: 70px;
   }
+  .aspect-ratio-container {
+    position: relative;
+    padding-bottom: 50%;
+    /* Adjust this value for your desired aspect ratio */
+    height: 0;
+    overflow: hidden;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -1169,5 +1173,4 @@ button:active {
     font-size: 80px;
   }
 }
-
 </style>
