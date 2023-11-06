@@ -14,6 +14,10 @@
             <div class="container-fluid">
               <div class="row justify-content-center">
                 <div class="col-12 mx-0" style="overflow-y:hidden; max-width: 100%;" id="chart">
+                  <!-- Loading GIF -->
+                  <div v-if="isLoading" style="text-align: center; padding: 20px;">
+                    <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" style="width: 100px; height: 100px;" />
+                  </div>
                   <!-- The candlestick chart will be rendered here -->
                 </div>
               </div>
@@ -23,46 +27,42 @@
           <div class="container-fluid">
             <div class="row justify-content-between">
               <div class="col-lg-6 col-md-6 mb-sm-3 mb-0" id="interval-options">
-              <!-- <div class="col-4 col-lg-6 text-center" id="intervalOptions"> -->
+                <!-- <div class="col-4 col-lg-6 text-center" id="intervalOptions"> -->
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 ms-0 mx-1 my-1 text-xs" 
-                  id="allButton" @click="fetchDataAndUpdateChart('All')">
+                  px-2 py-1 ms-0 mx-1 my-1 text-xs" id="allButton" @click="fetchDataAndUpdateChart('All')">
                   All Time
                 </button>
 
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  id="1m" @click="fetchDataAndUpdateChart('Monthly')">
+                  px-2 py-1 mx-1 my-1 text-xs" id="1m" @click="fetchDataAndUpdateChart('Monthly')">
                   Monthly
                 </button>
 
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
+                  px-2 py-1 mx-1 my-1 text-xs" id="1wk" @click="fetchDataAndUpdateChart('Weekly')">
                   Weekly</button>
               </div>
 
               <div class="col-md-5 mb-3 ps-md-5 text-md-end" id="chart-type">
-              <!-- <div class="col-3 col-lg-4 text-center" id="chart-type"> -->
+                <!-- <div class="col-3 col-lg-4 text-center" id="chart-type"> -->
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  id="candlestick" @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
+                  px-2 py-1 mx-1 my-1 text-xs" id="candlestick"
+                  @click="chartType = 'candlestick'; fetchDataAndUpdateChart(curr_interval)">
                   Candlestick
                 </button>
 
                 <button class="btn bg-gradient-primary
                   px-lg-4 py-lg-3 ms-lg-1 mx-lg-2 mb-lg-3
                   px-md-3 py-md-2 ms-md-2 mx-md-1 my-md-1 
-                  px-2 py-1 mx-1 my-1 text-xs"
-                  @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
+                  px-2 py-1 mx-1 my-1 text-xs" @click="chartType = 'area'; fetchDataAndUpdateChart(curr_interval)">
                   Area
                 </button>
               </div>
@@ -164,8 +164,7 @@
               <button class="btn bg-gradient-primary
                   px-lg-4 mx-lg-2
                   px-md-3 py-md-3
-                  px-2 py-2 ms-0 mb-4 text-xs"
-                  @click="toggleShowMore" id="showButton">
+                  px-2 py-2 ms-0 mb-4 text-xs" @click="toggleShowMore" id="showButton">
                 {{ showButtonValue ? 'Show Less' : 'Show More' }}
               </button>
             </div>
@@ -182,7 +181,7 @@
               <div class="container form-group font-weight-bold mt-2">
                 <textarea class="form-control responsive-text col-lg-10 col-md-10 col-sm-10" type="text" id="comment-box"
                   v-model="commentInput" placeholder="Enter comment" />
-                 <div class="text-danger mt-3"> {{ comments_error }}</div>
+                <div class="text-danger mt-3"> {{ comments_error }}</div>
               </div>
             </div>
 
@@ -190,10 +189,9 @@
               <button class="btn bg-gradient-primary
                   px-lg-4 mx-lg-2
                   px-md-3 py-md-3
-                  px-2 py-2 ms-0 mb-3 text-xs"
-                  id="post" @click="addComment()">
-                  Comment
-                </button>
+                  px-2 py-2 ms-0 mb-3 text-xs" id="post" @click="addComment()">
+                Comment
+              </button>
             </div>
 
             <div class="row mx-3" v-for="comment in comments">
@@ -231,11 +229,21 @@ onMounted(() => {
   curr_interval.value = 'All';
   selectSymbol(selectedSymbol);
   console.log(selectedName.value)
-  const fetchNewsPromise = new Promise((resolve) => {
+  const fetchSelectedName = async (symbol) => {
+    try {
+      const name = await fetchName(symbol);
+      selectedName.value = name;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchNewsPromise = new Promise(async (resolve) => {
+    await fetchSelectedName(selectedSymbol);
 
     const fetchNews = async (page = 1, q = selectedName.value) => {
       try {
-        const apiKey = '0b7989de4324420794d8726f9b503ffd';
+        const apiKey = '81563c51692742c8885a816c74eb66cb';
         const url = `https://newsapi.org/v2/everything?language=en&q=${q}&pageSize=20&page=${page}&apiKey=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
@@ -281,21 +289,27 @@ var chartType = 'candlestick'
 var tickerName = selectedName;
 var tickerSymbol = ref('');
 var curr_interval = ref('');
+const isLoading = ref(true);
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
 
 const selectSymbol = (symbol) => {
   tickerSymbol.value = symbol;
+  fetchName(symbol).then((name) => {
+    selectedName.value = name;
+  });
   fetchDataAndUpdateChart(curr_interval.value);
 };
 
 const fetchDataAndUpdateChart = async (interval) => {
+  isLoading.value = true;
   curr_interval.value = interval;
   const dataCacheKey = `${tickerSymbol.value}-${interval}`;
 
   if (dataCache[dataCacheKey] && typeof dataCache[dataCacheKey] === 'object') {
     const { tickerNameValue, chartData } = dataCache[dataCacheKey];
+    isLoading.value = false;
     renderChart(chartData);
     tickerName.value = tickerNameValue;
   } else {
@@ -312,6 +326,9 @@ const fetchDataAndUpdateChart = async (interval) => {
       renderChart(chartData);
     } catch (error) {
       console.error(error);
+    }
+    finally{
+      isLoading.value = false;
     }
   }
 };
@@ -455,14 +472,42 @@ const resizeChart = () => {
     }
     else {
       chart.updateOptions({
-      chart: {
-        height: 450,
-        width: document.querySelector('#chart').clientWidth,
-      },
-    });
+        chart: {
+          height: 450,
+          width: document.querySelector('#chart').clientWidth,
+        },
+      });
     }
   }
 };
+
+async function fetchName(symbol) {
+  let quotes = {
+    method: 'GET',
+    url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes',
+    params: {
+      region: 'US',
+      symbols: symbol
+    },
+    headers: {
+      'X-RapidAPI-Key': '6da3574d9cmsh2f06bbb69119e81p1b4af4jsn3e2517723248',
+      'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
+    }
+  };
+  try {
+    const response_quotes = await axios.request(quotes);
+    const quotesData = response_quotes.data;
+
+    // tickerName.value = quotesData.quoteResponse.result[0].shortName;
+    // selectedName.value = quotesData.quoteResponse.result[0].shortName;
+    // console.log(stockData)
+    return quotesData.quoteResponse.result[0].shortName;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 
 async function fetchData(interval, symbol) {
   let historical_data = {
@@ -478,18 +523,7 @@ async function fetchData(interval, symbol) {
     }
   };
 
-  let quotes = {
-    method: 'GET',
-    url: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes',
-    params: {
-      region: 'US',
-      symbols: symbol
-    },
-    headers: {
-      'X-RapidAPI-Key': '6da3574d9cmsh2f06bbb69119e81p1b4af4jsn3e2517723248',
-      'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
-    }
-  };
+
 
   if (interval === 'Weekly') {
     historical_data.params.period1 = Math.floor(Date.now() / 1000) - 7 * 24 * 60 * 60;
@@ -501,12 +535,8 @@ async function fetchData(interval, symbol) {
 
   try {
     const response = await axios.request(historical_data);
-    const response_quotes = await axios.request(quotes);
     const stockData = response.data;
-    const quotesData = response_quotes.data;
 
-    tickerName.value = quotesData.quoteResponse.result[0].shortName;
-    selectedName.value = quotesData.quoteResponse.result[0].shortName;
     // console.log(stockData)
     let chartData = stockData.prices.map((price) => ({
       x: new Date(price.date * 1000), // Convert timestamp to Date
@@ -644,7 +674,7 @@ const addComment = () => {
         console.error('Error adding comment: ', error)
       })
   }
-  else{
+  else {
     comments_error.value = "Comment cannot be empty";
   }
 };
@@ -688,15 +718,19 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.7rem;
   }
+
   .responsive-h1 {
     font-size: 25px;
   }
+
   .responsive-h3 {
     font-size: 22px;
   }
-  .responsive-h{
-    height:90vw;
+
+  .responsive-h {
+    height: 90vw;
   }
+
   #chart {
     overflow-x: auto;
   }
@@ -706,15 +740,19 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.6rem;
   }
+
   .responsive-h1 {
     font-size: 29px;
   }
+
   .responsive-h3 {
     font-size: 23px;
   }
-  .responsive-h{
-    height:60vw;
+
+  .responsive-h {
+    height: 60vw;
   }
+
   #chart {
     overflow-x: auto;
   }
@@ -724,20 +762,25 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.8rem;
   }
+
   .responsive-h1 {
     font-size: 42px;
   }
+
   .responsive-h3 {
     font-size: 24px;
   }
-  .responsive-h{
-    height:50vw;
+
+  .responsive-h {
+    height: 50vw;
   }
+
   #chart {
     overflow-x: hidden;
   }
-  img{
-    height:200px
+
+  img {
+    height: 200px
   }
 }
 
@@ -745,17 +788,21 @@ const addComment = () => {
   .responsive-text {
     font-size: 0.8rem;
   }
+
   .responsive-h1 {
     font-size: 50px;
   }
+
   .responsive-h3 {
     font-size: 30px;
   }
-  .responsive-h{
+
+  .responsive-h {
     height: 45vw;
   }
-  img{
-    height:250px
+
+  img {
+    height: 250px
   }
 }
 
@@ -763,49 +810,56 @@ const addComment = () => {
   .responsive-text {
     font-size: 1rem;
   }
+
   .responsive-h1 {
     font-size: 50px;
   }
+
   .responsive-h3 {
     font-size: 30px;
   }
-  .responsive-h{
-    height:35vw;
+
+  .responsive-h {
+    height: 35vw;
   }
-  img{
-    height:350px
+
+  img {
+    height: 350px
   }
 }
 
 @media (min-width: 2200px) {
-  .responsive-h{
+  .responsive-h {
     height: 33vw;
   }
-  img{
-    height:400px
+
+  img {
+    height: 400px
   }
 }
 
 @media (min-width: 2300px) {
-  .responsive-h{
+  .responsive-h {
     height: 31vw;
   }
-  img{
-    height:450px
+
+  img {
+    height: 450px
   }
 }
 
 @media (min-width: 2400px) {
-  .responsive-h{
+  .responsive-h {
     height: 29vw;
   }
-  img{
-    height:550px
+
+  img {
+    height: 550px
   }
 }
 
 @media (min-width: 2500px) {
-  .responsive-h{
+  .responsive-h {
     height: 28vw;
   }
 }

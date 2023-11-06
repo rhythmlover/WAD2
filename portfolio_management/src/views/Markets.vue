@@ -36,6 +36,10 @@
             <div class="container-fluid">
               <div class="row justify-content-center">
                 <div class="col-12 mx-0" style="overflow-y:hidden; max-width: 100%;" id="candlestick-chart">
+                  <!-- Loading GIF -->
+                  <div v-if="isLoading" style="text-align: center; padding: 20px;">
+                    <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" alt="Loading..." style="width: 100px; height: 100px;" />
+                  </div>
                   <!-- The candlestick chart will be rendered here -->
                 </div>
               </div>
@@ -371,7 +375,7 @@
                   <div class="row">
                     <div v-for="(article, index) in newsData.slice(0, 2)" :key="index" class="col-md-6">
                       <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
-                        style="max-width: 520px;">
+                        style="width: 520px;">
                         <div class="row g-0">
                           <div class="col-md-6" style="height: 150px; overflow: hidden;">
                             <img :src="article.article_photo_url" class="img-fluid rounded-start card-img"
@@ -396,7 +400,7 @@
                   <div class="row g-0">
                     <div v-for="(article, index) in newsData.slice(2)" :key="index" class="col-md-6">
                       <div class="card w-auto border m-sm-2 m-2 news blur blur-rounded shadow-lg"
-                        style="max-width: 520px;">
+                        style="width: 520px;">
                         <div class="row g-0">
                           <div class="col-md-6" style="height: 150px; overflow: hidden;">
                             <img :src="article.article_photo_url" class="img-fluid rounded-start card-img"
@@ -441,6 +445,8 @@ var chartType = 'candlestick'
 var tickerName = ref('')
 var tickerSymbol = ref('')
 var curr_interval = ref('')
+const isLoading = ref(true);
+
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
@@ -505,11 +511,13 @@ const selectSymbol = (symbol) => {
 }
 
 const fetchDataAndUpdateChart = async (interval) => {
+  isLoading.value = true;
   curr_interval.value = interval
   const dataCacheKey = `${tickerSymbol.value}-${interval}`
 
   if (dataCache[dataCacheKey] && typeof dataCache[dataCacheKey] === 'object') {
     const { tickerNameValue, chartData } = dataCache[dataCacheKey]
+    isLoading.value = false;
     renderChart(chartData)
     tickerName.value = tickerNameValue
   } else {
@@ -526,6 +534,9 @@ const fetchDataAndUpdateChart = async (interval) => {
       renderChart(chartData)
     } catch (error) {
       console.error(error)
+    }
+    finally{
+      isLoading.value = false;
     }
   }
 }
