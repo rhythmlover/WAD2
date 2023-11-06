@@ -610,6 +610,7 @@ async function marketSentiment(newsdata) {
 
     if (positive.value > negative.value) {
       sentiment.value = "Positive"
+      sentimentBool.value = true
     }
     else {
       sentiment.value = "Negative"
