@@ -14,6 +14,10 @@
             <div class="container-fluid">
               <div class="row justify-content-center">
                 <div class="col-12 mx-0" style="overflow-y:hidden; max-width: 100%;" id="chart">
+                  <!-- Display the loading GIF when isLoading is true -->
+                  <div v-if="isLoading" style="text-align: center; padding: 20px;">
+                    <img src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" alt="Loading..." style="width: 100px; height: 100px;" />
+                  </div>
                   <!-- The candlestick chart will be rendered here -->
                 </div>
               </div>
@@ -226,15 +230,15 @@ onMounted(() => {
   selectSymbol(selectedSymbol);
   console.log(selectedName.value)
   const fetchSelectedName = async (symbol) => {
-  try {
-    const name = await fetchName(symbol);
-    selectedName.value = name;
-  } catch (error) {
-    console.error(error);
-  }
-};
+    try {
+      const name = await fetchName(symbol);
+      selectedName.value = name;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const fetchNewsPromise = new Promise( async (resolve) => {
+  const fetchNewsPromise = new Promise(async (resolve) => {
     await fetchSelectedName(selectedSymbol);
 
     const fetchNews = async (page = 1, q = selectedName.value) => {
@@ -285,6 +289,7 @@ var chartType = 'candlestick'
 var tickerName = selectedName;
 var tickerSymbol = ref('');
 var curr_interval = ref('');
+const isLoading = ref(true);
 
 const dataCache = JSON.parse(localStorage.getItem('dataCache')) || {}
 
@@ -298,6 +303,7 @@ const selectSymbol = (symbol) => {
 };
 
 const fetchDataAndUpdateChart = async (interval) => {
+  isLoading.value = true;
   curr_interval.value = interval;
   const dataCacheKey = `${tickerSymbol.value}-${interval}`;
 
@@ -319,6 +325,9 @@ const fetchDataAndUpdateChart = async (interval) => {
       renderChart(chartData);
     } catch (error) {
       console.error(error);
+    }
+    finally{
+      isLoading.value = false;
     }
   }
 };
@@ -852,6 +861,7 @@ const addComment = () => {
   .responsive-h {
     height: 28vw;
   }
-}</style>
+}
+</style>
 
 
