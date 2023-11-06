@@ -141,7 +141,8 @@
             class="btn btn-sm col-lg-12 col-12 col-sm-12 col-md-12 mt-5"
             v-if="!showBeta"
             name="confirm"
-            @click="finalBeta(), showRecoTable()"
+            @click="finalBeta(), showRecoTable()" 
+            style="background-color: rgb(255, 255, 255);"
           >
             <a href="#result"></a>
             GET ANALYSIS REPORT
@@ -378,15 +379,15 @@
                                 Add!</button>
                               &nbsp;  -->
                               <!-- <button
-            class="btn btn-sm mb-0 ms-1"
-            data-toggle="modal"
-    
-            name="confirm"
-            @click.prevent="addingFromCard(index),finalBeta(), showRecoTable()"
-          >
-            <a href="#result"></a>
-            Add to Portfolio
-          </button> -->
+                                class="btn btn-sm mb-0 ms-1"
+                                data-toggle="modal"
+                        
+                                name="confirm"
+                                @click.prevent="addingFromCard(index),finalBeta(), showRecoTable()"
+                              >
+                                <a href="#result"></a>
+                                Add to Portfolio
+                              </button> -->
 
                                 <button href="#" class="btn btn-sm mb-0 ms-1">Read More</button>
                                 &nbsp;
@@ -402,10 +403,10 @@
             </div>
 
             <div class="d-flex justify-content-between mt-5">
-              <button class="btn btn-sm mb-0 ms-1" @click="reset">Back</button>
+              <button class="btn btn-sm mb-0 ms-1" @click="reset" style="background-color: rgb(255, 255, 255)">Back</button>
 
               <router-link to="/markets">
-                <button class="btn btn-sm mb-0 ms-1">Compare to Market</button>
+                <button class="btn btn-sm mb-0 ms-1" style="background-color: rgb(255, 255, 255)">Compare to Market</button>
               </router-link>
             </div>
             <div class="pb-10"></div>
