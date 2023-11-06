@@ -3,7 +3,7 @@
   <link id="pagestyle" href="src/assets/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
   <link href="src/assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="src/assets/css/nucleo-svg.css" rel="stylesheet" />
-  <div class="container-fluid position-sticky z-index-sticky top-0 ">
+  <div class="container-fluid position-sticky z-index-sticky top-0" style="background: linear-gradient(to bottom, #ffffff, #bddefc);">
     <div class="row">
       <div class="col-12">
         <nav
