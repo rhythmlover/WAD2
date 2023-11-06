@@ -490,7 +490,7 @@ async function fetchName(symbol) {
       symbols: symbol
     },
     headers: {
-      'X-RapidAPI-Key': '6da3574d9cmsh2f06bbb69119e81p1b4af4jsn3e2517723248',
+      'X-RapidAPI-Key': '0f41b9c6a4mshb99c3841f59207ap13d9c1jsn36a3f1207f00',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -518,7 +518,7 @@ async function fetchData(interval, symbol) {
       region: 'US'
     },
     headers: {
-      'X-RapidAPI-Key': '6da3574d9cmsh2f06bbb69119e81p1b4af4jsn3e2517723248',
+      'X-RapidAPI-Key': '0f41b9c6a4mshb99c3841f59207ap13d9c1jsn36a3f1207f00',
       'X-RapidAPI-Host': 'apidojo-yahoo-finance-v1.p.rapidapi.com'
     }
   };
@@ -574,7 +574,7 @@ const toggleShowMore = () => {
 
 // Market Sentiment Section
 
-const sentiment = ref('Positive');
+const sentiment = ref('');
 const sentimentBool = ref(true)
 const positive = ref('0.67');
 const mixed = ref('0.20');

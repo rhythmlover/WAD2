@@ -192,7 +192,7 @@
 
 @media (min-width: 1200px) {
   .responsive-h1 {
-    font-size: 23px;
+    font-size: 22px;
   }
 }
 </style>
@@ -265,7 +265,7 @@ const updateTable = async () => {
         stock.name.toLowerCase().includes(searchInput.value.toLowerCase())
       )
     })
-    searchedStocks.value = filteredStocks.slice(0, 3)
+    searchedStocks.value = filteredStocks.slice(0, 5)
     for (const stock of searchedStocks.value) {
       stock.recommendation = "Loading...";
       stock.price = "Loading...";
@@ -287,7 +287,7 @@ async function run() {
   try {
     const responses = await fetch(url, options)
     const results = await responses.json()
-    let active = results.body.slice(0,2);
+    let active = results.body.slice(0,5);
     let stockList = active.map(async (quote) => {
       current.value = quote.symbol;
       let [recc, price] = await getReco();
