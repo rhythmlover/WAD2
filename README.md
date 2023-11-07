@@ -28,3 +28,7 @@ To run the Vue server, run the following command inside the `portfolio_managemen
 ```bash
 npm run dev
 ```
+
+### API related errors
+
+In the event there are several components not displaying data, it is due to an expired subscription/exceed-limit api-key. Please contact us or generate a new API key by subscribing to the relevant APIs found on [RapidAPI](https://rapidapi.com/hub). After activating a key, please replace your new API key in the respective part of our code generating an API fetch error.

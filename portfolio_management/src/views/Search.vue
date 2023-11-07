@@ -287,7 +287,7 @@ async function run() {
   try {
     const responses = await fetch(url, options)
     const results = await responses.json()
-    let active = results.body.slice(0,5);
+    let active = results.body.slice(0,2);
     let stockList = active.map(async (quote) => {
       current.value = quote.symbol;
       let [recc, price] = await getReco();
